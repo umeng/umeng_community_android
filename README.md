@@ -1,5 +1,5 @@
 
-# ![](images/logo.png) 友盟微社区 Android SDK技术架构 
+# ![](images/logo.png) 友盟微社区 Android SDK
 -------
 
 ## 目录 
