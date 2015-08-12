@@ -24,7 +24,7 @@
 
 如图1-1、图1-2是云图TV的集成效果。        
 
-| ![p1](http://img.blog.csdn.net/20150416165133627) | ![p2](http://img.blog.csdn.net/20150416164957981)|
+| ![p1](images/yuntu_1.jpeg) | ![p2](images/yuntu_2.jpeg)|
 :---:|:-----:|
 | 图1-1 | 图1-2 |
 
@@ -32,7 +32,7 @@
 ## 二、技术架构
 从项目结构上来说，友盟微社区SDK可以简单分为如下三层:   
 
-![layer](http://img.blog.csdn.net/20150416183255716)        
+![layer](images/arch.png)        
 图 2-1 层次结构图
 
 * UI层 (User Interface开源)       
