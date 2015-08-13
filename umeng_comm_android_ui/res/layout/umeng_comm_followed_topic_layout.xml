@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        layout="@layout/umeng_comm_setting_title_bar" />
+
+    <include layout="@layout/umeng_comm_divide_line" />
+
+    <FrameLayout
+        android:id="@+id/umeng_comm_user_followed_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

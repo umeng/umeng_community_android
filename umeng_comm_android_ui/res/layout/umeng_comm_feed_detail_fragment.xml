@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_comm_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <!-- 底部的转发、赞、评论操作栏 -->
+
+        <LinearLayout
+            android:id="@+id/umeng_comm_action_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#f5f5f5"
+            android:baselineAligned="false"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp" >
+
+            <RelativeLayout
+                android:id="@+id/umeng_comm_like_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/umeng_comm_like_action_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/umeng_comm_like_normal"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_like"
+                    android:textSize="@dimen/text_big16_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/umeng_comm_forward_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/umeng_comm_forward_normal"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_forward"
+                    android:textSize="@dimen/text_big16_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/umeng_comm_comment_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/umeng_comm_comment_normal"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_comment"
+                    android:textSize="@dimen/text_big16_size" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <com.umeng.comm.ui.widgets.RefreshLvLayout
+            android:id="@+id/umeng_comm_feed_refresh_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/umeng_comm_action_layout" >
+
+            <ListView
+                android:id="@+id/umeng_comm_comments_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="#EEEEEE"
+                android:dividerHeight="1dip"
+                android:fadingEdgeLength="0.0sp"
+                android:fastScrollEnabled="false"
+                android:headerDividersEnabled="false"
+				android:footerDividersEnabled="true"           
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none"
+                android:scrollingCache="false" />
+        </com.umeng.comm.ui.widgets.RefreshLvLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/umeng_comm_comment_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        layout="@layout/umeng_comm_comment_layout"
+        android:clickable="true"
+        android:visibility="gone" />
+
+</FrameLayout>

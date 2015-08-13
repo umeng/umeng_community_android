@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:background="#ffffff" >
+
+    <TextView
+        android:id="@+id/umeng_comm_share_to_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="分享至"
+        android:textColor="#999999"
+        android:textSize="17sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/umeng_comm_share_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_share_to_tv"
+        android:layoutAnimation="@anim/umeng_comm_shareboard_layout_animation" />
+
+</RelativeLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <com.umeng.comm.ui.widgets.RoundImageView
+        android:id="@+id/umeng_comm_user_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitCenter"
+        android:background="@drawable/umeng_comm_like_more_user_normal"/>
+
+    <TextView
+        android:id="@+id/umeng_comm_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/umeng_comm_all"
+        android:textSize="@dimen/text_big12_size" />
+
+</LinearLayout>

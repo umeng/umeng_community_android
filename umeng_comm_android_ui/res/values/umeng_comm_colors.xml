@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <color name="umeng_comm_comments_bg">#F4F4F4</color>
+    <color name="umeng_comm_color_group">#2c3035</color>
+    <color name="umeng_comm_list_item_textcolor">#333333</color>
+    <color name="umeng_comm_list_item_bgcolor">#FFFFFF</color>
+    <color name="umeng_comm_divider">#E3E3E3</color>
+    <color name="umeng_comm_text_time">#999999</color>
+    <color name="umeng_comm_text_title">#464f61</color>
+    <color name="umeng_comm_text_friends_list">#959696</color>
+    <color name="umeng_comm_text_share_content">#666666</color>
+    <color name="umeng_comm_ucenter_bg">#EEEEEE</color>
+    <color name="umeng_comm_text_ucenter">#595959</color>
+    <color name="umeng_comm_edit_bg">#C4C4C4</color>
+    <color name="umeng_comm_grid_divider_line">#F8F8F8</color>
+    <color name="umeng_comm_linked_text">#97c7fd</color>
+    <color name="umeng_comm_text_color_origin">#FFA500</color>
+    <color name="umeng_comm_text_topic_light_color">#4a90e2</color>
+    <color name="umeng_comm_wrapper_text_color">#4a90e2</color>
+    <color name="umeng_comm_text_default_color">#4e4e4e</color>
+    <color name="umeng_comm_user_center_title_color">#f5f5f5</color>
+    <color name="umeng_comm_loction_text_color">#9b9b9b</color>
+    <color name="umeng_comm_feed_layout_bg_color">#f0f0f0</color>
+    <color name="umeng_comm_white_color">#ffffff</color>
+    <color name="umeng_comm_skip_text_color">#4971e3</color>
+    <color name="umeng_comm_topic_tip_bg">#cfcfcf</color> <!-- 发送feed页面，提示语背景颜色 -->
+    <!-- 消息流listview下拉刷新的header上的四个颜色值 -->
+
+    <color name="umeng_comm_lv_header_color1">#A1A1A1</color>
+    <color name="umeng_comm_lv_header_color2">#BFBFBF</color>
+    <color name="umeng_comm_lv_header_color3">#DDDDDD</color>
+    <color name="umeng_comm_lv_header_color4">#DEDEDE</color>
+
+    <!-- 剪切图片页面，paint的颜色 -->
+    <color name="umeng_comm_clip_image_paint">#aa000000</color>
+    <color name="umeng_comm_photo_preview_bg">#65BBF6</color>
+
+    <!--  -->
+    <color name="radio_button_selected_color">#ff33b5e5</color>
+    <!-- <color name="radio_button_unselected_color">@android:color/transparent</color> -->
+    <color name="radio_button_unselected_color">#ff0000</color>
+    <color name="umeng_comm_radio_stroke_color">#4A90E2</color>
+
+</resources>

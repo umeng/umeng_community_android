@@ -1,0 +1,275 @@
+<resources>
+
+    <string name="umeng_comm_login">登录</string>
+    <string name="umeng_comm_login_statement">我们不会在未经同意的情况下在任何社交媒体发布消息</string>
+    <string name="umeng_comm_new_post">新鲜事</string>
+    <string name="umeng_comm_edittext_hint">分享新鲜事&#8230;#此处添加话题更好哦#</string>
+    <string name="umeng_comm_3rdparty_login">使用第三方账户登录</string>
+    <string name="umeng_comm_username">MR.SIMPLE</string>
+    <string name="umeng_comm_posted_msg">消息</string>
+    <string name="umeng_comm_followed_topic">关注话题</string>
+    <string name="umeng_comm_followed_user">关注</string>
+    <string name="umeng_comm_my_fans">粉丝</string>
+    <string name="umeng_comm_topic_followed">取消关注</string>
+    <string name="umeng_comm_follow_topic">关注</string>
+    <string name="umeng_comm_search_hint">搜索话题</string>
+    <string name="umeng_comm_search_topic_failed">未找到匹配的话题</string>
+    <string name="umeng_comm_search_key">搜索</string>
+    <string name="umeng_comm_search_keyword_input">请输入话题关键字&#8230;</string>
+    <string name="umeng_comm_fetching_topics">话题获取中&#8230;</string>
+    <string name="umeng_comm_ok">确定</string>
+    <string name="umeng_comm_notify">通知</string>
+    <string name="umeng_comm_preview">预览</string>
+    <string name="umeng_comm_friends">我的好友</string>
+    <string name="umeng_comm_lastes_friends">最近联系人</string>
+    <string name="umeng_comm_pull_to_refresh_tap_label" translatable="false">点击刷新</string>
+    <string name="umeng_comm_user_follow">关注</string>
+    <string name="umeng_comm_cancel_follow">取消关注</string>
+    <string name="umeng_comm_load_more">加载更多</string>
+    <string name="umeng_comm_loading">加载中</string>
+    <string name="umeng_comm_comment_load_more">&#8230;</string>
+    <string name="umeng_comm_cancel">取消</string>
+    <string name="umeng_comm_prev">预览</string>
+    <string name="umeng_comm_camera">Camera</string>
+    <string name="umeng_comm_image_overflow">抱歉,最多只能选择9张图片</string>
+    <string name="umeng_comm_delete_feed">确认删除这条消息?</string>
+    <string name="umeng_comm_confirm_spam">确认举报?</string>
+    <string name="umeng_comm_this_feed">这条消息?</string>
+    <string name="umeng_comm_post_comment_success">评论成功</string>
+    <string name="umeng_comm_post_comment_failed">评论失败</string>
+    <string name="umeng_comm_delete_comment">确认删除这条评论?</string>
+    <string name="umeng_comm_delete_comment_failed">删除评论失败</string>
+    <string name="umeng_comm_delete_photo">确认删除这张图片?</string>
+    <string name="umeng_comm_desc">contentDescription</string>
+    <string name="umeng_comm_topic_create_success">话题创建成功</string>
+    <string name="umeng_comm_topic_create_failed">话题创建失败</string>
+    <string name="umeng_comm_topic_follow_success">关注成功</string>
+    <string name="umeng_comm_topic_follow_failed">关注失败</string>
+    <string name="umeng_comm_topic_cancel_success">取消关注成功</string>
+    <string name="umeng_comm_topic_cancel_failed">取消关注失败</string>
+    <string name="umeng_comm_send_success">发送成功</string>
+    <string name="umeng_comm_send_ing">发送中&#8230;</string>
+    <string name="umeng_comm_send_failed">发送失败</string>
+    <string name="umeng_comm_send">发送</string>
+    <string name="umeng_comm_topic_search_no_keyword">请输入关键字</string>
+    <string name="umeng_comm_logining">登录中&#8230;</string>
+    <string name="umeng_comm_nickname">昵称</string>
+    <string name="umeng_comm_male">男</string>
+    <string name="umeng_comm_female">女</string>
+    <string name="umeng_comm_gender">性别</string>
+    <string name="umeng_comm_age">年龄</string>
+    <string name="umeng_comm_telephone">电话</string>
+    <string name="umeng_comm_account_setting">账号设置</string>
+    <string name="umeng_comm_save">保 存</string>
+    <string name="umeng_comm_origin_image">原 图</string>
+    <string name="umeng_comm_search_friend">搜索好友</string>
+    <string name="umeng_comm_search_location">搜索位置</string>
+    <string name="umeng_comm_user_center">个人中心</string>
+    <string name="umeng_comm_user_favorites">我的收藏</string>
+    <string name="umeng_comm_user_notification">我的消息</string>
+    <string name="umeng_comm_user_center_no_name">请输入昵称</string>
+    <string name="umeng_comm_user_center_no_age">请输入年龄</string>
+    <string name="umeng_comm_user_center_no_age_valid">年龄有效范围0~120</string>
+    <string name="umeng_comm_follow_user_failed">关注用户失败</string>
+    <string name="umeng_comm_follow_user_success">关注用户成功</string>
+    <string name="umeng_comm_follow_cancel_failed">取消关注失败</string>
+    <string name="umeng_comm_follow_cancel_success">取消关注成功</string>
+    <string name="umeng_comm_my_friends">我的好友</string>
+    <string name="umeng_comm_content_invalid">请输入评论内容</string>
+    <string name="umeng_comm_fetching_loc">位置获取中</string>
+    <string name="umeng_comm_fetching_loc_failed">位置获取失败</string>
+    <string name="umeng_comm_load">加载</string>
+    <string name="umeng_comm_zero">0</string>
+    <string name="umeng_comm_search">搜索</string>
+    <string name="umeng_comm_load_complete">已经全部加载咯~</string>
+    <string name="umeng_comm_req_failed">抱歉，请求失败,请检查您的网络~</string>
+    <string name="umeng_comm_followed_user_failed">获取已关注列表失败&#8230;</string>
+    <string name="umeng_comm_followed_no_user">您暂时未关注好友</string>
+    <string name="umeng_comm_update_userinfo_failed">更新用户信息失败</string>
+    <string name="umeng_comm_update_info_success">更新用户信息成功</string>
+    <string name="umeng_comm_login_failed">登录失败，请重试&#8230;</string>
+    <string name="umeng_comm_no_new_friends">暂无最新好友</string>
+    <string name="umeng_comm_delete_failed">删除失败</string>
+    <string name="umeng_comm_delete_success">删除成功</string>
+    <string name="umeng_comm_setting_user">用户设置</string>
+    <string name="umeng_comm_update_user_info">用户信息更新中</string>
+    <string name="umeng_comm_update_user_icon">用户头像更新中</string>
+    <string name="umeng_comm_setting_msg">消息设置</string>
+    <string name="umeng_comm_setting">设置</string>
+    <string name="umeng_comm_setting_logout">退出登录</string>
+    <string name="umeng_comm_setting_push">推送设置</string>
+    <string name="umeng_comm_feed_detail">正文内容</string>
+    <string name="umeng_comm_parse_image_failed">解析图片失败</string>
+    <string name="umeng_comm_reply">回复</string>
+    <string name="umeng_comm_colon">：</string>
+    <string name="umeng_comm_load_topic_failed">获取话题失败</string>
+    <string name="umeng_comm_not_have_more">没有更多话题咯~</string>
+    <string name="umeng_comm_not_choose_image">还未选择图片</string>
+    <string name="umeng_comm_last_image">已经最后一张图片了</string>
+    <string name="umeng_comm_first_image">已经是第一张图片了</string>
+    <string name="umeng_comm_no_content">请输入内容</string>
+    <string name="umeng_comm_load_userinfo_failed">获取用户信息失败</string>
+    <string name="umeng_comm_load_delete_failed">删除失败</string>
+    <string name="umeng_comm_load_delete_success">删除成功</string>
+    <string name="umeng_comm_liked">您已经点赞</string>
+    <string name="umeng_comm_like_failed">点赞失败~</string>
+    <string name="umeng_comm_like_success">点赞成功</string>
+    <string name="umeng_comm_cancel_like_success">取消点赞成功</string>
+    <string name="umeng_comm_cancel_like_failed">取消点赞失败~</string>
+    <string name="umeng_comm_load_failed">加载失败</string>
+    <string name="umeng_comm_text_confirm">确认</string>
+    <string name="umeng_comm_text_cancel">取消</string>
+    <string name="umeng_comm_text_load_more_db">从数据库加载更多</string>
+    <string name="umeng_comm_text_load_over">已经全部加载完毕咯~</string>
+    <string name="umeng_comm_text_my_location">我的位置</string>
+    <string name="umeng_comm_text_dont_show_location">不显示位置</string>
+    <string name="umeng_comm_delete_feed_tips">删除</string>
+    <string name="umeng_comm_delete_tips">确认删除?</string>
+    <string name="umeng_comm_report_feed_tips">举报</string>
+    <string name="umeng_comm_text_spammer_success">举报成功</string>
+    <string name="umeng_comm_text_spammered">您已经举报过该条消息</string>
+    <string name="umeng_comm_text_spammer_failed">举报失败</string>
+    <string name="umeng_comm_text_login_modul">请添加登录组件</string>
+    <string name="umeng_comm_feed_deleted">该内容已被删除</string>
+    <string name="umeng_comm_data_empty">加载数据为空</string>
+    <string name="umeng_comm_logout_failed">退出登录失败</string>
+    <string name="umeng_comm_topic_no_desc">该话题还没有描述喔</string>
+    <string name="umeng_comm_data_failed">加载数据失败</string>
+    <string name="umeng_comm_overflow_tips">抱歉,已超过字符上限~</string>
+    <string name="umeng_comm_http_conn_failed">连接服务器失败,请检查您的网络~</string>
+    <string name="umeng_comm_http_time_out">请求超时,请检查您的网络~</string>
+    <string name="umeng_comm_write_sth">写点啥吧</string>
+    <string name="umeng_comm_no_topic">您还没有关注话题哦</string>
+    <string name="umeng_comm_login_user_invalid">登录用户必须包含用户id、昵称、source</string>
+    <string name="umeng_comm_user_name_tips">非法昵称,昵称只能由2~20个中文、数字、英文字母以及下划线组成</string>
+    <string name="umeng_comm_user_name_illegal_char">非法昵称,昵称包含非法字符</string>
+    <string name="umeng_comm_user_name_feed_invalid">无效Feed</string>
+    <string name="umeng_comm_not_network">抱歉,没有网络连接</string>
+    <string name="umeng_comm_no_push">目前您没有集成推送组件</string>
+       <string name="umeng_comm_share_success">分享成功</string>
+    <string name="umeng_comm_username_sensitive">更新失败,您的昵称包含敏感词</string>
+    <string name="umeng_comm_login_username_sensitive">登录失败,您的昵称包含敏感词</string>
+    <string name="umeng_comm_user_unusable">操作失败,用户被删除或者禁言</string>
+    <!-- 对应着server的20005错误 -->
+    <string name="umeng_comm_origin_feed_delete">原帖已被删除,不能转发</string>
+    <string name="umeng_comm_duplicate_name">昵称已存在，请修改昵称&#8230;</string>
+    <string name="umeng_comm_before_save">请先保用户信息，再更新头像&#8230;</string>
+    <string name="umeng_comm_save_pic_success">图片保存成功</string>
+    <string name="umeng_comm_save_pic_failed">图片保存失败</string>
+    <string name="umeng_comm_feeds_num">发表消息：</string>
+    <string name="umeng_comm_fans_num">粉丝：</string>
+    <string name="umeng_comm_skip">跳过</string>
+    <string name="umeng_comm_recommend_user">用户推荐</string>
+    <string name="umeng_comm_recommend_friends">好友圈</string>
+    <string name="umeng_comm_recommend_nearby">附近内容</string>
+    <string name="umeng_comm_realtime">实时内容</string>
+    <string name="umeng_comm_recommend_topic">话题推荐</string>
+    <string name="umeng_comm_topic_tip_male">大哥啊，添加个话题吧！</string>
+    <string name="umeng_comm_topic_tip_female">大妹砸，添加个话题吧！</string>
+    <string name="umeng_comm_find">发现</string>
+    <string name="umeng_comm_recommend">推荐</string>
+    <string name="umeng_comm_other">其它</string>
+    <string name="umeng_comm_myself">我的</string>
+    <string name="umeng_comm_no_recommend_user">暂时没有推荐用户咯</string>
+    <string name="umeng_comm_no_follow_unfollow_myself">不能关注/取消关注自己咯~</string>
+    <string name="umeng_comm_topic_has_deleted">该话题应经被删除&#8230;</string>
+    <string name="umeng_comm_relation_user">相关用户</string>
+    <string name="umeng_comm_all_msg">全部消息</string>
+    <string name="umeng_comm_all">全部</string>
+    <string name="umeng_comm_no_search_user">未找到相关用户</string>
+    <string name="umeng_comm_no_search_feed">未找到相关Feed</string>
+    <string name="umeng_comm_no_recommend_topic">暂时没有推荐话题咯</string>
+    <string name="umeng_comm_search_content">请输入用户或内容关键字</string>
+    <string name="umeng_comm_invalid_token">登录信息已过期,请重新登录</string>
+    <string name="umeng_comm_search_view_hint">搜索用户和内容</string>
+    <string name="umeng_comm_dots"> &#8230; </string>
+    <string name="umeng_comm_forward">转发</string>
+    <string name="umeng_comm_comment">评论</string>
+    <string name="umeng_comm_like">赞</string>
+    <string name="umeng_comm_unlike">取消</string>
+    <string name="umeng_comm_like_user_title">点赞狂们</string>
+    <string name="umeng_comm_user_deleted">该用户已经被删除，请联系管理员</string>
+    <string name="umeng_comm_bulletin_tips">是否需要将本条内容标记为公告？</string>
+    <string name="umeng_comm_no_newfeed_tips">没有新数据啦~</string>
+    <string name="umeng_comm_no_nextpage">没有下一页了~</string>
+    <string name="umeng_comm_topic_has_focused">该话题已经被您关注~</string>
+    <string name="umeng_comm_topic_has_not_focused">您未关注该话题~</string>
+    <string name="umeng_comm_user_has_focused">该用户已经被您关注~</string>
+    <string name="umeng_comm_user_has_not_focused">该用户未被您关注~</string>
+    <string name="umeng_comm_topic">话题</string>
+    <string name="umeng_comm_album">相册</string>
+    <string name="umeng_comm_request_location_failed">定位失败~</string>
+    <string name="umeng_comm_favorites">收藏</string>
+    <string name="umeng_comm_cancel_favorites">取消收藏</string>
+    <string name="umeng_comm_favorites_failed">收藏失败，请重试~</string>
+    <string name="umeng_comm_cancel_favorites_failed">取消收藏失败，请重试~</string>
+    <string name="umeng_comm_favorites_success">收藏成功~</string>
+    <string name="umeng_comm_cancel_favorites_success">取消收藏成功~</string>
+    <string name="umeng_comm_has_favorited">您已经收藏该Feed~</string>
+    <string name="umeng_comm_not_favorited">您还未收藏该Feed~</string>
+    <string name="umeng_comm_sure_spam">确定举报?</string>
+    <string name="umeng_comm_favoriets_list">收藏列表</string>
+    <string name="umeng_comm_no_data">暂时没有数据咯~</string>
+    <string name="umeng_comm_no_followed_user">您还未关注用户咯~</string>
+    <string name="umeng_comm_no_fans">您还没有粉丝咯~</string>
+    <string name="umeng_comm_no_focus_topic">您还未关注话题咯~</string>
+    <string name="umeng_comm_liked_you">赞了你</string>
+    <string name="umeng_comm_no_favourite_feed">您还未收藏Feed哦~</string>
+    <string name="umeng_comm_device_forbidden">该设备已经被屏蔽，请联系社区管理员</string>
+    <string name="umeng_comm_favorites_overflow">您的收藏列表已满，请先移除一些收藏项</string>
+    <string name="umeng_comm_come_from">来自  </string>
+    <string name="umeng_comm_do_not_reply_yourself">不能回复自己的评论</string>
+    <string name="umeng_comm_comment_text_overflow">评论字数已经超过140字啦~</string>
+    <string name="umeng_comm_comment_text_max">评论字数不能超过140字咯~</string>
+    <string name="umeng_comm_invalid_feed">Feed被屏蔽或删除</string>
+    <string name="umeng_comm_http_req_failed">网络请求失败,请重试~</string>
+    <string name="umeng_comm_do_not_spam_yourself_content">抱歉,不能举报自己的内容~</string>
+    <string name="umeng_comm_do_not_spam_yourself">抱歉,不能举报自己的内容~</string>
+    <string name="umeng_comm_device_forbiddened">该设备已经被禁止，请联系管理员~</string>
+    <string name="umeng_comm_feed_unavailable">该Feed不可访问,可能已被管理员删除~</string>
+    
+    <!-- 收藏feed spam提示 -->
+    <!-- <string name="umeng_comm_feed_spam_shield">该收藏Feed被屏蔽~</string> -->
+    <string name="umeng_comm_feed_spam_deleted">该收藏Feed被删除~</string>
+    <!-- <string name="umeng_comm_feed_spam_deleted_admin">该收藏Feed被管理员删除~</string>
+    <string name="umeng_comm_feed_spam_sensitive">该收藏Feed含有敏感词~</string> -->
+    
+    
+
+    <string-array name="umeng_comm_topic_detail_tabs">
+        <item>话题聚合</item>
+        <item>活跃用户</item>
+    </string-array>
+    <string-array name="umeng_comm_comments_tabs">
+        <item>收到的评论</item>
+        <item>发出的评论</item>
+    </string-array>
+    <string-array name="umeng_comm_feed_titles">
+        <item>关注</item>
+        <item>推荐</item>
+        <item>话题</item>
+    </string-array>
+    <string-array name="umeng_comm_new_msg_titles">
+        <item>我</item>
+        <item>评论</item>
+        <item>赞</item>
+    </string-array>
+
+    <string name="umeng_comm_content_short_tips">发布的内容太少啦，再多写点内容。</string>
+    <string name="umeng_comm_admin_notify">管理员通知</string>
+
+    <!-- 社区名字 -->
+    <string name="umeng_comm_name">微社区</string>
+
+    <!-- 图片选择器相关 -->
+
+    <string name="umeng_comm_more_than_max">超过了上限</string>
+    <string name="umeng_comm_recent_photos">最近照片</string>
+    <string name="umeng_comm_sure">确定</string>
+    <string name="umeng_comm_select_photos">选择照片</string>
+    <string name="umeng_comm_back">返回</string>
+    <string name="umeng_comm_taking_pictures">拍摄照片</string>
+    <string name="umeng_comm_max_img_limit_reached">不能选择超过%d个图像</string>
+    <string name="umeng_comm_count">张</string>
+
+</resources>

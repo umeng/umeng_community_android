@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.umeng.comm.ui.widgets.RefreshLvLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_comm_swipe_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ListView
+        android:id="@+id/umeng_comm_notify_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#EEEEEE"
+        android:dividerHeight="1dip"
+        android:fadingEdgeLength="0.0sp"
+        android:fastScrollEnabled="false"
+        android:headerDividersEnabled="false"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="none"
+        android:scrollingCache="false" />
+
+</com.umeng.comm.ui.widgets.RefreshLvLayout>

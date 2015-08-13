@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.umeng.community.example"
+    android:versionCode="5"
+    android:versionName="2.1" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="10" />
+
+    <!-- 使用相机 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <!-- ###################声明SDK使用的相关权限###################### -->
+    <!-- 检测网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 获取mac地址作为用户的备用唯一标识 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 获取用户手机的IMEI，用来唯一的标识用户 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 缓存资源优先存入SDcard -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许应用程序联网，以便向我们的服务器端发送数据 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 定位所需的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+
+    <!-- 推送相关的权限 -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- QQ、QQ空间所需权限 -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <application
+        android:name=".CommunityApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.umeng.community.example.MainActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".custom.CustonLoginActivity" />
+        
+        <!-- 发现的Activity -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.FindActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <!--  -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.UserInfoActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--  -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.TopicDetailActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--  -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.FeedsActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <!-- 搜索结果Activity -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.RelativeUserActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <!--  -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.PostFeedActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <!--  -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.ForwardActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!-- 搜索Activity -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.SearchActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <!-- feed详情页面 -->
+        <activity
+            android:name="com.umeng.comm.ui.activities.FeedDetailActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <!-- 设置页面activity -->
+        <activity android:name="com.umeng.comm.ui.activities.SettingActivity" />
+
+        <!-- 引导页面activity -->
+        <activity android:name="com.umeng.comm.ui.activities.GuideActivity" />
+
+        <!-- 点赞用户页面 -->
+        <activity android:name="com.umeng.comm.ui.activities.LikeUsersActivity" />
+
+        <!-- 友盟登录界面 -->
+        <activity android:name="com.umeng.community.login.LoginActivity" />
+
+        <!-- 显示某个位置Feed的Activity -->
+        <activity android:name="com.umeng.comm.ui.activities.LocationFeedActivity" />
+
+        <!-- ##################分享相关#################### -->
+        <!-- 分享内容编辑页 -->
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+
+        <!-- 腾讯SSO授权的Activity注册 -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1104606393" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 微信回调activity -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name="com.umeng.comm.ui.activities.AlbumActivity" />
+        <activity android:name="com.umeng.comm.ui.activities.FollowedTopicActivity" />
+        <activity android:name="com.umeng.comm.ui.activities.NotificationActivity" />
+        <activity android:name="com.umeng.comm.ui.activities.NewMsgActivity" />
+
+        <!-- 图片选择相关 -->
+        <activity android:name="com.umeng.comm.ui.imagepicker.PhotoSelectorActivity" />
+        <activity android:name="com.umeng.comm.ui.imagepicker.PhotoPreviewActivity" />
+
+        <!-- ##################### 推送相关 ##################### -->
+        <receiver
+            android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
+            android:exported="false"
+            android:process=":push" >
+        </receiver>
+        <receiver
+            android:name="com.umeng.message.SystemReceiver"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.umeng.message.MessageReceiver"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.RECEIVE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.umeng.message.ElectionReceiver"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.ELECTION_RESULT_V4" />
+
+                <category android:name="umeng" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.umeng.message.RegistrationReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.umeng.community.example.intent.action.COMMAND" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.umeng.message.BootBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.umeng.message.UmengService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="com.umeng.community.example.intent.action.START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.community.example.intent.action.COCKROACH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.PING_V4" />
+
+                <category android:name="umeng" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.umeng.message.UmengIntentService"
+            android:process=":push" />
+        <service
+            android:name="com.umeng.message.UmengMessageIntentReceiverService"
+            android:exported="true"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="org.android.agoo.client.MessageReceiverService" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.android.agoo.client.ElectionReceiverService" />
+            </intent-filter>
+        </service>
+        <!-- V1.3.0添加的service，负责下载通知的资源 -->
+        <service android:name="com.umeng.message.UmengDownloadResourceService" />
+
+        <!--
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="54d19086fd98c540a2001155" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="de08937649e99e3c81d7924b145b3f79" >
+        </meta-data>
+        -->
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="4eaee02c527015373b000003" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="a102852523d3070310d74f676d128a3c" >
+        </meta-data>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="557e18d1afb32a69351be5abc7f1cd25" />
+    </application>
+
+</manifest>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/umeng_comm_user_center_title_color" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_comm_clip_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true" >
+
+        <ImageButton
+            android:id="@+id/umeng_comm_clip_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/umeng_comm_back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/umeng_comm_clip_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text="@string/umeng_comm_save"
+            android:textSize="@dimen/text_big16_size"
+            android:textColor="@color/umeng_comm_text_topic_light_color" />
+    </RelativeLayout>
+
+    <com.umeng.comm.ui.widgets.ClipImageLayout
+        android:id="@+id/umeng_comm_clip_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/umeng_comm_clip_title" />
+
+</RelativeLayout>

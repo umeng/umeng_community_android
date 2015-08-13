@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="6dp" >
+
+    <com.umeng.comm.ui.widgets.RoundImageView
+        android:id="@+id/umeng_comm_friend_picture"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:contentDescription="@string/umeng_comm_friends"
+        android:scaleType="centerCrop" />
+
+    <!-- 话题、好友、位置信息都居中显示 -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/umeng_comm_friend_picture"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/umeng_comm_friend_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="name"
+            android:textSize="@dimen/text_big16_size" />
+
+        <TextView
+            android:id="@+id/umeng_comm_other_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="desc"
+            android:textColor="@color/umeng_comm_loction_text_color"
+            android:textSize="@dimen/text_big12_size" />
+    </LinearLayout>
+
+</RelativeLayout>

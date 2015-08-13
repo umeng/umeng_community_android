@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewStub xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_comm_empty"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout="@layout/umeng_comm_no_data" >
+
+</ViewStub>

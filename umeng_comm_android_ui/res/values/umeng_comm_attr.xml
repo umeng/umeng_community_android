@@ -1,0 +1,29 @@
+<resources>
+
+    <declare-styleable name="FlowLayout">
+        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="verticalSpacing" format="dimension" />
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="debugDraw" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="FlowLayout_LayoutParams">
+        <attr name="layout_newLine" format="boolean" />
+        <attr name="layout_horizontalSpacing" format="dimension" />
+        <attr name="layout_verticalSpacing" format="dimension" />
+    </declare-styleable>
+    
+    <declare-styleable name="FeedContentView">
+        <attr name="detail_layout" format="boolean" />
+    </declare-styleable>
+    
+    <declare-styleable name="UmengEmoji">
+        <attr name="emojiconSize" format="dimension"/>
+        <attr name="emojiconTextStart" format="integer"/>
+        <attr name="emojiconTextLength" format="integer"/>
+        <attr name="emojiconUseSystemDefault" format="boolean"/>
+    </declare-styleable>
+
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_checked="true"><shape>
+            <solid android:color="#4A90E2" />
+            <!-- android:radius 弧形的半径 -->
+            <corners android:radius="1.2dp"/>
+        </shape></item>
+    <item android:state_checked="false"><shape>
+            <solid android:color="@android:color/white" />
+            <corners android:radius="1.3dp" />
+        </shape></item>
+
+</selector>

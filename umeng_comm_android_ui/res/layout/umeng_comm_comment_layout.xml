@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ececec"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/umeng_comm_comment_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        layout="@layout/umeng_comm_divide_line"
+        android:background="#bcbbc1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_comment_line" >
+
+        <TextView
+            android:id="@+id/umeng_comm_comment_send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/umeng_comm_send"
+            android:textSize="@dimen/text_big16_size" />
+
+        <ImageView
+            android:id="@+id/umeng_comm_emoji"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/umeng_comm_emoji_keyboard" />
+
+        <com.umeng.comm.ui.widgets.CommentEditText
+            android:id="@+id/umeng_comm_comment_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_toLeftOf="@id/umeng_comm_comment_send_button"
+            android:layout_toRightOf="@id/umeng_comm_emoji"
+            android:background="@drawable/umeng_comm_comment_frame_style"
+            android:focusable="true"
+            android:gravity="center|left"
+            android:inputType="text" />
+    </RelativeLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        layout="@layout/umeng_comm_divide_line"
+        android:background="#d9d7dd" />
+
+    <com.umeng.comm.ui.emoji.EmojiBorad
+        android:id="@+id/umeng_comm_emojiview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_comment_edittext"
+        android:visibility="gone" />
+
+</LinearLayout>

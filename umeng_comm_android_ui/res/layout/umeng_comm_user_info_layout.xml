@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由于布局文件跟页面的动画紧密相关，修改请慎重 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <!-- portrait icon -->
+
+        <RelativeLayout
+            android:id="@+id/umeng_comm_portrait_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="120dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="70dp" >
+
+            <!-- 用户头像 -->
+
+            <com.umeng.comm.ui.widgets.RoundImageView
+                android:id="@+id/umeng_comm_user_header"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/umeng_comm_male" />
+
+            <!-- 昵称 -->
+
+            <TextView
+                android:id="@+id/umeng_comm_user_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/umeng_comm_user_header"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="昵称"
+                android:textSize="14sp" />
+            <!-- 关注 or 已关注 -->
+
+            <ToggleButton
+                android:id="@+id/umeng_comm_user_follow"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/umeng_comm_user_name_tv"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/umeng_comm_active_user_togglebutton_bg"
+                android:checked="false"
+                android:textColor="@color/umeng_comm_toogle_color"
+                android:textOff="@string/umeng_comm_follow_topic"
+                android:textOn="@string/umeng_comm_topic_followed"
+                android:textSize="@dimen/text_big14_size" />
+
+            <!-- gender -->
+
+            <ImageView
+                android:id="@+id/umeng_comm_user_gender"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@id/umeng_comm_user_header"
+                android:layout_centerHorizontal="true"
+                android:layout_toRightOf="@id/umeng_comm_user_name_tv"
+                android:contentDescription="@string/umeng_comm_desc"
+                android:paddingBottom="4dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/umeng_comm_gender_male" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/umeng_comm_user_follow"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:id="@+id/umeng_comm_user_albums_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:drawableLeft="@drawable/umeng_comm_album"
+                    android:drawablePadding="3dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@string/umeng_comm_album"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/umeng_comm_user_topic_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/umeng_comm_user_albums_tv"
+                    android:drawableLeft="@drawable/umeng_comm_user_topic"
+                    android:drawablePadding="3dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@string/umeng_comm_topic"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <!-- action bar -->
+
+        <include
+            android:id="@+id/umeng_comm_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            layout="@layout/umeng_comm_setting_title_bar" />
+
+        <include
+            android:id="@+id/umeng_comm_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/umeng_comm_title_layout"
+            layout="@layout/umeng_comm_divide_line" />
+
+        <!-- 三个tab布局 -->
+
+        <LinearLayout
+            android:id="@+id/umeng_comm_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/umeng_comm_portrait_layout"
+            android:background="#cccccc"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/umeng_comm_posted_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="3dp" >
+
+                <TextView
+                    android:id="@+id/umeng_comm_posted_count_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_zero" />
+
+                <TextView
+                    android:id="@+id/umeng_comm_posted_msg_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/umeng_comm_posted_count_tv"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_posted_msg" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/umeng_comm_follow_user_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="3dp" >
+
+                <TextView
+                    android:id="@+id/umeng_comm_follow_user_count_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_zero" />
+
+                <TextView
+                    android:id="@+id/umeng_comm_followed_user_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/umeng_comm_follow_user_count_tv"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_followed_user" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/umeng_comm_my_fans_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/umeng_comm_fans_count_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_zero" />
+
+                <TextView
+                    android:id="@+id/umeng_comm_my_fans_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/umeng_comm_fans_count_tv"
+                    android:gravity="center"
+                    android:text="@string/umeng_comm_my_fans" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- fragment container -->
+
+        <FrameLayout
+            android:id="@+id/umeng_comm_user_info_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/umeng_comm_info_layout" >
+        </FrameLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/umeng_comm_commnet_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        layout="@layout/umeng_comm_comment_layout"
+        android:gravity="center"
+        android:visibility="invisible" />
+
+</FrameLayout>

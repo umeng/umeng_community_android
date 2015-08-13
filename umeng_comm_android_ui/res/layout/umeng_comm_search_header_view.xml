@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ececec"
+    android:gravity="center" >
+
+    <TextView
+        android:id="@+id/umeng_comm_comment_send_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="6dp"
+        android:drawablePadding="2dp"
+        android:textSize="@dimen/text_big16_size"
+        android:text="@string/umeng_comm_search_view_hint"
+        android:background="@drawable/umeng_comm_search_frame_style"
+        android:drawableLeft="@drawable/umeng_comm_search"
+        android:textColor="#999999" />
+
+</FrameLayout>

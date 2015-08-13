@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@android:color/white"
+    android:gravity="left"
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp" >
+
+    <ImageButton
+        android:id="@+id/umeng_comm_title_back_btn"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/umeng_comm_back_bt"
+        android:contentDescription="@string/umeng_comm_new_post" >
+    </ImageButton>
+
+    <TextView
+        android:id="@+id/umeng_comm_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="@string/umeng_comm_user_center"
+        android:textSize="@dimen/text_big16_size" />
+
+    <ImageButton
+        android:id="@+id/umeng_comm_title_setting_btn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/umeng_comm_setting_bt"
+        android:contentDescription="@string/umeng_comm_new_post" >
+    </ImageButton>
+
+</RelativeLayout>

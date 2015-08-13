@@ -1,0 +1,15 @@
+*.project
+*.classpath
+local.properties
+*/local.properties
+project.properties
+bin/
+gen/
+*.DS_Store
+*/bin/
+*/gen/
+*.apk
+.settings/
+scripts/output/
+*/scripts/output/
+*/.settings/

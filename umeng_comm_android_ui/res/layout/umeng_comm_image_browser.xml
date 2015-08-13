@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <GridView
+        android:id="@+id/umeng_comm_image_browser_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:cacheColorHint="@android:color/transparent"
+        android:fadingEdge="none"
+        android:gravity="center"
+        android:horizontalSpacing="@dimen/image_item_space"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="@dimen/image_item_space" >
+    </GridView>
+
+    <!-- 分割线 -->
+
+    <View
+        android:id="@+id/umeng_comm_image_browser_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/umeng_comm_divider" />
+
+    <!-- 确认和预览 -->
+
+    <RelativeLayout
+        android:id="@+id/umeng_comm_image_header"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" >
+
+        <TextView
+            android:id="@+id/umeng_comm_image_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/umeng_comm_prev"
+            android:textSize="@dimen/text_big18_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/umeng_comm_camera"
+            android:textSize="@dimen/text_big14_size"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/umeng_comm_image_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="@string/umeng_comm_ok"
+            android:textSize="@dimen/text_big18_size" />
+    </RelativeLayout>
+
+</LinearLayout>

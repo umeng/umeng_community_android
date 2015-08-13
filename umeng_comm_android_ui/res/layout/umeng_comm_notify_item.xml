@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/umeng_comm_list_item_bgcolor"
+    android:minHeight="64dp"
+    android:padding="10dp" >
+
+    <com.umeng.comm.ui.widgets.RoundImageView
+        android:id="@+id/umeng_comm_notify_user_imageview"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/umeng_comm_desc"
+        android:src="@drawable/umeng_comm_male" />
+
+    <TextView
+        android:id="@+id/umeng_comm_notify_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="6dp"
+        android:text="昨天"
+        android:textColor="@color/umeng_comm_text_share_content"
+        android:textSize="@dimen/text_big14_size" />
+
+    <TextView
+        android:id="@+id/umeng_comm_notify_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/umeng_comm_notify_time_tv"
+        android:layout_toRightOf="@id/umeng_comm_notify_user_imageview"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="用户名"
+        android:textSize="@dimen/text_big16_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/umeng_comm_notify_desc_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_notify_name_tv"
+        android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@id/umeng_comm_notify_time_tv"
+        android:layout_toRightOf="@id/umeng_comm_notify_user_imageview"
+        android:text="通知信息"
+        android:textSize="@dimen/text_big13_size" />
+
+</RelativeLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">友盟微社区</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="feed_detail">feed详情页面</string>
+    <string name="msg">进入友盟社区</string>
+    <string name="user_info">用户信息页面</string>
+    <string name="search_topic">话题搜索</string>
+    <string name="select_location">话题搜索</string>
+    <string name="follow_topic">话题搜索</string>
+
+</resources>

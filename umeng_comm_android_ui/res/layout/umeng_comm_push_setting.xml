@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp" >
+
+    <RelativeLayout
+        android:id="@+id/umeng_comm_push_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" >
+
+        <TextView
+            android:id="@+id/umeng_comm_push_setting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:text="@string/umeng_comm_setting_push"
+            android:textSize="@dimen/text_big16_size" />
+
+        <com.umeng.comm.ui.widgets.SwitchButton
+            android:id="@+id/umeng_common_switch_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp" />
+    </RelativeLayout>
+
+</RelativeLayout>
