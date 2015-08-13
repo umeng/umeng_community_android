@@ -25,11 +25,11 @@
 5. 先进的anti-spam，自动肃清垃圾信息；
 
 
-如图1-1、图1-2是云图TV的集成效果。        
+如图1-1、图1-2是卡360钱包的集成效果。        
 
-| ![p1](images/yuntu_1.jpeg) | ![p2](images/yuntu_2.jpeg)|
+| ![p1](images/demo_1.jpg) | ![p2](images/demo_2.jpg)|
 :---:|:-----:|
-| 图1-1 | 图1-2 |
+| 图1-1 Feed页面 | 图1-2 话题页面 |
 
 更多详情请移步[友盟微社区官方网站](http://wsq.umeng.com/) 。
 
