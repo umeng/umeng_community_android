@@ -35,6 +35,7 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
     private FollowDBAPI mFollowDBAPI = DatabaseAPI.getInstance().getFollowDBAPI();
     protected String nextPageUrl;
     private boolean hasRefresh = false;
+    protected boolean isFollowPage = true;
 
     public FollowedUserFgPresenter(MvpFollowedUserView followedUserView, String uid) {
         this.mFollowedUserView = followedUserView;
@@ -90,7 +91,7 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
 
     private DefalutReceiver mReceiver = new DefalutReceiver() {
         public void onReceiveUser(Intent intent) {
-            if (mUid.equals(CommConfig.getConfig().loginedUser.id)) {
+            if (isFollowPage && mUid.equals(CommConfig.getConfig().loginedUser.id)) {
                 CommUser user = getUser(intent);// 取消关注某个用户
                 BROADCAST_TYPE type = getType(intent);
                 onUserFollowStateChange(user, type);
@@ -177,9 +178,11 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
      */
     protected void onUserFollowStateChange(CommUser user, BROADCAST_TYPE type) {
         List<CommUser> dataSource = mFollowedUserView.getBindDataSource();
-        if (type == BROADCAST_TYPE.TYPE_USER_FOLLOW) {
-            dataSource.add(user);
-            mFollowDBAPI.follow(user);
+        if (type == BROADCAST_TYPE.TYPE_USER_FOLLOW ) {
+            if (!dataSource.contains(user)) {
+                dataSource.add(user);
+                mFollowDBAPI.follow(user);
+            }
         } else {
             dataSource.remove(user);
             // 从DB中移除

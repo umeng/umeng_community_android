@@ -24,6 +24,9 @@
 
 package com.umeng.comm.ui.dialogs;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
@@ -33,6 +36,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.constants.Constants;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
 import com.umeng.comm.core.imageloader.ImgDisplayOption;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
@@ -42,8 +46,6 @@ import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.ui.adapters.PickerAdapter;
 import com.umeng.comm.ui.adapters.viewholders.FriendItemViewHolder;
-
-import java.util.List;
 
 /**
  * 发布Feed时@好友的Dialog
@@ -57,6 +59,8 @@ public class AtFriendDialog extends PickerDialog<CommUser> {
      * @ 好友的下一页url地址。每次从server获取好友列表时，都能够拿到该url，因此不cache到DB
      */
     private String mNextPageUrl;
+    
+    private volatile AtomicBoolean mUpdateNextPageUrl = new AtomicBoolean(true);
 
     public AtFriendDialog(Context context) {
         this(context, 0);
@@ -134,6 +138,10 @@ public class AtFriendDialog extends PickerDialog<CommUser> {
             @Override
             public void onComplete(FansResponse resp) {
                 mRefreshLvLayout.setRefreshing(false);
+                if (resp.errCode == ErrorCode.NO_ERROR && mUpdateNextPageUrl.get() ) {
+                    mNextPageUrl = resp.nextPageUrl;
+                    mUpdateNextPageUrl.set(false);
+                }
                 handleResultData(resp);
             }
         });
@@ -155,6 +163,9 @@ public class AtFriendDialog extends PickerDialog<CommUser> {
                     @Override
                     public void onComplete(FansResponse data) {
                         mRefreshLvLayout.setLoading(false);
+                        if ( data.errCode == ErrorCode.NO_ERROR ) {
+                            mNextPageUrl = data.nextPageUrl;
+                        }
                         handleResultData(data);
                     }
                 });
@@ -184,7 +195,6 @@ public class AtFriendDialog extends PickerDialog<CommUser> {
         List<CommUser> sourceList = mAdapter.getDataSource();
         users.removeAll(sourceList);
         mAdapter.addData(users);
-        mNextPageUrl = response.nextPageUrl;
 
         // 将我关注的好友的owner id 设置为当前用户的id.
         for (CommUser commUser : users) {

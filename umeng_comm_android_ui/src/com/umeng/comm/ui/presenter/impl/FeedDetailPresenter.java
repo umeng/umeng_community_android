@@ -44,6 +44,7 @@ import com.umeng.comm.ui.mvpview.MvpLikeView;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Feed详情页的Presenter
@@ -59,6 +60,7 @@ public class FeedDetailPresenter extends BaseFeedPresenter {
 
     CommentPresenter mCommentPresenter;
     LikePresenter mLikePresenter;
+    volatile AtomicBoolean mUpdateNextPageUrl = new AtomicBoolean(true);
 
     public FeedDetailPresenter(Context context, MvpFeedDetailView feedDetailView,
             MvpLikeView likeView, MvpCommentView commentView) {
@@ -138,7 +140,10 @@ public class FeedDetailPresenter extends BaseFeedPresenter {
                     return;
                 }
 
-                parseNextPage(response.result);
+                if ( TextUtils.isEmpty(mNextPageUrl) && mUpdateNextPageUrl.get() ) {
+                    mNextPageUrl = response.nextPageUrl;
+                    mUpdateNextPageUrl.set(false);
+                }
                 List<Comment> comments = response.result;
                 comments.removeAll(mFeedItem.comments);
                 mFeedItem.comments.addAll(comments);
@@ -150,10 +155,6 @@ public class FeedDetailPresenter extends BaseFeedPresenter {
                 saveCommentsToDB(response.result);
             }
         });
-    }
-
-    private void parseNextPage(List<Comment> result) {
-        mNextPageUrl = result.size() > 0 ? result.get(0).nextPageUrl : "";
     }
 
     public void loadMoreComments() {
@@ -168,7 +169,7 @@ public class FeedDetailPresenter extends BaseFeedPresenter {
                     @Override
                     public void onComplete(CommentResponse response) {
                         if (response.errCode == ErrorCode.NO_ERROR) {
-                            parseNextPage(response.result);
+                            mNextPageUrl = response.nextPageUrl;
                             mCommentView.loadMoreComment(response.result);
                             saveCommentsToDB(response.result);
                         } else {

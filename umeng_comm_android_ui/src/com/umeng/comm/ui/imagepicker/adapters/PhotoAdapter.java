@@ -26,8 +26,7 @@ public class PhotoAdapter extends MBaseAdapter<PhotoModel> {
     }
 
     public PhotoAdapter(Context context, ArrayList<PhotoModel> models, int screenWidth,
-            onPhotoItemCheckedListener listener, onItemClickListener clickListener,
-            OnClickListener cameraListener) {
+            onPhotoItemCheckedListener listener, onItemClickListener clickListener) {
         this(context, models);
         this.listener = listener;
         this.mClickListener = clickListener;
@@ -59,7 +58,7 @@ public class PhotoAdapter extends MBaseAdapter<PhotoModel> {
         return convertView;
     }
 
-    public void setonItemClickListener(onItemClickListener clickListener) {
+    public void setOnItemClickListener(onItemClickListener clickListener) {
         this.mClickListener = clickListener;
     }
 }

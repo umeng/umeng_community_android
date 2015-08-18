@@ -24,8 +24,11 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.text.TextUtils;
 
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.FeedCommentResponse;
 import com.umeng.comm.ui.mvpview.MvpFeedView;
@@ -35,6 +38,7 @@ import com.umeng.comm.ui.mvpview.MvpFeedView;
  */
 public class CommentReceivedPresenter extends FeedListPresenter {
 
+    protected volatile AtomicBoolean mUpdateNextPageUrl = new AtomicBoolean(true);
     public CommentReceivedPresenter(MvpFeedView feedViewInterface) {
         super(feedViewInterface);
     }
@@ -54,9 +58,12 @@ public class CommentReceivedPresenter extends FeedListPresenter {
 
         @Override
         public void onComplete(FeedCommentResponse response) {
-            mNextPageUrl = response.nextPageUrl;
-            mFeedView.onRefreshEnd();
+            if ( TextUtils.isEmpty(mNextPageUrl) && mUpdateNextPageUrl.get() ) {
+                mNextPageUrl = response.nextPageUrl;
+                mUpdateNextPageUrl.set(false);
+            }
             addFeedItemsToHeader(response.result);
+            mFeedView.onRefreshEnd();
         }
     };
 
@@ -70,6 +77,10 @@ public class CommentReceivedPresenter extends FeedListPresenter {
                 new SimpleFetchListener<FeedCommentResponse>() {
                     @Override
                     public void onComplete(FeedCommentResponse response) {
+                        if ( response.errCode != ErrorCode.NO_ERROR ) {
+                            return ;
+                        }
+                        mNextPageUrl = response.nextPageUrl;
                         appendFeedItems(response.result);
                         mFeedView.onRefreshEnd();
                     }

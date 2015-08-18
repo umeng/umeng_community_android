@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -122,7 +121,6 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView {
     protected int getItemLayout() {
         return ResFinder.getLayout("umeng_comm_feed_lv_item");
     }
-    
 
     @Override
     protected void initWidgets() {
@@ -392,7 +390,8 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView {
                 mImageGv.setVisibility(View.GONE);
             }
             // 如果该feed是收藏，且转发feed、原feed都被删除，则不显示原feed的状态
-            if(item.status >=FeedItem.STATUS_SPAM && item.sourceFeed.status >=FeedItem.STATUS_SPAM){
+            if (item.status >= FeedItem.STATUS_SPAM
+                    && item.sourceFeed.status >= FeedItem.STATUS_SPAM) {
                 mForwardLayout.setVisibility(View.GONE);
             } else {
                 // 删除被转发的feed
@@ -642,5 +641,4 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView {
         mDistanceTextView.setVisibility(View.VISIBLE);
     }
 
-   
 }

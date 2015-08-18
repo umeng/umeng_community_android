@@ -138,3 +138,8 @@ LoginSDKManager.getInstance().addAndUse(new SocialLoginImpl()) ;
 ```
 
 通过这几步，登录系统就注入到微社区SDK中了。当友盟微社区需要登录时，微社区SDK就会通过LoginSDKManager的getCurrentSDK()函数获取用户指定的登录实现，然后触发对应的`login()`函数，此时就会执行你的登录流程。登录成功之后，通过`login()`函数的回调listener ( 这个简单示例中没有给出该listener, 具体可参考 [友盟微社区使用已有账户系统](http://dev.umeng.com/wsq/android/detail-integration#1) ) 将用户信息传回给友盟SDK，就完成了整个登录过程。
+
+
+**登录流程最终如下图所示 :** 
+
+![](../images/login-flow.jpg)

@@ -26,6 +26,7 @@ package com.umeng.comm.core.db.ctrl.impl;
 
 import android.text.TextUtils;
 
+import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.umeng.comm.core.beans.CommUser;
@@ -172,13 +173,7 @@ class FeedDBAPIImpl extends AbsDbAPI<List<FeedItem>> implements FeedDBAPI {
 
     @Override
     public void deleteAllFeedsFromDB() {
-        submit(new DbCommand() {
-
-            @Override
-            protected void execute() {
-                new Delete().from(FeedItem.class).where("category='NORMAL'").execute();
-            }
-        });
+        submit(new DeleteAllFeedItemCmd());
     }
 
     @Override
@@ -356,4 +351,80 @@ class FeedDBAPIImpl extends AbsDbAPI<List<FeedItem>> implements FeedDBAPI {
                 .execute();
     }
 
+    /**
+     * 删除Feed相关的Like、评论、feed-topic、feed-friend等关系记录,评论、赞本书的数据也会被删除
+     */
+    class DeleteAllFeedItemCmd extends DbCommand {
+
+        @Override
+        protected void execute() {
+            try {
+                removeFeedRelativeItems();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            // 删除Feed本身的数据
+            new Delete().from(FeedItem.class).where("category='NORMAL'").execute();
+        }
+
+        @SuppressWarnings("unchecked")
+        private Class<? extends Model> refectModelClz(String className)
+                throws ClassNotFoundException {
+            return (Class<? extends Model>) Class.forName(className);
+        }
+
+        private void removeFeedRelativeItems() throws ClassNotFoundException {
+            // 获取所有缓存的Feed
+            List<FeedItem> cacheFeedItems = new Select().from(FeedItem.class)
+                    .where("category='NORMAL'").execute();
+
+            Class<? extends Model> feedLikeClass = refectModelClz("com.umeng.comm.core.beans.relation.FeedLike");
+            Class<? extends Model> feedCommentClass = refectModelClz("com.umeng.comm.core.beans.relation.FeedComment");
+            Class<? extends Model> feedTopicClass = refectModelClz("com.umeng.comm.core.beans.relation.FeedTopic");
+            Class<? extends Model> feedCreatorClass = refectModelClz("com.umeng.comm.core.beans.relation.FeedCreator");
+            Class<? extends Model> feedFriendClass = refectModelClz("com.umeng.comm.core.beans.relation.FeedFriends");
+
+            for (FeedItem feedItem : cacheFeedItems) {
+                // 移除like相关
+                removeRelativeLike(feedItem.id, feedLikeClass);
+                // 移除Feed相关的Comment
+                removeRelativeComment(feedItem.id, feedCommentClass);
+                new Delete().from(feedTopicClass).where("feed_id=?", feedItem.id)
+                        .execute();
+                new Delete().from(feedCreatorClass).where("feed_id=?", feedItem.id)
+                        .execute();
+                new Delete().from(feedFriendClass).where("feed_id=?", feedItem.id)
+                        .execute();
+            }
+        }
+
+        private void removeRelativeLike(String feedId, Class<? extends Model> feedLikeClass)
+                throws ClassNotFoundException {
+            List<Like> likes = new Select().from(Like.class).innerJoin(feedLikeClass)
+                    .on("like._id=feed_like.like_id").where("feed_like.feed_id=?", feedId)
+                    .execute();
+            // 删除feed_like表中的记录
+
+            new Delete().from(feedLikeClass).where("feed_id=?", feedId);
+            Class<? extends Model> likeCreatorClz = feedLikeClass = refectModelClz("com.umeng.comm.core.beans.relation.LikeCreator");
+            for (Like like : likes) {
+                new Delete().from(likeCreatorClz).where("like_id=?", like.id).execute();
+                new Delete().from(Like.class).where("_id=?", like.id).execute();
+            }
+        }
+
+        private void removeRelativeComment(String feedId,
+                Class<? extends Model> feedCommentClass)
+                throws ClassNotFoundException {
+            List<Comment> comments = new Select().from(Comment.class)
+                    .innerJoin(feedCommentClass)
+                    .on("comment._id=feed_comment.comment_id")
+                    .where("feed_comment.feed_id=?", feedId)
+                    .execute();
+            for (Comment comment : comments) {
+                new Delete().from(feedCommentClass).where("comment_id=?", comment.id).execute();
+                new Delete().from(Comment.class).where("_id=?", comment.id).execute();
+            }
+        }
+    }
 }

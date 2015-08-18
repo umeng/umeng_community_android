@@ -37,7 +37,6 @@ public class CommentPostedPresenter extends CommentReceivedPresenter {
 
     @Override
     public void loadDataFromServer() {
-
         mCommunitySDK.fetchPostedComments(0, mCommentListener);
     }
 

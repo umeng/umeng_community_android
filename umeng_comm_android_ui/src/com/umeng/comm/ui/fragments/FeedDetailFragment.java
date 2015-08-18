@@ -501,6 +501,7 @@ public class FeedDetailFragment extends CommentEditFragment<List<FeedItem>, Feed
     @Override
     public void loadMoreComment(List<Comment> comments) {
         mRefreshLayout.setLoading(false);
+        comments.removeAll(mCommentAdapter.getDataSource());
         mCommentAdapter.addData(comments);
         // 存储数据
         mFeedItem.comments.addAll(comments);

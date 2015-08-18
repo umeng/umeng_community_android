@@ -73,7 +73,8 @@ public class FeedContentPresenter extends BaseFeedPresenter {
 
     public void clickOriginFeedItem(FeedItem feedItem) {
         mFeedItem = feedItem;
-        if (mFeedItem.sourceFeed.status >= FeedItem.STATUS_SPAM) {
+        if (mFeedItem.sourceFeed != null
+                && mFeedItem.sourceFeed.status >= FeedItem.STATUS_SPAM) {
             ToastMsg.showShortMsg(mContext,
                     ResFinder.getString("umeng_comm_feed_deleted"));
             return;

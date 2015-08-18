@@ -24,9 +24,12 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.text.TextUtils;
 
 import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.LikeMeResponse;
 import com.umeng.comm.ui.mvpview.MvpFeedView;
@@ -36,6 +39,8 @@ import com.umeng.comm.ui.mvpview.MvpFeedView;
  */
 public class LikeMePresenter extends FeedListPresenter {
 
+    private volatile AtomicBoolean mUpdateNextPageUrl = new AtomicBoolean(true);
+    
     public LikeMePresenter(MvpFeedView feedViewInterface) {
         super(feedViewInterface);
     }
@@ -53,9 +58,15 @@ public class LikeMePresenter extends FeedListPresenter {
 
                     @Override
                     public void onComplete(LikeMeResponse response) {
-                        mNextPageUrl = response.nextPageUrl;
-                        mFeedView.onRefreshEnd();
+                        if(response.errCode != ErrorCode.NO_ERROR ){
+                            return ;
+                        }
+                        if ( TextUtils.isEmpty(mNextPageUrl) && mUpdateNextPageUrl.get() ) {
+                            mNextPageUrl = response.nextPageUrl;
+                            mUpdateNextPageUrl.set(false);
+                        }
                         addFeedItemsToHeader(response.result);
+                        mFeedView.onRefreshEnd();
                     }
                 });
     }
@@ -70,12 +81,13 @@ public class LikeMePresenter extends FeedListPresenter {
                 new SimpleFetchListener<LikeMeResponse>() {
                     @Override
                     public void onComplete(LikeMeResponse response) {
-                        mFeedView.onRefreshEnd();
                         if (mFeedView.handleResponse(response)) {
+                            mFeedView.onRefreshEnd();
                             return;
                         }
-
+                        mNextPageUrl = response.nextPageUrl;
                         appendFeedItems(response.result);
+                        mFeedView.onRefreshEnd();
                     }
                 });
     }

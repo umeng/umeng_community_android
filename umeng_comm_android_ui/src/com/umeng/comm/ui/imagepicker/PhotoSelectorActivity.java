@@ -20,14 +20,14 @@ import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.sdkmanager.ImageLoaderManager;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ToastMsg;
-import com.umeng.comm.ui.R;
+import com.umeng.comm.core.utils.ResFinder.ResType;
 import com.umeng.comm.ui.imagepicker.adapters.AlbumAdapter;
 import com.umeng.comm.ui.imagepicker.adapters.PhotoAdapter;
 import com.umeng.comm.ui.imagepicker.domain.PhotoSelectorDomain;
 import com.umeng.comm.ui.imagepicker.model.AlbumModel;
 import com.umeng.comm.ui.imagepicker.model.PhotoModel;
 import com.umeng.comm.ui.imagepicker.util.AnimationUtil;
-import com.umeng.comm.ui.imagepicker.util.CommonUtils;
+import com.umeng.comm.ui.imagepicker.util.ImagePickerUtils;
 import com.umeng.comm.ui.imagepicker.widgets.PhotoItemViewHolder;
 import com.umeng.comm.ui.imagepicker.widgets.PhotoItemViewHolder.onItemClickListener;
 import com.umeng.comm.ui.imagepicker.widgets.PhotoItemViewHolder.onPhotoItemCheckedListener;
@@ -67,62 +67,18 @@ public class PhotoSelectorActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RECCENT_PHOTO = getResources().getString(R.string.umeng_comm_recent_photos);
+        RECCENT_PHOTO = ResFinder.getString("umeng_comm_recent_photos");
         requestWindowFeature(Window.FEATURE_NO_TITLE);//
         setContentView(ResFinder.getLayout("umeng_comm_imagepicker_photoselector"));
 
         parseIntentExtra(getIntent());
         initWidgets();
-        initImageLoader();
         initPhotoGridView();
         initAlbumListView();
 
         photoSelectorDomain = new PhotoSelectorDomain(getApplicationContext());
         photoSelectorDomain.getReccent(reccentListener); // 鏇存柊鏈�杩戠収鐗�
         photoSelectorDomain.updateAlbum(albumListener); // 璺熸柊鐩稿唽淇℃伅
-    }
-
-    private void initImageLoader() {
-        // DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
-        // .showImageOnLoading(R.drawable.umeng_comm_not_found)
-        // .showImageOnFail(R.drawable.umeng_comm_not_found)
-        // .cacheInMemory(true).cacheOnDisk(true)
-        // .resetViewBeforeLoading(true).considerExifParams(false)
-        // .bitmapConfig(Bitmap.Config.RGB_565).build();
-        //
-        // ImageLoaderConfiguration config = new
-        // ImageLoaderConfiguration.Builder(
-        // this)
-        // .memoryCacheExtraOptions(400, 400)
-        // // default = device screen dimensions
-        // .diskCacheExtraOptions(400, 400, null)
-        // .threadPoolSize(5)
-        // // default Thread.NORM_PRIORITY - 1
-        // .threadPriority(Thread.NORM_PRIORITY)
-        // // default FIFO
-        // .tasksProcessingOrder(QueueProcessingType.LIFO)
-        // // default
-        // .denyCacheImageMultipleSizesInMemory()
-        // .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
-        // .memoryCacheSize(2 * 1024 * 1024)
-        // .memoryCacheSizePercentage(13)
-        // // default
-        // .diskCache(
-        // new UnlimitedDiscCache(StorageUtils.getCacheDirectory(
-        // this, true)))
-        // // default
-        // .diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
-        // .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-        // // default
-        // .imageDownloader(new BaseImageDownloader(this))
-        // // default
-        // .imageDecoder(new BaseImageDecoder(false))
-        // // default
-        // .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-        // // default
-        // .defaultDisplayImageOptions(imageOptions).build();
-        //
-        // ImageLoader.getInstance().init(config);
     }
 
     private void initWidgets() {
@@ -146,8 +102,8 @@ public class PhotoSelectorActivity extends Activity implements
 
     private void initPhotoGridView() {
         mPhotoAdapter = new PhotoAdapter(getApplicationContext(),
-                new ArrayList<PhotoModel>(), CommonUtils.getWidthPixels(this),
-                this, this, this);
+                new ArrayList<PhotoModel>(), ImagePickerUtils.getWidthPixels(this),
+                this, this);
         mPhotosGridView.setAdapter(mPhotoAdapter);
     }
 
@@ -188,7 +144,7 @@ public class PhotoSelectorActivity extends Activity implements
         else if (v.getId() == ResFinder.getId("umeng_comm_tv_album_ar"))
             album();
         else if (v.getId() == ResFinder.getId("umeng_comm_tv_preview_ar"))
-            priview();
+            preview();
         else if (v.getId() == ResFinder.getId("umeng_comm_bv_back_lh"))
             finish();
     }
@@ -196,7 +152,7 @@ public class PhotoSelectorActivity extends Activity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
-            PhotoModel photoModel = new PhotoModel(CommonUtils.query(
+            PhotoModel photoModel = new PhotoModel(ImagePickerUtils.query(
                     getApplicationContext(), data.getData()));
             // ///////////////////////////////////////////////////////////////////////////////////////////
             if (mSelectedPhotos.size() >= MAX_IMAGE) {
@@ -229,11 +185,10 @@ public class PhotoSelectorActivity extends Activity implements
         finish();
     }
 
-    /** 棰勮鐓х墖 */
-    private void priview() {
+    private void preview() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("photos", mSelectedPhotos);
-        CommonUtils.launchActivity(this, PhotoPreviewActivity.class, bundle);
+        ImagePickerUtils.launchActivity(this, PhotoPreviewActivity.class, bundle);
     }
 
     private void album() {
@@ -244,38 +199,31 @@ public class PhotoSelectorActivity extends Activity implements
         }
     }
 
-    /** 寮瑰嚭鐩稿唽鍒楄〃 */
     private void popAlbum() {
         layoutAlbum.setVisibility(View.VISIBLE);
-        new AnimationUtil(getApplicationContext(), R.anim.umeng_comm_translate_up_current)
+        new AnimationUtil(getApplicationContext(), ResFinder.getResourceId(ResType.ANIM, "umeng_comm_translate_up_current"))
                 .setLinearInterpolator().startAnimation(layoutAlbum);
     }
 
-    /** 闅愯棌鐩稿唽鍒楄〃 */
     private void hideAlbum() {
-        new AnimationUtil(getApplicationContext(), R.anim.umeng_comm_translate_down)
+        new AnimationUtil(getApplicationContext(), ResFinder.getResourceId(ResType.ANIM, "umeng_comm_translate_down"))
                 .setLinearInterpolator().startAnimation(layoutAlbum);
         layoutAlbum.setVisibility(View.GONE);
     }
-
-    // private void reset() {
-    // mSelectedPhotos.clear();
-    // tvNumber.setText("(0)");
-    // tvPreview.setEnabled(false);
-    // }
 
     /** 点击查看照片 */
     @Override
     public void onItemClick(int position) {
         Bundle bundle = new Bundle();
-        if (tvAlbum.getText().toString().equals(RECCENT_PHOTO)) {
-            bundle.putInt("position", position - 1);
-        }
-        else {
-            bundle.putInt("position", position);
-        }
+        // if (tvAlbum.getText().toString().equals(RECCENT_PHOTO)) {
+        // bundle.putInt("position", position - 1);
+        // }
+        // else {
+        // bundle.putInt("position", position);
+        // }
+        bundle.putInt("position", position);
         bundle.putString("album", tvAlbum.getText().toString());
-        CommonUtils.launchActivity(this, PhotoPreviewActivity.class, bundle);
+        ImagePickerUtils.launchActivity(this, PhotoPreviewActivity.class, bundle);
     }
 
     @Override

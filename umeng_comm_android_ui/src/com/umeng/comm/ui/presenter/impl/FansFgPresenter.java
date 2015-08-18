@@ -27,6 +27,7 @@ public class FansFgPresenter extends FollowedUserFgPresenter {
      */
     public FansFgPresenter(MvpFollowedUserView followedUserView, String uid) {
         super(followedUserView, uid);
+        isFollowPage = false;
         mFansDBAPI = DatabaseAPI.getInstance().getFansDBAPI();
     }
 

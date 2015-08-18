@@ -24,6 +24,11 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.List;
+
+import android.text.TextUtils;
+
+import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.beans.FeedItem.CATEGORY;
 import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
@@ -57,6 +62,14 @@ public class RecommendFeedPresenter extends FeedListPresenter {
 
     @Override
     public void loadMoreData() {
+    }
+    
+    @Override
+    protected void saveDataToDB(List<FeedItem> newFeedItems) {
+        // 未登录的情况下，不保存推荐数据
+        if ( !TextUtils.isEmpty(CommConfig.getConfig().loginedUser.id) ) {
+            super.saveDataToDB(newFeedItems);
+        }
     }
 
 }

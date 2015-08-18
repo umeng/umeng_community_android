@@ -25,6 +25,7 @@
 package com.umeng.comm.ui.presenter.impl;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.nets.responses.FeedsResponse;
@@ -51,6 +52,10 @@ public class LocationFeedPresenter extends FriendFeedPresenter {
 
     @Override
     public void loadDataFromServer() {
+        if ( mLocation == null ) {
+            Log.d("", "####obtain location is null...");
+            return ;
+        }
         mCommunitySDK.fetchNearByFeed(mLocation, mRefreshListener);
     }
     

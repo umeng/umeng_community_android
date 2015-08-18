@@ -24,8 +24,11 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.text.TextUtils;
 
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.LikesResponse;
 import com.umeng.comm.core.nets.uitls.NetworkUtils;
@@ -37,6 +40,7 @@ public class LikeUserActivityPresenter extends BasePresenter {
     MvpLikeUserView mView;
     String mFeedId;
     String mNextPageUrl;
+    volatile AtomicBoolean mFromRefresh = new AtomicBoolean(true); //【此时在下拉刷新，然后立即滑动到底部加载更多可能出现问题】
 
     public LikeUserActivityPresenter(MvpLikeUserView view, String feedId) {
         mView = view;
@@ -44,6 +48,7 @@ public class LikeUserActivityPresenter extends BasePresenter {
     }
 
     public void loadLikeUserFromServer() {
+        mFromRefresh.set(true); // 刷新不需要更新下一页地址
         mCommunitySDK.fetchFeedLikes(mFeedId, mFetchListener);
     }
 
@@ -52,6 +57,7 @@ public class LikeUserActivityPresenter extends BasePresenter {
             mView.onRefreshEnd();
             return;
         }
+        mFromRefresh.set(false);// 加载更多需要更新下一页地址
         mCommunitySDK.fetchNextPageData(mNextPageUrl, LikesResponse.class, mFetchListener);
     }
     
@@ -63,12 +69,17 @@ public class LikeUserActivityPresenter extends BasePresenter {
 
         @Override
         public void onComplete(LikesResponse response) {
-            mView.onRefreshEnd();
+            if ( response.errCode != ErrorCode.NO_ERROR ) {
+                return ;
+            }
+            if (!mFromRefresh.get()) {
+                mNextPageUrl = response.nextPageUrl;
+            }
             if (NetworkUtils.handleResponse(mContext, response)) {
                 return;
             }
-            mNextPageUrl = response.nextPageUrl;
             mView.fetchLikeUsers(response.result);
+            mView.onRefreshEnd();
         }
     };
 }

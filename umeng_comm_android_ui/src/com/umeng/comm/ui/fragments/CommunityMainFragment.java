@@ -167,6 +167,7 @@ public class CommunityMainFragment extends BaseFragment<Void, UnReadMsgPresenter
     @Override
     public void onResume() {
         super.onResume();
+        MessageCount.calculateTotal();
         if (mUnreadMsg.unReadTotal > 0) {
             mBadgeView.setVisibility(View.VISIBLE);
         } else {

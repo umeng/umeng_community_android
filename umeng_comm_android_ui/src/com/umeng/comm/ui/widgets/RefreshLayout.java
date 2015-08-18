@@ -41,7 +41,6 @@ import com.umeng.comm.core.utils.ResFinder.ResType;
  * 继承自SwipeRefreshLayout,从而实现滑动到底部时上拉加载更多的功能. 注意 :
  * 在下拉刷新完成时需要调用RefreshLayout的setRefreshing(false)方法来停止刷新过程；
  * 在上拉加载更多完成时需要调用setLoading(false)来标识加载完成。
- * 
  */
 public abstract class RefreshLayout<T extends AbsListView> extends SwipeRefreshLayout implements
         OnScrollListener {
@@ -140,8 +139,12 @@ public abstract class RefreshLayout<T extends AbsListView> extends SwipeRefreshL
     @SuppressWarnings("unchecked")
     protected void getRefreshView() {
         int childs = getChildCount();
-        if (childs > 0) {
-            View childView = getChildAt(0);
+        if (childs <= 0) {
+            return;
+        }
+        View childView = null;
+        for (int i = 0; i < childs; i++) {
+            childView = getChildAt(i);
             if (childView instanceof AbsListView) {
                 mAbsListView = (T) childView;
                 // 设置滚动监听器给ListView, 使得滚动的情况下也可以自动加载
@@ -212,6 +215,9 @@ public abstract class RefreshLayout<T extends AbsListView> extends SwipeRefreshL
      * 判断是否到了最底部
      */
     private boolean isBottom() {
+        if (mAbsListView == null) {
+            getRefreshView();
+        }
         // 已经到最后一项且可见的第一项>0
         if (mAbsListView != null && mAbsListView.getAdapter() != null) {
             int childCount = mAbsListView.getAdapter().getCount();

@@ -30,6 +30,7 @@ import android.text.TextUtils;
 
 import com.umeng.comm.core.beans.AlbumItem;
 import com.umeng.comm.core.beans.ImageItem;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.AlbumResponse;
@@ -40,12 +41,15 @@ import com.umeng.comm.ui.presenter.BasePresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AlbumPresenter extends BasePresenter implements BaseActivityPresenter {
 
     String mUid;
     MvpAlbumView mAlbumView;
     String mNextPage;
+    
+    private volatile AtomicBoolean mUpdateNextUrl = new AtomicBoolean(true); 
 
     public AlbumPresenter(String uid, MvpAlbumView view) {
         mUid = uid;
@@ -68,6 +72,13 @@ public class AlbumPresenter extends BasePresenter implements BaseActivityPresent
 
             @Override
             public void onComplete(AlbumResponse response) {
+                if ( response.errCode != ErrorCode.NO_ERROR ) {
+                    return ;
+                }
+                if ( TextUtils.isEmpty(mNextPage) && mUpdateNextUrl.get() ) {
+                    mNextPage = response.nextPageUrl;
+                    mUpdateNextUrl.set(false);
+                }
                 deliveryImageItems(response);
             }
         });
@@ -82,8 +93,6 @@ public class AlbumPresenter extends BasePresenter implements BaseActivityPresent
     }
 
     private List<ImageItem> parseNewImageItem(AlbumResponse response) {
-        mNextPage = response.nextPageUrl;
-
         List<ImageItem> newItems = new ArrayList<ImageItem>();
         for (AlbumItem albumItem : response.result) {
             newItems.addAll(albumItem.images);
@@ -100,6 +109,13 @@ public class AlbumPresenter extends BasePresenter implements BaseActivityPresent
 
                         @Override
                         public void onComplete(AlbumResponse response) {
+                            if ( response.errCode != ErrorCode.NO_ERROR ) {
+                                return ;
+                            }
+                            mNextPage = response.nextPageUrl;
+                            if ( !TextUtils.isEmpty(mNextPage) && "null".equals(mNextPage) ) {
+                                mNextPage = "";
+                            }
                             deliveryImageItems(response);
                         }
                     });

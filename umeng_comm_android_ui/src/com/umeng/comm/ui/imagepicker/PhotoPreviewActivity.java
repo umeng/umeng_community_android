@@ -8,7 +8,7 @@ import android.os.Bundle;
 import com.umeng.comm.ui.imagepicker.PhotoSelectorActivity.OnLocalReccentListener;
 import com.umeng.comm.ui.imagepicker.domain.PhotoSelectorDomain;
 import com.umeng.comm.ui.imagepicker.model.PhotoModel;
-import com.umeng.comm.ui.imagepicker.util.CommonUtils;
+import com.umeng.comm.ui.imagepicker.util.ImagePickerUtils;
 
 /**
  * 照片预览Activity
@@ -41,7 +41,7 @@ public class PhotoPreviewActivity extends BasePhotoPreviewActivity implements
         } else if (extras.containsKey("album")) { // 点击图片查看
             String albumName = extras.getString("album"); // 相册
             this.current = extras.getInt("position");
-            if (!CommonUtils.isNull(albumName)
+            if (!ImagePickerUtils.isNull(albumName)
                     && albumName.equals(PhotoSelectorActivity.RECCENT_PHOTO)) {
                 photoSelectorDomain.getReccent(this);
             } else {

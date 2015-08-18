@@ -57,6 +57,7 @@ public class CommentMeAdapter extends LikeMeFeedAdapter {
     @Override
     protected void setItemData(final int position, FeedItemViewHolder holder, View rootView) {
         super.setItemData(position, holder, rootView);
+        holder.mFeedTextTv.setOnClickListener(null);
         if (!showReplyBtn) {
             return;
         }

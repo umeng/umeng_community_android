@@ -58,7 +58,6 @@ public class RecommendFeedFragment extends FeedListFragment<RecommendFeedPresent
         // 没有网络的情况下从数据库加载
         if (!DeviceUtils.isNetworkAvailable(getActivity())) {
             mPresenter.loadDataFromDB();
-            // loadFeedsFromDB();
             return;
         }
         mPresenter.fetchNextPageData();
