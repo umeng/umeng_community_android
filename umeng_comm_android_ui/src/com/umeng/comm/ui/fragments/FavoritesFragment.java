@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.beans.FeedItem.CATEGORY;
 import com.umeng.comm.core.utils.ResFinder;
@@ -98,5 +99,12 @@ public class FavoritesFragment extends FriendsFragment {
     @Override
     protected void dealFavourite(FeedItem feedItem) {
         ((FavoritesFeedPresenter) mPresenter).addFavoutite(feedItem);
+    }
+    
+    /**
+     * 取消关注某个人时，收藏中的feed不需要做相关操作
+     */
+    @Override
+    protected void onCancelFollowUser(CommUser user) {
     }
 }

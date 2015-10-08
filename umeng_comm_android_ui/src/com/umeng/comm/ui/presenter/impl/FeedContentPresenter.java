@@ -24,6 +24,8 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 
@@ -36,13 +38,10 @@ import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.LoginResponse;
 import com.umeng.comm.core.utils.CommonUtils;
-import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.activities.FeedDetailActivity;
 import com.umeng.comm.ui.activities.UserInfoActivity;
 import com.umeng.comm.ui.dialogs.ImageBrowser;
-
-import java.util.List;
 
 /**
  * @author mrsimple
@@ -75,8 +74,7 @@ public class FeedContentPresenter extends BaseFeedPresenter {
         mFeedItem = feedItem;
         if (mFeedItem.sourceFeed != null
                 && mFeedItem.sourceFeed.status >= FeedItem.STATUS_SPAM) {
-            ToastMsg.showShortMsg(mContext,
-                    ResFinder.getString("umeng_comm_feed_deleted"));
+            ToastMsg.showShortMsgByResName("umeng_comm_feed_deleted");
             return;
         }
         gotoFeedDetailActivity(getForwardDetailFeed());
@@ -125,9 +123,12 @@ public class FeedContentPresenter extends BaseFeedPresenter {
 
                     @Override
                     public void onComplete(LoginResponse response) {
+                        // 取消登录情况，不做任何提示
+                        if (response.errCode == ErrorCode.CANCAL_CODE) {
+                            return;
+                        }
                         if (response.errCode != ErrorCode.NO_ERROR) {
-                            ToastMsg.showShortMsgByResName(mContext,
-                                    "umeng_comm_login_failed");
+                            ToastMsg.showShortMsgByResName("umeng_comm_login_failed");
                             return;
                         }
 

@@ -24,6 +24,9 @@
 
 package com.umeng.comm.ui.activities;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
@@ -34,9 +37,6 @@ import android.view.View.OnClickListener;
 import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
 import com.umeng.comm.core.utils.ResFinder;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * 社区主界面, 页面包含消息流主页面、话题选择页面、消息发布页面, 默认为消息流主界面.
@@ -94,7 +94,10 @@ public class FeedsActivity extends BaseFragmentActivity implements OnClickListen
         if (bundle != null) {
             boolean fromLogout = bundle.getBoolean(Constants.FROM_COMMUNITY_LOGOUT);
             if (fromLogout) {
+                // 此时需要将intent的数据更新，避免下次操作将数据带过来~
+                getIntent().putExtra(Constants.FROM_COMMUNITY_LOGOUT, false);
                 mFeedsFragment.cleanAdapterData();
+                mFeedsFragment.repeatLoadDataFromServer();
             }
         }
     }

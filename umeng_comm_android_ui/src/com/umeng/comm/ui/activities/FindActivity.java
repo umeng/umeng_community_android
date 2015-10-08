@@ -24,11 +24,15 @@
 
 package com.umeng.comm.ui.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -96,31 +100,35 @@ public class FindActivity extends BaseFragmentActivity implements OnClickListene
         parseIntentData();
         setupUnreadFeedMsgBadge();
         setupUnReadNotifyBadge();
+        
+        registerInitSuccessBroadcast();
     }
 
     private void parseIntentData() {
         mUser = getIntent().getExtras().getParcelable(Constants.TAG_USER);
         mContainerClass = getIntent().getExtras().getString(Constants.TYPE_CLASS);
-        mUnReadMsg = MessageCount.obtainSingleInstance();
+        mUnReadMsg = CommConfig.getConfig().mMessageCount;
     }
 
+    /**
+     * 设置通知红点</br>
+     */
     private void setupUnReadNotifyBadge() {
-        if (mUnReadMsg != null) {
-            if (mUnReadMsg.unReadNotice > 0) {
-                mNotifyBadgeView.setVisibility(View.VISIBLE);
-            } else {
-                mNotifyBadgeView.setVisibility(View.INVISIBLE);
-            }
+        if (mUnReadMsg.unReadNotice > 0) {
+            mNotifyBadgeView.setVisibility(View.VISIBLE);
+        } else {
+            mNotifyBadgeView.setVisibility(View.INVISIBLE);
         }
     }
 
+    /**
+     * 设置消息数红点</br>
+     */
     private void setupUnreadFeedMsgBadge() {
-        if (mUnReadMsg != null) {
-            if (mUnReadMsg.feedRelativeTotal() > 0) {
-                mMsgBadgeView.setVisibility(View.VISIBLE);
-            } else {
-                mMsgBadgeView.setVisibility(View.GONE);
-            }
+        if (mUnReadMsg.unReadTotal - mUnReadMsg.unReadNotice > 0) {
+            mMsgBadgeView.setVisibility(View.VISIBLE);
+        } else {
+            mMsgBadgeView.setVisibility(View.GONE);
         }
     }
 
@@ -326,4 +334,31 @@ public class FindActivity extends BaseFragmentActivity implements OnClickListene
         }
         return super.onKeyDown(keyCode, event);
     }
+    
+    /**
+     * 注册登录成功时的广播</br>
+     */
+    private void registerInitSuccessBroadcast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_INIT_SUCCESS);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mInitConfigReceiver,
+                filter);
+    }
+
+    private BroadcastReceiver mInitConfigReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mUnReadMsg = CommConfig.getConfig().mMessageCount;
+            setupUnReadNotifyBadge();
+            setupUnreadFeedMsgBadge();
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mInitConfigReceiver);
+        super.onDestroy();
+    }
+    
 }

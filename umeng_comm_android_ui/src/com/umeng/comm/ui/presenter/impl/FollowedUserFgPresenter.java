@@ -4,6 +4,8 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,19 +13,19 @@ import android.text.TextUtils;
 
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.db.ctrl.FollowDBAPI;
 import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.FansResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.ui.mvpview.MvpFollowedUserView;
 import com.umeng.comm.ui.presenter.BaseFragmentPresenter;
 import com.umeng.comm.ui.utils.BroadcastUtils;
 import com.umeng.comm.ui.utils.BroadcastUtils.BROADCAST_TYPE;
 import com.umeng.comm.ui.utils.BroadcastUtils.DefalutReceiver;
-
-import java.util.List;
 
 /**
  * 
@@ -35,7 +37,7 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
     private FollowDBAPI mFollowDBAPI = DatabaseAPI.getInstance().getFollowDBAPI();
     protected String nextPageUrl;
     private boolean hasRefresh = false;
-    protected boolean isFollowPage = true;
+//    protected boolean isFollowPage = true;
 
     public FollowedUserFgPresenter(MvpFollowedUserView followedUserView, String uid) {
         this.mFollowedUserView = followedUserView;
@@ -64,12 +66,16 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
 
             @Override
             public void onComplete(FansResponse response) {
-                final List<CommUser> followedUsers = response.result;
                 // 根据response进行Toast
-                if (mFollowedUserView.handleResponse(response)) {
+                if (NetworkUtils.handleResponseAll(response)) {
                     mFollowedUserView.onRefreshEnd();
+                    if (response.errCode == ErrorCode.NO_ERROR) {
+                        nextPageUrl = "";
+                    }
                     return;
                 }
+
+                final List<CommUser> followedUsers = response.result;
                 // 保存数据
                 if (CommonUtils.isMyself(new CommUser(mUid))) {
                     mFollowDBAPI.follow(followedUsers);
@@ -78,10 +84,8 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
                 // 更新GridView
                 List<CommUser> dataSource = mFollowedUserView.getBindDataSource();
                 followedUsers.removeAll(dataSource);
-                if (followedUsers.size() > 0) {
-                    dataSource.addAll(followedUsers);
-                    mFollowedUserView.notifyDataSetChanged();
-                }
+                dataSource.addAll(followedUsers);
+                mFollowedUserView.notifyDataSetChanged();
                 // 解析下一页地址
                 parseNextpageUrl(response, true);
                 mFollowedUserView.onRefreshEnd();
@@ -91,7 +95,7 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
 
     private DefalutReceiver mReceiver = new DefalutReceiver() {
         public void onReceiveUser(Intent intent) {
-            if (isFollowPage && mUid.equals(CommConfig.getConfig().loginedUser.id)) {
+            if (mUid.equals(CommConfig.getConfig().loginedUser.id)) {
                 CommUser user = getUser(intent);// 取消关注某个用户
                 BROADCAST_TYPE type = getType(intent);
                 onUserFollowStateChange(user, type);
@@ -109,16 +113,13 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
 
     @Override
     public void loadDataFromDB() {
-        if ( !mUid.equals(CommConfig.getConfig().loginedUser.id) ) {
-            return ;
+        if (!mUid.equals(CommConfig.getConfig().loginedUser.id)) {
+            return;
         }
         mFollowDBAPI.loadFollowedUsersFromDB(mUid, new
                 SimpleFetchListener<List<CommUser>>() {
                     @Override
                     public void onComplete(List<CommUser> fans) {
-                        if (hasRefresh) {
-
-                        }
                         if (CommonUtils.isActivityAlive(convertContextToActivity())
                                 && !CommonUtils.isListEmpty(fans)) {
                             List<CommUser> dataSource = mFollowedUserView.getBindDataSource();
@@ -145,15 +146,19 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
 
                     @Override
                     public void onComplete(FansResponse response) {
-                        mFollowedUserView.onRefreshEnd();
                         // 根据response进行Toast
-                        if (mFollowedUserView.handleResponse(response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
+                            if (response.errCode == ErrorCode.NO_ERROR) {
+                                nextPageUrl = "";
+                            }
+                            mFollowedUserView.onRefreshEnd();
                             return;
                         }
                         // 保存到数据库
                         mFollowDBAPI.follow(response.result);
                         appendUsers(response.result);
                         parseNextpageUrl(response, false);
+                        mFollowedUserView.onRefreshEnd();
                     }
                 });
     }
@@ -178,7 +183,7 @@ public class FollowedUserFgPresenter extends BaseFragmentPresenter<List<CommUser
      */
     protected void onUserFollowStateChange(CommUser user, BROADCAST_TYPE type) {
         List<CommUser> dataSource = mFollowedUserView.getBindDataSource();
-        if (type == BROADCAST_TYPE.TYPE_USER_FOLLOW ) {
+        if (type == BROADCAST_TYPE.TYPE_USER_FOLLOW) {
             if (!dataSource.contains(user)) {
                 dataSource.add(user);
                 mFollowDBAPI.follow(user);

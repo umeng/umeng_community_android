@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <string name="umeng_comm_not_support">暂不支持该平台登录</string>
+    <string name="umeng_socialize_3rdparty_login">使用第三方账户登录</string>
+    <string name="umeng_socialize_login_statement">我们不会在未经同意的情况下在任何社交媒体发布消息</string>
+    <string name="umeng_socialize_load_userinfo">获取用户信息中...</string>
+    <string name="umeng_socialize_fetch_info_failed">获取用户信息失败...</string>
+
+</resources>

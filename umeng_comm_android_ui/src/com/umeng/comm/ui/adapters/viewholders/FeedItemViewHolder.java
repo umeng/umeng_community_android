@@ -155,7 +155,7 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView {
         if (mImageGvViewStub.getVisibility() == View.GONE) {
             mImageGvViewStub.setVisibility(View.VISIBLE);
             int imageGvResId = ResFinder.getId("umeng_comm_msg_gridview");
-            mImageGv = (WrapperGridView) this.findViewById(imageGvResId);
+            mImageGv = (WrapperGridView) findViewById(imageGvResId);
             mImageGv.hasScrollBar = true;
         }
 
@@ -311,8 +311,7 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView {
             shareItem.mTargetUrl = mFeedItem.sourceFeed.shareLink;
         }
         shareItem.mFeedId = mFeedItem.id;
-        shareItem.mTitle = mFeedItem.sourceFeed == null ? mFeedItem.text
-                : mFeedItem.sourceFeed.text;
+        shareItem.mTitle = mFeedItem.text;
         ShareSDKManager.getInstance().getCurrentSDK().share(activity, shareItem);
     }
 
@@ -445,6 +444,7 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView {
     /**
      * 设置转发feed的视图的可见性
      */
+    @SuppressWarnings("deprecation")
     private void setForwardViewVisibility(FeedItem item) {
         // 显示转发视图
         mForwardLayout.setVisibility(View.VISIBLE);
@@ -599,8 +599,7 @@ public class FeedItemViewHolder extends ViewHolder implements MvpLikeView {
         mForwardCountTextView.setVisibility(View.GONE);
     }
 
-    public void setOnItemViewClickListener(final int position,
-            final OnItemViewClickListener<FeedItem> listener) {
+    public void setOnItemViewClickListener(final int position,final OnItemViewClickListener<FeedItem> listener) {
         mItemViewClickListener = listener;
         mCommentCountTextView.setOnClickListener(new LoginOnViewClickListener() {
 

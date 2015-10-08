@@ -34,7 +34,9 @@ import android.widget.TextView;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.beans.Topic;
+import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.ui.utils.textspan.TopicClickSpan;
+import com.umeng.comm.ui.utils.textspan.UrlClickSpan;
 import com.umeng.comm.ui.utils.textspan.UserClickSpan;
 import com.umeng.comm.ui.widgets.TextViewFixTouchConsume;
 
@@ -68,10 +70,29 @@ public final class FeedViewRender {
         renderTopics(context, item, contentSsb);
         // 渲染好友
         renderFriends(context, item, contentSsb);
+        // 渲染url链接
+        renderUrls(context, item.text, contentSsb);
         // 多一个空格
         contentSsb.append(" ");
-        //
+        // 将文本设置到TextView上
         contentTextView.setText(contentSsb);
+    }
+
+    private static void renderUrls(Context context, String feedText,
+            SpannableStringBuilder contentSsb) {
+        List<String> urlList = UrlMatcher.recognizeUrls(feedText);
+        if (CommonUtils.isListEmpty(urlList)) {
+            return;
+        }
+
+        for (final String url : urlList) {
+            List<DecorationItem> items = findTagsInText(feedText, url);
+            for (DecorationItem decoratorItem : items) {
+                makeStringClickable(contentSsb, decoratorItem.start, decoratorItem.text,
+                        new UrlClickSpan(context, url));
+            }
+        }
+
     }
 
     /**
@@ -137,6 +158,8 @@ public final class FeedViewRender {
                         new UserClickSpan(context, user));
             }
         }
+        
+        renderUrls(context, textView.getText().toString(), contentSsb);
         textView.setText(contentSsb);
     }
 
@@ -171,9 +194,8 @@ public final class FeedViewRender {
      * @param text
      * @param clickableSpan
      */
-    private static void makeStringClickable(SpannableStringBuilder contentSsb, int start,
-            final String text,
-            ClickableSpan clickableSpan) {
+    private static void makeStringClickable(SpannableStringBuilder contentSsb,
+            int start, final String text, ClickableSpan clickableSpan) {
         contentSsb.setSpan(clickableSpan, start, start + text.length(), 0);
     }
 

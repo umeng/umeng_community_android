@@ -27,20 +27,19 @@ package com.umeng.comm.ui.mvpview;
 import java.util.List;
 
 import com.umeng.comm.core.beans.Topic;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 
 /**
  * 话题推荐的View接口
  */
-public interface MvpRecommendTopicView {
+public interface MvpRecommendTopicView extends MvpBaseRefreshView {
 
     public List<Topic> getBindDataSource();
 
     public void notifyDataSetChanged();
 
-    public void onRefreshStart();
+    /**
+     * 刷新结束，仅仅hide相关View，不做数据相关操作</br>
+     */
+    public void onRefreshEndNoOP();
 
-    public void onRefreshEnd();
-
-    public boolean handlerResponse(AbsResponse<?> response);
 }

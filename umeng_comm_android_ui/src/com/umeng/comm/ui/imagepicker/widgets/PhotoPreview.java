@@ -45,30 +45,6 @@ public class PhotoPreview extends LinearLayout implements OnClickListener {
 
     private void loadImage(String path) {
         ImageLoaderManager.getInstance().getCurrentSDK().displayImage(path, mImageView);
-
-        // ImageLoaderManager.getInstance().getCurrentSDK().displayImage(path,
-        // mImageView,
-        // ImgDisplayOption.getCommonDisplayOption(), new ImageLoadingListener()
-        // {
-        //
-        // @Override
-        // public void onLoadingStarted(String imageUri, View view) {
-        // mImageView.setImageDrawable(ResFinder.getDrawable("umeng_comm_not_found"));
-        // }
-        //
-        // @Override
-        // public void onLoadingFailed(String imageUri, View view) {
-        // mImageView.setImageDrawable(ResFinder.getDrawable("umeng_comm_not_found"));
-        // mProgressBar.setVisibility(View.GONE);
-        // }
-        //
-        // @Override
-        // public void onLoadingComplete(String imageUri, View view, Bitmap
-        // loadedImage) {
-        // mImageView.setImageBitmap(loadedImage);
-        // mProgressBar.setVisibility(View.GONE);
-        // }
-        // });
     }
 
     @Override

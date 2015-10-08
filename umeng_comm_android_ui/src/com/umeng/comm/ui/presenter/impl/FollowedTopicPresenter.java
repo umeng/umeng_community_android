@@ -63,7 +63,7 @@ public class FollowedTopicPresenter extends TopicFgPresenter {
 
                     @Override
                     public void onComplete(final TopicResponse response) {
-                        if (NetworkUtils.handleResponse(mContext, response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
                             mRecommendTopicView.onRefreshEnd();
                             return;
                         }
@@ -71,11 +71,9 @@ public class FollowedTopicPresenter extends TopicFgPresenter {
                         List<Topic> results = response.result;
                         List<Topic> mDatas = mRecommendTopicView.getBindDataSource();
                         // 去除重复的
-                        results.removeAll(mDatas);
+                        mDatas.removeAll(results);
                         mDatas.addAll(results);
                         userTopicPolicy(mUid, results);
-                        // 更新数据
-                        // mRecommendTopicView.getBindDataSource().addAll(results);
                         mRecommendTopicView.notifyDataSetChanged();
                         // 保存话题本身的数据后再保存用户关注的话题到数据库
                         DatabaseAPI.getInstance().getTopicDBAPI()

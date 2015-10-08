@@ -24,6 +24,10 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -43,6 +47,7 @@ import com.umeng.comm.core.listeners.Listeners.CommListener;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.nets.Response;
 import com.umeng.comm.core.nets.responses.SimpleResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.TimeUtils;
 import com.umeng.comm.core.utils.ToastMsg;
@@ -50,10 +55,6 @@ import com.umeng.comm.ui.dialogs.ConfirmDialog;
 import com.umeng.comm.ui.mvpview.MvpCommentView;
 import com.umeng.comm.ui.presenter.BasePresenter;
 import com.umeng.comm.ui.utils.BroadcastUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class CommentPresenter extends BasePresenter {
     MvpCommentView mCommentView;
@@ -99,19 +100,15 @@ public class CommentPresenter extends BasePresenter {
 
             @Override
             public void onComplete(SimpleResponse response) {
-
-                String toastResName = "umeng_comm_post_comment_failed";
-                // 判断用户是否被禁言
-                if (response.errCode == ErrorCode.USER_FORBIDDEN_ERR_CODE) {
-                    toastResName = "umeng_comm_user_unusable";
-                } else if (response.errCode == ErrorCode.NO_ERROR) {
-                    toastResName = "umeng_comm_post_comment_success";
-                    mFeedItem.commentCount++;
+                if (NetworkUtils.handleResponseComm(response)) {
+                    return;
                 }
-                ToastMsg.showShortMsgByResName(mContext, toastResName);
-                if ( response.errCode != ErrorCode.NO_ERROR ) {
-                    return ;
+                if (response.errCode != ErrorCode.NO_ERROR) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_post_comment_failed");
+                    return;
                 }
+                ToastMsg.showShortMsgByResName("umeng_comm_post_comment_success");
+                mFeedItem.commentCount++;
                 comment.createTime = TimeUtils.format(formatDate());
                 comment.id = response.id;
                 mFeedItem.comments.add(0, comment);
@@ -135,15 +132,15 @@ public class CommentPresenter extends BasePresenter {
 
             @Override
             public void onComplete(Response response) {
+                if (NetworkUtils.handleResponseComm(response)) {
+                    return;
+                }
                 if (response.errCode == ErrorCode.NO_ERROR) {
-                    ToastMsg.showShortMsg(mContext,
-                            ResFinder.getString("umeng_comm_text_spammer_success"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_text_spammer_success");
                 } else if (response.errCode == ErrorCode.SPAMMERED_CODE) {
-                    ToastMsg.showShortMsg(mContext,
-                            ResFinder.getString("umeng_comm_text_spammered"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_comment_text_spammered");
                 } else {
-                    ToastMsg.showShortMsg(mContext,
-                            ResFinder.getString("umeng_comm_text_spammer_failed"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_text_spammer_failed");
                 }
             }
         });
@@ -173,14 +170,16 @@ public class CommentPresenter extends BasePresenter {
 
             @Override
             public void onComplete(Response response) {
+                if ( NetworkUtils.handleResponseComm(response) ) {
+                    return ;
+                }
                 if (response.errCode == ErrorCode.NO_ERROR) {
                     mFeedItem.comments.remove(comment);
                     mFeedItem.commentCount--;
                     mCommentView.onCommentDeleted(comment);
                     mDatabaseAPI.getCommentAPI().deleteCommentsFromDB(comment.id);
                 } else {
-                    ToastMsg.showShortMsg(mContext,
-                            ResFinder.getString("umeng_comm_delete_comment_failed"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_delete_comment_failed");
                 }
             }
         });

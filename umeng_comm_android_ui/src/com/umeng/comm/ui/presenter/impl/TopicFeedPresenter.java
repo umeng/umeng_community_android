@@ -24,6 +24,12 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.Iterator;
+import java.util.List;
+
+import com.umeng.comm.core.beans.FeedItem;
+import com.umeng.comm.core.beans.Topic;
+import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.ui.mvpview.MvpFeedView;
 
 /**
@@ -38,6 +44,24 @@ public class TopicFeedPresenter extends FeedListPresenter {
     @Override
     public void loadDataFromServer() {
         mCommunitySDK.fetchTopicFeed(mId, mRefreshListener);
+    }
+    
+    @Override
+    protected List<FeedItem> appendFeedItems(List<FeedItem> feedItems,boolean fromDB) {
+        if ( CommonUtils.isListEmpty(feedItems) || !fromDB) {
+            return super.appendFeedItems(feedItems,fromDB);
+        }
+        // 移除不包含该feed的缓存数据
+        Iterator<FeedItem> iterator = feedItems.iterator();
+        Topic tempTopic = new Topic();
+        tempTopic.id = mId;
+        while (iterator.hasNext()) {
+            FeedItem item = iterator.next();
+            if ( CommonUtils.isListEmpty(item.topics) || !item.topics.contains(tempTopic) ) {
+                iterator.remove();
+            }
+        }
+        return super.appendFeedItems(feedItems,fromDB);
     }
 
 }

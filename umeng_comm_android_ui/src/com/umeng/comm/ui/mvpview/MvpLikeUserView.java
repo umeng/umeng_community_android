@@ -24,13 +24,10 @@
 
 package com.umeng.comm.ui.mvpview;
 
-import com.umeng.comm.core.beans.CommUser;
-import com.umeng.comm.core.beans.Like;
-
 import java.util.List;
 
-public interface MvpLikeUserView {
-    public void onRefreshStart();
-    public void onRefreshEnd();
+import com.umeng.comm.core.beans.Like;
+
+public interface MvpLikeUserView extends MvpBaseRefreshView{
     public void fetchLikeUsers(List<Like> likes);
 }

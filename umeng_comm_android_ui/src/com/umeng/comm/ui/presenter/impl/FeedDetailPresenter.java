@@ -24,6 +24,11 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -35,16 +40,12 @@ import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.CommentResponse;
 import com.umeng.comm.core.nets.responses.LikesResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpCommentView;
 import com.umeng.comm.ui.mvpview.MvpFeedDetailView;
 import com.umeng.comm.ui.mvpview.MvpLikeView;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Feed详情页的Presenter
@@ -102,8 +103,16 @@ public class FeedDetailPresenter extends BaseFeedPresenter {
         mCommunitySDK.fetchFeedLikes(mFeedItem.id, new SimpleFetchListener<LikesResponse>() {
             @Override
             public void onComplete(LikesResponse response) {
-                if (response.errCode != ErrorCode.NO_ERROR) {
+                if (NetworkUtils.handleResponseComm(response)) {
                     return;
+                }
+                if( response.errCode == ErrorCode.ERR_CODE_FEED_UNAVAILABLE) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_feed_unavailable");
+                    return ;
+                }
+                if ( response.errCode != ErrorCode.NO_ERROR ) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_load_failed");
+                    return ;
                 }
                 List<Like> likes = response.result;
                 likes.removeAll(mFeedItem.likes);
@@ -136,10 +145,18 @@ public class FeedDetailPresenter extends BaseFeedPresenter {
             @Override
             public void onComplete(CommentResponse response) {
                 mCommentView.onRefreshEnd();
-                if (response.errCode != ErrorCode.NO_ERROR) {
+                if (NetworkUtils.handleResponseComm(response)) {
                     return;
                 }
-
+                
+                if( response.errCode == ErrorCode.ERR_CODE_FEED_UNAVAILABLE) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_feed_unavailable");
+                    return ;
+                }
+                if ( response.errCode != ErrorCode.NO_ERROR ) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_load_failed");
+                    return ;
+                }
                 if ( TextUtils.isEmpty(mNextPageUrl) && mUpdateNextPageUrl.get() ) {
                     mNextPageUrl = response.nextPageUrl;
                     mUpdateNextPageUrl.set(false);
@@ -168,12 +185,15 @@ public class FeedDetailPresenter extends BaseFeedPresenter {
 
                     @Override
                     public void onComplete(CommentResponse response) {
+                        if ( NetworkUtils.handleResponseComm(response) ) {
+                            return;
+                        }
                         if (response.errCode == ErrorCode.NO_ERROR) {
                             mNextPageUrl = response.nextPageUrl;
                             mCommentView.loadMoreComment(response.result);
                             saveCommentsToDB(response.result);
                         } else {
-                            ToastMsg.showShortMsg(mContext, "请求失败");
+                            ToastMsg.showShortMsgByResName("umeng_comm_request_failed");
                         }
                         mCommentView.onRefreshEnd();
                     }

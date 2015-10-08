@@ -49,7 +49,7 @@ import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ResFinder.ResType;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.activities.BaseFragmentActivity;
-import com.umeng.comm.ui.mvpview.UserProfileSettingView;
+import com.umeng.comm.ui.mvpview.MvpUserProfileSettingView;
 import com.umeng.comm.ui.presenter.impl.UserSettingPresenter;
 import com.umeng.comm.ui.utils.ViewFinder;
 import com.umeng.comm.ui.widgets.SquareImageView;
@@ -58,7 +58,7 @@ import com.umeng.comm.ui.widgets.SquareImageView;
  * 用户设置Fragment
  */
 public class UserSettingFragment extends BaseFragment<CommUser, UserSettingPresenter> implements
-        OnClickListener, UserProfileSettingView {
+        OnClickListener, MvpUserProfileSettingView {
 
     /**
      * ImageLoader
@@ -132,7 +132,7 @@ public class UserSettingFragment extends BaseFragment<CommUser, UserSettingPrese
         }
 
         if (!TextUtils.isEmpty(mUser.iconUrl)) {
-            mImageLoader.reset();
+//            mImageLoader.reset();
             mImageLoader.displayImage(mUser.iconUrl, mIconImg, getDisplayOption(mGender));
             mImageLoader.resume();
         }
@@ -172,13 +172,13 @@ public class UserSettingFragment extends BaseFragment<CommUser, UserSettingPrese
     private boolean checkData() {
         String name = mNickNameEtv.getText().toString().trim();
         if (TextUtils.isEmpty(name)) {
-            ToastMsg.showShortMsgByResName(getActivity(), "umeng_comm_user_center_no_name");
+            ToastMsg.showShortMsgByResName("umeng_comm_user_center_no_name");
             return false;
         }
 
         boolean result = CommonUtils.isUserNameValid(name);
         if (!result) {
-            ToastMsg.showShortMsg(getActivity(), ResFinder.getString("umeng_comm_user_name_tips"));
+            ToastMsg.showShortMsgByResName("umeng_comm_user_name_tips");
         }
         return result;
     }
@@ -192,7 +192,7 @@ public class UserSettingFragment extends BaseFragment<CommUser, UserSettingPrese
         int femalViewResId = ResFinder.getId("umeng_comm_gender_textview_femal");
         if (id == userIconResId) {
             if (isRegisterUserNameInvalid) {
-                ToastMsg.showShortMsgByResName(getActivity(), "umeng_comm_before_save");
+                ToastMsg.showShortMsgByResName("umeng_comm_before_save");
             } else {
                 selectProfile();
             }

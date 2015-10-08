@@ -24,6 +24,9 @@
 
 package com.umeng.comm.ui.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,10 +44,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.activeandroid.util.Log;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.constants.Constants;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.constants.HttpProtocol;
 import com.umeng.comm.core.listeners.Listeners;
+import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
+import com.umeng.comm.core.nets.responses.LoginResponse;
+import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.activities.RelativeUserActivity;
@@ -53,9 +61,6 @@ import com.umeng.comm.ui.adapters.SearchUsersAdapter;
 import com.umeng.comm.ui.mvpview.MvpSearchFgView;
 import com.umeng.comm.ui.presenter.impl.SearchPresenter;
 import com.umeng.comm.ui.widgets.EmptyView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 搜索Fragment
@@ -101,6 +106,8 @@ public class SearchFragment extends FeedListFragment<SearchPresenter> implements
         showRelativeUserView(null);
 
         mRootView.findViewById(ResFinder.getId("umeng_comm_back")).setOnClickListener(this);
+        // TODO 比较合理的方式先检测输入是否为空，接着再检查是否登录。此时需要将两个回调单独成成员变量，
+        //避免复用，并借助View.performClick()方法实现
         mRootView.findViewById(ResFinder.getId("umeng_comm_topic_search")).setOnClickListener(
                 new Listeners.LoginOnViewClickListener() {
 
@@ -108,7 +115,7 @@ public class SearchFragment extends FeedListFragment<SearchPresenter> implements
                     protected void doAfterLogin(View v) {
                         String keyword = mSearchEditText.getText().toString().trim();
                         if (TextUtils.isEmpty(keyword)) {
-                            ToastMsg.showShortMsg(getActivity(), "请输出搜索关键字");
+                            ToastMsg.showShortMsgByResName("umeng_comm_topic_search_no_keyword");
                             return;
                         }
                         ((SearchPresenter) mPresenter).executeSearch(mSearchEditText
@@ -131,11 +138,27 @@ public class SearchFragment extends FeedListFragment<SearchPresenter> implements
         mSearchEditText.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO
-                        || actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    ((SearchPresenter) mPresenter).executeSearch(mSearchEditText.getText()
-                            .toString());
+                if (actionId != EditorInfo.IME_ACTION_GO
+                        && actionId != EditorInfo.IME_ACTION_SEARCH) {
+                    return false;
                 }
+                final String text = mSearchEditText.getText().toString();
+                if (TextUtils.isEmpty(text)) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_search_content");
+                    return false;
+                }
+                CommonUtils.checkLoginAndFireCallback(getActivity(),
+                        new SimpleFetchListener<LoginResponse>() {
+
+                            @Override
+                            public void onComplete(LoginResponse response) {
+                                if (response.errCode == ErrorCode.NO_ERROR) {
+                                    ((SearchPresenter) mPresenter).executeSearch(text);
+                                } else {
+                                    Log.d("", "### login failed...");
+                                }
+                            }
+                        });
                 return false;
             }
         });

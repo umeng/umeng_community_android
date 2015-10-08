@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ececec"
+    android:focusableInTouchMode="true"
+    android:id="@+id/umeng_comm_topic_search_title_layout"
+    android:orientation="vertical" >
+
+    <!-- title -->
+
+    <RelativeLayout
+        android:id="@+id/umeng_comm_topic_edittext_layout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
+
+        <ImageButton
+            android:id="@+id/umeng_comm_back"
+            android:layout_width="26dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/umeng_comm_desc"
+            android:scaleType="fitCenter"
+            android:src="@drawable/umeng_comm_back_bt" />
+
+        <Button
+            android:id="@+id/umeng_comm_topic_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/umeng_comm_search_button_style"
+            android:text="@string/umeng_comm_search_key"
+            android:textColor="@color/umeng_comm_text_default_color"
+            android:textSize="@dimen/text_big16_size" />
+
+        <EditText
+            android:id="@+id/umeng_comm_topic_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/umeng_comm_topic_search"
+            android:layout_toRightOf="@id/umeng_comm_back"
+            android:background="@drawable/umeng_comm_search_frame_style"
+            android:drawableLeft="@drawable/umeng_comm_search"
+            android:drawablePadding="2dp"
+            android:hint="@string/umeng_comm_search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLength="18"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#999999"
+            android:textSize="@dimen/text_big16_size" />
+    </RelativeLayout>
+
+    <include layout="@layout/umeng_comm_divide_line" />
+
+</LinearLayout>

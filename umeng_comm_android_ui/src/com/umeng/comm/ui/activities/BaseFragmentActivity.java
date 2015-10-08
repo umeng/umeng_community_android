@@ -41,8 +41,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.imageloader.UMImageLoader;
-import com.umeng.comm.core.nets.responses.AbsResponse;
-import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.sdkmanager.ImageLoaderManager;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.ui.fragments.CommunityMainFragment;
@@ -71,7 +69,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     private boolean isFinish = false;
     private InputMethodManager mInputMan;
     protected CommunityMainFragment mFeedsFragment = new CommunityMainFragment();
-    private ViewFinder mViewFinder ;
+    private ViewFinder mViewFinder;
 
     /**
      * 该Handler主要处理软键盘的弹出跟隐藏
@@ -112,27 +110,25 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
-        mViewFinder = new ViewFinder(getWindow().getDecorView()) ;
+        mViewFinder = new ViewFinder(getWindow().getDecorView());
     }
-    
-    
+
     @Override
     public void setContentView(View view) {
         super.setContentView(view);
-        mViewFinder = new ViewFinder(view) ;
+        mViewFinder = new ViewFinder(view);
     }
-    
+
     @Override
     public void setContentView(View view, LayoutParams params) {
         super.setContentView(view, params);
-        mViewFinder = new ViewFinder(view) ;
+        mViewFinder = new ViewFinder(view);
     }
-    
-    
+
     public <T extends View> T findViewByIdWithFinder(int id) {
         return mViewFinder.findViewById(id);
     }
-    
+
     /*
      * [ 不要删除该函数 ],该函数的空实现修复了FragmentActivity中的bug
      */
@@ -346,7 +342,4 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    public boolean handlerResponse(AbsResponse<?> response) {
-        return NetworkUtils.handleResponse(this.getApplicationContext(), response);
-    }
 }

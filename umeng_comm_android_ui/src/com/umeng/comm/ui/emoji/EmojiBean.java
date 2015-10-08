@@ -26,6 +26,7 @@ public class EmojiBean implements Serializable {
     private int icon;
     private char value;
     private String emoji;
+    public boolean isDouble = true;
 
     private EmojiBean() {
     }
@@ -46,6 +47,7 @@ public class EmojiBean implements Serializable {
     public static EmojiBean fromChar(char ch) {
         EmojiBean emoji = new EmojiBean();
         emoji.emoji = Character.toString(ch);
+        emoji.isDouble = false;
         return emoji;
     }
 

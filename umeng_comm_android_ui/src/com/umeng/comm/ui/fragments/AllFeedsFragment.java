@@ -25,14 +25,13 @@
 package com.umeng.comm.ui.fragments;
 
 import android.content.Intent;
-import android.graphics.Rect;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.listeners.Listeners.LoginOnViewClickListener;
@@ -63,7 +62,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
     @Override
     protected FeedListPresenter createPresenters() {
         super.createPresenters();
-        FeedListPresenter presenter = new FeedListPresenter(this);
+        FeedListPresenter presenter = new FeedListPresenter(this, true);
         presenter.setOnResultListener(mListener);
         return presenter;
     }
@@ -78,57 +77,75 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
             if (!isShowToast) {
                 return;
             }
-            mTipView = (TextView) LayoutInflater.from(getActivity()).inflate(
-                    ResFinder.getLayout("umeng_comm_newfeed_tips"), null);
             if (nums <= 0) {
                 mTipView.setText(ResFinder.getString("umeng_comm_no_newfeed_tips"));
             } else {
                 mTipView.setText(nums + "条新内容");
             }
-
-            int locationY = getLocation();
-            if (locationY == 0) {
-                return;
-            }
-
-            Toast toast = new Toast(getActivity().getApplication());
-            toast.setView(mTipView);
-            toast.setDuration(2000);
-            toast.setGravity(Gravity.TOP | Gravity.CENTER | Gravity.FILL_HORIZONTAL, 0, locationY);
-            toast.show();
+          showNewFeedTips();
         }
     };
-
+    
     /**
-     * 获取feed Listview第一项的位置</br>
      * 
-     * @return
+     * 显示[更新N条新feed]】的View</br>
      */
-    private int getLocation() {
-        int[] location = new int[2];
-        Rect rect = new Rect();
-        getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+    private void showNewFeedTips(){
+        mTipView.setVisibility(View.VISIBLE);
+        Animation showAnimation = new AlphaAnimation(0.2f, 1);
+        showAnimation.setDuration(400);
+        showAnimation.setFillAfter(true);
+        showAnimation.setAnimationListener(new AnimationListener() {
 
-        mFeedsListView.getLocationOnScreen(location); // 该中情况实际不会出现。
-        return location[1] - rect.top - 1;
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                dismissNewFeedTips();
+            }
+        });
+        mTipView.startAnimation(showAnimation);
+    }
+    
+    /**
+     * 
+     * 隐藏[更新N条feed]的View。注意：该方法必须由{@link #showNewFeedTips}的AnimationListener回调中被调用</br>
+     */
+    private void dismissNewFeedTips(){
+        Animation animation = new AlphaAnimation(1, 0);
+        animation.setStartOffset(800);
+        animation.setDuration(500);
+        animation.setAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mTipView.setVisibility(View.GONE);
+            }
+        });
+        mTipView.startAnimation(animation);
     }
 
     // [注意]主页的Feed来源于好友+话题，取消对好友的关注不能删除该用户的Feed
     @Override
     protected void onCancelFollowUser(CommUser user) {
-        // super.onCancelFollowUser(user);
-        // // 取消对某个用户的关注，移除其feed
-        // List<FeedItem> items = mFeedLvAdapter.getDataSource();
-        // List<FeedItem> scrapItems = new ArrayList<FeedItem>();
-        // for (FeedItem item : items) {
-        // if (item.creator.equals(user)) {
-        // scrapItems.add(item);
-        // }
-        // }
-        // if (scrapItems.size() > 0) {
-        // mFeedLvAdapter.getDataSource().removeAll(scrapItems);
-        // mFeedLvAdapter.notifyDataSetChanged();
-        // }
     }
 
     @Override
@@ -163,6 +180,7 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
                 getActivity().startActivity(intent);
             }
         });
+        mTipView = (TextView) headerView.findViewById(ResFinder.getId("umeng_comm_feeds_tips"));
         mFeedsListView.addHeaderView(headerView);
         super.initAdapter();
     }
@@ -189,6 +207,15 @@ public class AllFeedsFragment extends PostBtnAnimFragment<FeedListPresenter> {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isShowToast = isVisibleToUser;
+    }
+
+    /**
+     * 主动调用加载数据。 【注意】该接口仅仅在退出登录时，跳转到FeedsActivity清理数据后重新刷新数据</br>
+     */
+    public void loadFeedFromServer() {
+        if (mPresenter != null) {
+            mPresenter.loadDataFromServer();
+        }
     }
 
 }

@@ -99,18 +99,18 @@ public class FeedPostPresenter extends BasePresenter {
 
     public void postNewFeed(final FeedItem feedItem) {
         if (!DeviceUtils.isNetworkAvailable(mContext)) {
-            ToastMsg.showShortMsg(mContext, ResFinder.getString("umeng_comm_not_network"));
+            ToastMsg.showShortMsgByResName("umeng_comm_not_network");
             mActivityView.canNotPostFeed();
             return;
         }
         if (!hasContent(feedItem)) {
-            ToastMsg.showShortMsg(mContext, ResFinder.getString("umeng_comm_no_content"));
+            ToastMsg.showShortMsgByResName("umeng_comm_not_network");
             mActivityView.canNotPostFeed();
             return;
         }
 
         if (!isTextValid(feedItem)) {
-            ToastMsg.showShortMsg(mContext, ResFinder.getString("umeng_comm_content_short_tips"));
+            ToastMsg.showShortMsgByResName("umeng_comm_content_short_tips");
             mActivityView.canNotPostFeed();
             return;
         }
@@ -171,7 +171,7 @@ public class FeedPostPresenter extends BasePresenter {
 
     protected void postFeedResponse(FeedItemResponse response, FeedItem feedItem) {
         if (mActivityView != null
-                && mActivityView.handleResponse(response)) {
+                && NetworkUtils.handleResponseComm(response)) {
             PostNotifycation.showPostNotifycation(mContext, ResFinder.getString(
                     "umeng_comm_send_failed"),
                     feedItem.text);
@@ -179,8 +179,7 @@ public class FeedPostPresenter extends BasePresenter {
         }
 
         if (response.errCode == ErrorCode.NO_ERROR) {
-            ToastMsg.showShortMsg(mContext,
-                    ResFinder.getString("umeng_comm_send_success"));
+            ToastMsg.showShortMsgByResName("umeng_comm_send_success");
             PostNotifycation.clearPostNotifycation(mContext);
             FeedMemento.clear(mContext);
             // 发送广播
@@ -248,7 +247,7 @@ public class FeedPostPresenter extends BasePresenter {
      */
     public void forwardFeed(FeedItem feedItem, final FeedItem forwardFeedItem) {
         if (!DeviceUtils.isNetworkAvailable(mContext)) {
-            ToastMsg.showShortMsg(mContext, ResFinder.getString("umeng_comm_not_network"));
+            ToastMsg.showShortMsgByResName("umeng_comm_not_network");
             return;
         }
 
@@ -259,8 +258,14 @@ public class FeedPostPresenter extends BasePresenter {
 
                     @Override
                     public void onComplete(FeedItemResponse response) {
-                        if (NetworkUtils.handleResponse(mContext, response)) {
+                        if (NetworkUtils.handleResponseComm(response)) {
                             Log.w("", "forward error . code = " + response.errCode);
+                            return;
+                        }
+                        // 被转发的原始feed被删除
+                        if (response.errCode == ErrorCode.ORIGIN_FEED_DELETE_ERR_CODE
+                                || response.errCode == ErrorCode.ERR_CODE_FEED_UNAVAILABLE) {
+                            ToastMsg.showShortMsgByResName("umeng_comm_origin_feed_delete");
                             return;
                         }
                         FeedItem feedItem = response.result;

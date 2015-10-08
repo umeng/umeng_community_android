@@ -1,8 +1,9 @@
 
 package com.umeng.comm.ui.imagepicker.adapters;
 
+import java.util.ArrayList;
+
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -11,8 +12,6 @@ import com.umeng.comm.ui.imagepicker.model.PhotoModel;
 import com.umeng.comm.ui.imagepicker.widgets.PhotoItemViewHolder;
 import com.umeng.comm.ui.imagepicker.widgets.PhotoItemViewHolder.onItemClickListener;
 import com.umeng.comm.ui.imagepicker.widgets.PhotoItemViewHolder.onPhotoItemCheckedListener;
-
-import java.util.ArrayList;
 
 /**
  * 图片选择Adapter
@@ -40,7 +39,6 @@ public class PhotoAdapter extends MBaseAdapter<PhotoModel> {
             convertView = viewHolder.getItemView();
             convertView.setTag(viewHolder);
         } else {
-            Log.e("", "### 复用 : " + convertView);
             viewHolder = (PhotoItemViewHolder) convertView.getTag();
         }
         final PhotoModel photoModel = getItem(position);

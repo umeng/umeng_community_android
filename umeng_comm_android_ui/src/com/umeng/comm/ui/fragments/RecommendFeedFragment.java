@@ -57,6 +57,7 @@ public class RecommendFeedFragment extends FeedListFragment<RecommendFeedPresent
     protected void loadMoreFeed() {
         // 没有网络的情况下从数据库加载
         if (!DeviceUtils.isNetworkAvailable(getActivity())) {
+            onRefreshEnd();
             mPresenter.loadDataFromDB();
             return;
         }
@@ -64,7 +65,7 @@ public class RecommendFeedFragment extends FeedListFragment<RecommendFeedPresent
     }
 
     public void cleanAdapterData() {
-        if ( mFeedLvAdapter != null ) {
+        if (mFeedLvAdapter != null) {
             mFeedLvAdapter.getDataSource().clear();
             mFeedLvAdapter.notifyDataSetChanged();
         }
@@ -105,4 +106,14 @@ public class RecommendFeedFragment extends FeedListFragment<RecommendFeedPresent
         BroadcastUtils.unRegisterBroadcast(getActivity(), mReceiver);
         super.onDestroy();
     }
+
+    /**
+     * 主动调用加载数据。 【注意】该接口仅仅在退出登录时，跳转到FeedsActivity清理数据后重新刷新数据</br>
+     */
+    public void loadDataFromServer() {
+        if (mPresenter != null) {
+            mPresenter.loadDataFromServer();
+        }
+    }
+
 }

@@ -40,16 +40,16 @@ import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.LoginHelper;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.activities.GuideActivity;
-import com.umeng.comm.ui.mvpview.UserProfileSettingView;
+import com.umeng.comm.ui.mvpview.MvpUserProfileSettingView;
 import com.umeng.comm.ui.presenter.BaseFragmentPresenter;
 import com.umeng.comm.ui.utils.BroadcastUtils;
 
 public class UserSettingPresenter extends BaseFragmentPresenter<CommUser> {
     Activity mActivity;
-    UserProfileSettingView mProfileSettingView;
+    MvpUserProfileSettingView mProfileSettingView;
     private boolean isFirstSetting = false;// 是否第一次登录跳转到设置页面
 
-    public UserSettingPresenter(Activity context, UserProfileSettingView view) {
+    public UserSettingPresenter(Activity context, MvpUserProfileSettingView view) {
         mActivity = context;
         mCommunitySDK = CommunityFactory.getCommSDK(context);
         mProfileSettingView = view;
@@ -66,7 +66,7 @@ public class UserSettingPresenter extends BaseFragmentPresenter<CommUser> {
             @Override
             public void onComplete(LoginResponse response) {
                 mProfileSettingView.showLoading(false);
-                if (response.errCode == 0) {
+                if (response.errCode == ErrorCode.NO_ERROR) {
                     LoginHelper.loginSuccess(mActivity, response.result, user.source);
                     Intent intent = new Intent(mActivity, GuideActivity.class);
                     mActivity.startActivity(intent);
@@ -87,15 +87,15 @@ public class UserSettingPresenter extends BaseFragmentPresenter<CommUser> {
             }
 
             @Override
-            public void onComplete(Response data) {
+            public void onComplete(Response response) {
                 mProfileSettingView.showLoading(false);
-                showResponseToast(data);
-                if (data.errCode == ErrorCode.NO_ERROR) {
+                showResponseToast(response);
+                if (response.errCode == ErrorCode.NO_ERROR) {
                     CommConfig.getConfig().loginedUser = user;
-                    saveUserInfo(data, user);
+                    saveUserInfo(response, user);
                     BroadcastUtils.sendUserUpdateBroadcast(mActivity, user);
                 } else {
-                    showResponseToast(data);
+                    showResponseToast(response);
                 }
             }
         });
@@ -129,18 +129,15 @@ public class UserSettingPresenter extends BaseFragmentPresenter<CommUser> {
      */
     private void showResponseToast(Response data) {
         if (data.errCode == ErrorCode.NO_ERROR) {
-            ToastMsg.showShortMsgByResName(mActivity, "umeng_comm_update_info_success");
+            ToastMsg.showShortMsgByResName("umeng_comm_update_info_success");
         } else if (data.errCode == ErrorCode.SENSITIVE_ERR_CODE) { // 昵称含有敏感词
-            ToastMsg.showShortMsgByResName(mActivity,
-                    "umeng_comm_username_sensitive");
+            ToastMsg.showShortMsgByResName("umeng_comm_username_sensitive");
         } else if (data.errCode == ErrorCode.ERR_CODE_USER_NAME_DUPLICATE) { // 昵称重复
-            ToastMsg.showShortMsgByResName(mActivity,
-                    "umeng_comm_duplicate_name");
+            ToastMsg.showShortMsgByResName("umeng_comm_duplicate_name");
         } else if (data.errCode == ErrorCode.ERR_CODE_USER_NAME_ILLEGAL_CHAR) {
-            ToastMsg.showShortMsgByResName(mActivity, "umeng_comm_user_name_illegal_char");
+            ToastMsg.showShortMsgByResName("umeng_comm_user_name_illegal_char");
         }else {
-            ToastMsg.showShortMsgByResName(mActivity,
-                    "umeng_comm_update_userinfo_failed");
+            ToastMsg.showShortMsgByResName("umeng_comm_update_userinfo_failed");
         }
     }
 }

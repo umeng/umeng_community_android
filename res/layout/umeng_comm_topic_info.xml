@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/portrait_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f5f5f5"
+    android:padding="4dp" >
+
+    <ToggleButton
+        android:id="@+id/umeng_comm_topic_toggle_btn"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/umeng_community_topic_bg"
+        android:textColor="@color/umeng_comm_toogle_color"
+        android:textOff="@string/umeng_comm_follow_topic"
+        android:textOn="@string/umeng_comm_topic_followed"
+        android:textSize="@dimen/text_big16_size" />
+
+    <!-- 昵称、用户等级、用户性别 -->
+
+    <TextView
+        android:id="@+id/umeng_comm_topic_desc_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@id/umeng_comm_topic_toggle_btn"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLength="30"
+        android:text="@string/umeng_comm_username"
+        android:textSize="@dimen/text_big16_size" />
+
+</RelativeLayout>

@@ -37,6 +37,7 @@ import android.widget.RadioGroup;
 
 import com.umeng.comm.core.utils.DeviceUtils;
 import com.umeng.comm.core.utils.ResFinder;
+import com.umeng.comm.core.utils.ResFinder.ResType;
 
 /**
  * SegmentView是一个类似于iOS的segment
@@ -58,6 +59,8 @@ public class SegmentView extends RadioGroup {
      * 绘制分割线时的padding值
      */
     int linePadding = 0;
+
+    int lastSelectedPos = 0;
     /**
      * 选中回调
      */
@@ -73,7 +76,7 @@ public class SegmentView extends RadioGroup {
         mPaint.setColor(ResFinder.getColor("umeng_comm_radio_stroke_color"));
         float strokeWidth = DeviceUtils.dp2px(getContext(), 0.5f);
         mPaint.setStrokeWidth(strokeWidth);
-        setupOnItenClickListener();
+        setupOnItemClickListener();
     }
 
     boolean isShowBadge = false;
@@ -82,7 +85,7 @@ public class SegmentView extends RadioGroup {
         isShowBadge = show;
     }
 
-    private void setupOnItenClickListener() {
+    private void setupOnItemClickListener() {
         super.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override
@@ -99,15 +102,10 @@ public class SegmentView extends RadioGroup {
 
     public void setTabs(String[] tabTitles) {
         removeAllViews();
+        int i = 0;
         for (String title : tabTitles) {
-            addTab(title);
-        }
-    }
-
-    public void setTabs(List<String> tabTitles) {
-        removeAllViews();
-        for (String title : tabTitles) {
-            addTab(title);
+            addTab(title, i);
+            i++;
         }
     }
 
@@ -130,13 +128,17 @@ public class SegmentView extends RadioGroup {
         radioButton.setChecked(true);
     }
 
-    public void addTab(String title) {
+    public void addTab(String title, int pos) {
         BadgeRadioButton radioButton = (BadgeRadioButton) LayoutInflater.from(getContext())
                 .inflate(
                         ResFinder.getLayout("umeng_comm_radio_button_item"), this, false);
         radioButton.setId(ids++);
         radioButton.setText(title);
         radioButton.setShowBadge(isShowBadge);
+        if (pos != 0 && pos != childCount - 1) {
+            radioButton.setBackgroundResource(ResFinder.getResourceId(ResType.DRAWABLE,
+                    "umeng_comm_segment_shape_middle"));
+        }
         // 添加到当前ViewGroup中
         this.addView(radioButton);
     }

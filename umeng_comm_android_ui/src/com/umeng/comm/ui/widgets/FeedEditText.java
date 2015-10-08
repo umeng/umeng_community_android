@@ -24,6 +24,15 @@
 
 package com.umeng.comm.ui.widgets;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
@@ -33,22 +42,13 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
+import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.beans.Topic;
 import com.umeng.comm.core.utils.Log;
-import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.fragments.TopicPickerFragment.ResultListener;
 import com.umeng.comm.ui.utils.textspan.TextWrapperClickSpan;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressLint("UseSparseArrays")
 /**
@@ -64,9 +64,9 @@ public class FeedEditText extends EditText {
     public Map<Integer, CommUser> mAtMap = new ConcurrentHashMap<Integer, CommUser>();
 
     /**
-     * 话题map
+     * 话题map 
      */
-    public Map<Integer, Topic> mTopicMap = /* new HashMap<Integer, Topic>() */new ConcurrentHashMap<Integer, Topic>();
+    public Map<Integer, Topic> mTopicMap = new ConcurrentHashMap<Integer, Topic>();
 
     private ResultListener<Topic> mTopicListener;
 
@@ -75,10 +75,6 @@ public class FeedEditText extends EditText {
     int lastTextLength = 0;
     int curTextLength = 0;
     public int mCursorIndex = 0;
-    /**
-     * 最多300个字符
-     */
-    public static int MAX_CHARS = 300;
 
     /**
      * @param context
@@ -150,12 +146,13 @@ public class FeedEditText extends EditText {
     private void checkChars() {
         // int currentChars =
         // CommonUtils.getCharacterNums(getText().toString());
+        int MAX_CHARS = CommConfig.getConfig().mFeedLen;
         int currentChars = getText().toString().length();
         int temp = currentChars - MAX_CHARS;
         if (temp > 0) {
             setText(getText().delete(MAX_CHARS, currentChars));
             setSelection(MAX_CHARS);
-            ToastMsg.showShortMsg(getContext(), ResFinder.getString("umeng_comm_overflow_tips"));
+            ToastMsg.showShortMsgByResName("umeng_comm_overflow_tips");
         }
 
     }

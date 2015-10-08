@@ -86,8 +86,8 @@ public class MainActivity extends FragmentActivity {
 
         initPlatforms(this);
         // 设置地理位置SDK
-        LocationSDKManager.getInstance().addImpl("umeng_location", new DefaultLocationImpl())
-                .useThis("umeng_location");
+        LocationSDKManager.getInstance().addAndUse(new DefaultLocationImpl());
+
     }
 
     /**
@@ -304,7 +304,6 @@ public class MainActivity extends FragmentActivity {
                     }
 
                 });
-
     }
 
 }

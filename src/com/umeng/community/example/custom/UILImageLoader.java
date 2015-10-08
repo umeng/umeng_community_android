@@ -16,11 +16,14 @@ import com.umeng.community.example.R;
 
 /**
  * 自定义的图片加载器
+ * 
+ * @author mrsimple
  */
 public class UILImageLoader implements UMImageLoader {
 
     static ImageLoader mImageLoader = ImageLoader.getInstance();
 
+    @SuppressWarnings("deprecation")
     DisplayImageOptions options = new DisplayImageOptions.Builder()
             .showImageOnLoading(R.drawable.umeng_comm_not_found)
             .showImageForEmptyUri(R.drawable.umeng_comm_not_found)
@@ -37,6 +40,7 @@ public class UILImageLoader implements UMImageLoader {
 
     private void init(Context context) {
 
+        @SuppressWarnings("deprecation")
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()

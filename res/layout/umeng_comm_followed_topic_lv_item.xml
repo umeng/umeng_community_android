@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="64dp"
+    android:paddingTop="12dp" >
+
+    <com.umeng.comm.ui.widgets.RoundImageView
+        android:id="@+id/umeng_comm_topic_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/umeng_comm_desc"
+        android:src="@drawable/umeng_comm_topic_icon" />
+
+    <ToggleButton
+        android:id="@+id/umeng_comm_topic_togglebutton"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/umeng_comm_active_user_togglebutton_bg"
+        android:textColor="@color/umeng_comm_toogle_color"
+        android:textOff="@string/umeng_comm_follow_topic"
+        android:textOn="@string/umeng_comm_topic_followed"
+        android:textSize="@dimen/text_big14_size" />
+
+    <TextView
+        android:id="@+id/umeng_comm_topic_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/umeng_comm_topic_togglebutton"
+        android:layout_toRightOf="@id/umeng_comm_topic_icon"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="话题名字"
+        android:textColor="@color/umeng_comm_text_topic_light_color"
+        android:textSize="@dimen/text_big16_size" />
+
+    <TextView
+        android:id="@+id/umeng_comm_topic_desc_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_topic_tv"
+        android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@id/umeng_comm_topic_togglebutton"
+        android:layout_toRightOf="@id/umeng_comm_topic_icon"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/umeng_comm_text_time"
+        android:text="话题描述"
+        android:textSize="@dimen/text_big13_size" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/umeng_comm_topic_icon"
+        android:layout_marginTop="5dp"
+        layout="@layout/umeng_comm_divide_line" />
+
+</RelativeLayout>

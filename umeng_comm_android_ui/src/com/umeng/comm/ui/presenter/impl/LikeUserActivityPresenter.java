@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.text.TextUtils;
 
-import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.LikesResponse;
 import com.umeng.comm.core.nets.uitls.NetworkUtils;
@@ -69,13 +68,13 @@ public class LikeUserActivityPresenter extends BasePresenter {
 
         @Override
         public void onComplete(LikesResponse response) {
-            if ( response.errCode != ErrorCode.NO_ERROR ) {
+            if ( NetworkUtils.handleResponseAll(response) ) {
                 return ;
             }
             if (!mFromRefresh.get()) {
                 mNextPageUrl = response.nextPageUrl;
             }
-            if (NetworkUtils.handleResponse(mContext, response)) {
+            if (NetworkUtils.handleResponseAll(response)) {
                 return;
             }
             mView.fetchLikeUsers(response.result);

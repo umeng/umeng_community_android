@@ -24,10 +24,12 @@
 
 package com.umeng.comm.ui.fragments;
 
+import java.util.List;
+
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.widget.ListView;
 
-import com.umeng.comm.core.beans.MessageCount;
+import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.Notification;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.ui.adapters.NotifyAdapter;
@@ -35,8 +37,6 @@ import com.umeng.comm.ui.mvpview.MvpNotifyView;
 import com.umeng.comm.ui.presenter.impl.NotificationPresenter;
 import com.umeng.comm.ui.widgets.RefreshLayout.OnLoadListener;
 import com.umeng.comm.ui.widgets.RefreshLvLayout;
-
-import java.util.List;
 
 /**
  * 消息通知Fragment
@@ -90,15 +90,21 @@ public class NotificationFragment extends BaseFragment<List<Notification>, Notif
     }
 
     @Override
-    public List<Notification> getDataSet() {
+    public List<Notification> getBindDataSource() {
         return mAdapter.getDataSource();
     }
 
     @Override
     public void notifyDataSetChange() {
         mAdapter.notifyDataSetChanged();
-        MessageCount.obtainSingleInstance().unReadNotice = 0;
-        MessageCount.calculateTotal();
+        int total = CommConfig.getConfig().mMessageCount.unReadTotal;
+        int unReadNotice = CommConfig.getConfig().mMessageCount.unReadNotice;
+        CommConfig.getConfig().mMessageCount.unReadTotal = total - unReadNotice;
+        CommConfig.getConfig().mMessageCount.unReadNotice = 0;
+    }
+
+    @Override
+    public void onRefreshStart() {
     }
 
 }

@@ -24,6 +24,9 @@
 
 package com.umeng.comm.ui.fragments;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -39,7 +42,6 @@ import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.OnResultListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 import com.umeng.comm.core.nets.responses.LoginResponse;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.Log;
@@ -53,9 +55,6 @@ import com.umeng.comm.ui.utils.ViewFinder;
 import com.umeng.comm.ui.widgets.BaseView;
 import com.umeng.comm.ui.widgets.RefreshGvLayout;
 import com.umeng.comm.ui.widgets.RefreshLayout.OnLoadListener;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 已关注的用户的Fragment
@@ -143,8 +142,7 @@ public class FollowedUserFragment extends BaseFragment<List<CommUser>, FollowedU
                             @Override
                             public void onComplete(LoginResponse response) {
                                 if (response.errCode != ErrorCode.NO_ERROR) {
-                                    ToastMsg.showShortMsgByResName(getActivity(),
-                                            "umeng_comm_login_failed");
+                                    ToastMsg.showShortMsgByResName("umeng_comm_login_failed");
                                     return;
                                 }
                                 Intent userIntent = new Intent(getActivity(),
@@ -234,11 +232,6 @@ public class FollowedUserFragment extends BaseFragment<List<CommUser>, FollowedU
         } else {
             mBaseView.hideEmptyView();
         }
-    }
-
-    @Override
-    public boolean handleResponse(AbsResponse<?> response) {
-        return super.handlerResponse(response);
     }
 
     protected OnResultListener mAnimationResultListener = null;

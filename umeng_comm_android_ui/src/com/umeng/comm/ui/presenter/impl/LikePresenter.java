@@ -36,8 +36,7 @@ import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.OnResultListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.SimpleResponse;
-import com.umeng.comm.core.utils.ResFinder;
-import com.umeng.comm.core.utils.ToastMsg;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.ui.mvpview.MvpLikeView;
 import com.umeng.comm.ui.presenter.BasePresenter;
 import com.umeng.comm.ui.utils.BroadcastUtils;
@@ -66,10 +65,7 @@ public class LikePresenter extends BasePresenter {
 
             @Override
             public void onComplete(SimpleResponse response) {
-
-                // 判断用户是否被禁言
-                if (response.errCode == ErrorCode.USER_FORBIDDEN_ERR_CODE) {
-                    ToastMsg.showShortMsg(mContext, ResFinder.getString("umeng_comm_user_unusable"));
+                if (NetworkUtils.handleResponseComm(response)) {
                     return;
                 }
 
@@ -130,12 +126,9 @@ public class LikePresenter extends BasePresenter {
             @Override
             public void onComplete(SimpleResponse response) {
                 // 判断用户是否被禁言
-                if (response.errCode == ErrorCode.USER_FORBIDDEN_ERR_CODE) {
-                    ToastMsg.showShortMsg(mContext, ResFinder.getString("umeng_comm_user_unusable"));
-                    return;
-                }
-                if (response.errCode != 0) {
-                    return;
+                if (NetworkUtils.handleResponseComm(response)
+                        || NetworkUtils.handResponseWithDefaultCode(response)) {
+                    return ;
                 }
                 mFeedItem.isLiked = false;
                 mFeedItem.likeCount--;

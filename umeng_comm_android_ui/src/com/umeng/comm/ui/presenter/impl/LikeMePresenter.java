@@ -32,6 +32,7 @@ import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.LikeMeResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.ui.mvpview.MvpFeedView;
 
 /**
@@ -58,7 +59,8 @@ public class LikeMePresenter extends FeedListPresenter {
 
                     @Override
                     public void onComplete(LikeMeResponse response) {
-                        if(response.errCode != ErrorCode.NO_ERROR ){
+                        if(NetworkUtils.handleResponseAll(response) ){
+                            mFeedView.onRefreshEnd();
                             return ;
                         }
                         if ( TextUtils.isEmpty(mNextPageUrl) && mUpdateNextPageUrl.get() ) {
@@ -81,12 +83,15 @@ public class LikeMePresenter extends FeedListPresenter {
                 new SimpleFetchListener<LikeMeResponse>() {
                     @Override
                     public void onComplete(LikeMeResponse response) {
-                        if (mFeedView.handleResponse(response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
+                            if ( response.errCode == ErrorCode.NO_ERROR ) {
+                                mNextPageUrl = "";
+                            }
                             mFeedView.onRefreshEnd();
                             return;
                         }
                         mNextPageUrl = response.nextPageUrl;
-                        appendFeedItems(response.result);
+                        appendFeedItems(response.result,false);
                         mFeedView.onRefreshEnd();
                     }
                 });

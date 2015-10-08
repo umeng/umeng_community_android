@@ -53,6 +53,7 @@ public class LikeMeFeedAdapter extends NoImageFeedAdapter {
         holder.mShareBtn.setText(TimeUtils.format(date));
     }
 
+    @SuppressWarnings("deprecation")
     private void updateShareTextViewParams(TextView textView) {
         LayoutParams params = (LayoutParams) textView.getLayoutParams();
         params.width = android.view.ViewGroup.LayoutParams.WRAP_CONTENT;

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusableInTouchMode="true"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <!-- title -->
+
+    <RelativeLayout
+        android:id="@+id/umeng_comm_title_bar_root"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" >
+
+        <ImageView
+            android:id="@+id/umeng_comm_setting_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:contentDescription="@string/umeng_comm_new_post"
+            android:padding="10dp"
+            android:src="@drawable/umeng_comm_back_bt" />
+
+        <TextView
+            android:id="@+id/umeng_comm_setting_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/umeng_comm_camera_pressed"
+            android:text="@string/umeng_comm_account_setting"
+            android:textSize="@dimen/text_big18_size" />
+
+        <Button
+            android:id="@+id/umeng_comm_save_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/umeng_comm_tv_style"
+            android:textSize="@dimen/text_big16_size" />
+    </RelativeLayout>
+
+    <include layout="@layout/umeng_comm_divide_line"  />
+
+</LinearLayout>

@@ -24,28 +24,33 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
-import android.text.TextUtils;
-
-import com.umeng.comm.core.beans.CommConfig;
-import com.umeng.comm.core.beans.FeedItem;
-import com.umeng.comm.core.constants.ErrorCode;
-import com.umeng.comm.core.listeners.Listeners.FetchListener;
-import com.umeng.comm.core.listeners.Listeners.OnResultListener;
-import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
-import com.umeng.comm.core.nets.responses.FeedsResponse;
-import com.umeng.comm.core.utils.CommonUtils;
-import com.umeng.comm.ui.mvpview.MvpFeedView;
-import com.umeng.comm.ui.utils.Filter;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.text.TextUtils;
+
+import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.beans.FeedItem;
+import com.umeng.comm.core.constants.Constants;
+import com.umeng.comm.core.constants.ErrorCode;
+import com.umeng.comm.core.listeners.Listeners.FetchListener;
+import com.umeng.comm.core.listeners.Listeners.OnResultListener;
+import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
+import com.umeng.comm.core.nets.responses.FeedsResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
+import com.umeng.comm.ui.mvpview.MvpFeedView;
+import com.umeng.comm.ui.utils.Filter;
+
 /**
  * Feed列表相关的Presenter，该Presenter从网络、数据库中读取Feed，如果数据是从网络上获取的，那么需要将数据存储到数据库中。
- * 在获取数据后会通过MvpFeedView的{@link MvpFeedView#getAdapterDataSet()}
+ * 在获取数据后会通过MvpFeedView的{@link MvpFeedView#getBindDataSource()}
  * 函数获取到列表的数据集,然后对新获取的数据进行去重、排序，再将新获取到的数据添加到列表的数据集合中，最后调用
  * {@link MvpFeedView#notifyDataSetChanged()} 函数更新对应的列表视图。
  * 
@@ -55,6 +60,8 @@ public class FeedListPresenter extends BaseFeedPresenter {
     protected MvpFeedView mFeedView;
     protected String mNextPageUrl;
     private Filter<FeedItem> mFeedFilter;
+    private boolean isRegisterLoginBroadcast = false;
+    private boolean isAttached = false;
     private OnResultListener mOnResultListener; // feed更新时回调，用于提示
 
     /**
@@ -63,7 +70,12 @@ public class FeedListPresenter extends BaseFeedPresenter {
     protected AtomicBoolean isNeedRemoveOldFeeds = new AtomicBoolean(true);
 
     public FeedListPresenter(MvpFeedView view) {
+        this(view, false);
+    }
+
+    public FeedListPresenter(MvpFeedView view, boolean isRegisterLoginBroadcast) {
         mFeedView = view;
+        this.isRegisterLoginBroadcast = isRegisterLoginBroadcast;
     }
 
     /**
@@ -94,27 +106,25 @@ public class FeedListPresenter extends BaseFeedPresenter {
         @Override
         public void onComplete(FeedsResponse response) {
             // 根据response进行Toast
-            if (mFeedView.handleResponse(response)) {
+            if (NetworkUtils.handleResponseAll(response)) {
                 mFeedView.onRefreshEnd();
                 return;
             }
 
             final List<FeedItem> newFeedItems = response.result;
-            if (response.errCode == ErrorCode.NO_ERROR) {
-                // 对于下拉刷新，仅在下一个地址为空（首次刷新）时设置下一页地址
-                if (TextUtils.isEmpty(mNextPageUrl) && isNeedRemoveOldFeeds.get()) { 
-                    mNextPageUrl = response.nextPageUrl;
-                }
-                beforeDeliveryFeeds(response);
-                // 更新数据
-                int news = addFeedItemsToHeader(newFeedItems);
-                if (mOnResultListener != null) {
-                    mOnResultListener.onResult(news);
-                }
-                // 保存加载的数据。如果该数据存在于DB中，则替换成最新的，否则Insert一条新纪录
-                saveDataToDB(newFeedItems);
-                mFeedView.onRefreshEnd();
+            // 对于下拉刷新，仅在下一个地址为空（首次刷新）时设置下一页地址
+            if (TextUtils.isEmpty(mNextPageUrl) && isNeedRemoveOldFeeds.get()) {
+                mNextPageUrl = response.nextPageUrl;
             }
+            beforeDeliveryFeeds(response);
+            // 更新数据
+            int news = addFeedItemsToHeader(newFeedItems);
+            if (mOnResultListener != null) {
+                mOnResultListener.onResult(news);
+            }
+            // 保存加载的数据。如果该数据存在于DB中，则替换成最新的，否则Insert一条新纪录
+            saveDataToDB(newFeedItems);
+            mFeedView.onRefreshEnd();
         }
     };
 
@@ -135,7 +145,7 @@ public class FeedListPresenter extends BaseFeedPresenter {
             // 此时暂时不清空Adapter数据，确保手机显示的数据是集为：cache+server端数据
             // 清空数据库中的缓存数据
             mDatabaseAPI.getFeedDBAPI().deleteAllFeedsFromDB();
-            if ( !TextUtils.isEmpty(CommConfig.getConfig().loginedUser.id) ) {
+            if (!TextUtils.isEmpty(CommConfig.getConfig().loginedUser.id)) {
                 isNeedRemoveOldFeeds.set(false);
             }
         }
@@ -153,13 +163,11 @@ public class FeedListPresenter extends BaseFeedPresenter {
                     @Override
                     public void onComplete(FeedsResponse response) {
                         mFeedView.onRefreshEnd();
-                        //此时数据加载完毕，需要更新下一页地址
-                        if (response.errCode == ErrorCode.NO_ERROR
-                                && CommonUtils.isListEmpty(response.result)) {
-                            mNextPageUrl = "";
-                        }
                         // 根据response进行Toast
-                        if (mFeedView.handleResponse(response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
+                            if (response.errCode == ErrorCode.NO_ERROR) { // 如果返回的数据是空，则需要置下一页地址为空
+                                mNextPageUrl = "";
+                            }
                             return;
                         }
 
@@ -168,7 +176,7 @@ public class FeedListPresenter extends BaseFeedPresenter {
                         final List<FeedItem> feedItems = getNewFeedItems(response.result);
                         if (feedItems != null && feedItems.size() > 0) {
                             // 追加数据
-                            appendFeedItems(feedItems);
+                            appendFeedItems(feedItems,false);
                             saveDataToDB(feedItems);
                         }
                     }
@@ -180,14 +188,14 @@ public class FeedListPresenter extends BaseFeedPresenter {
      * 
      * @param feedItems
      */
-    protected List<FeedItem> appendFeedItems(List<FeedItem> feedItems) {
+    protected List<FeedItem> appendFeedItems(List<FeedItem> feedItems,boolean fromDB) {
         List<FeedItem> newFeeds = null;
         synchronized (this) {
             newFeeds = getNewFeedItems(feedItems);
             if (newFeeds != null && newFeeds.size() > 0) {
                 // 添加到listview中
-                mFeedView.getAdapterDataSet().addAll(newFeeds);
-                sortFeedItems(mFeedView.getAdapterDataSet());
+                mFeedView.getBindDataSource().addAll(newFeeds);
+                sortFeedItems(mFeedView.getBindDataSource());
                 mFeedView.notifyDataSetChanged();
             }
         }
@@ -221,7 +229,7 @@ public class FeedListPresenter extends BaseFeedPresenter {
     private List<FeedItem> getNewFeedItems(List<FeedItem> feedItems) {
         // 去掉在本地已经存在的feeds[此时应该先从adapter中移除数据，确保加载下来的是最新的数据]
         // feedItems.removeAll(mFeedView.getAdapterDataSet());
-        mFeedView.getAdapterDataSet().removeAll(feedItems);
+        mFeedView.getBindDataSource().removeAll(feedItems);
         // 过滤数据
         return filteFeeds(feedItems);
     }
@@ -233,7 +241,7 @@ public class FeedListPresenter extends BaseFeedPresenter {
      */
     protected int addFeedItemsToHeader(List<FeedItem> feedItems) {
         feedItems = filteFeeds(feedItems);
-        List<FeedItem> olds = mFeedView.getAdapterDataSet();
+        List<FeedItem> olds = mFeedView.getBindDataSource();
         int size = olds.size();
         olds.removeAll(feedItems);
         olds.addAll(0, feedItems);
@@ -266,6 +274,15 @@ public class FeedListPresenter extends BaseFeedPresenter {
         mDatabaseAPI.getFeedDBAPI().loadFeedsFromDB(uid, mDbFetchListener);
     }
 
+    @Override
+    public void attach(Context context) {
+        super.attach(context);
+        if (isRegisterLoginBroadcast && !isAttached) {
+            registerLoginSuccessBroadcast();
+            isAttached = true;
+        }
+    }
+
     /**
      * 用于数据库的SimpleFetchListener
      */
@@ -274,7 +291,7 @@ public class FeedListPresenter extends BaseFeedPresenter {
 
                 @Override
                 public void onComplete(List<FeedItem> response) {
-                    appendFeedItems(response);
+                    appendFeedItems(response,true);
                 }
             };
 
@@ -284,6 +301,63 @@ public class FeedListPresenter extends BaseFeedPresenter {
         public int compare(FeedItem lhs, FeedItem rhs) {
             int isTop = rhs.isTop - lhs.isTop;
             return isTop != 0 ? isTop : rhs.publishTime.compareTo(lhs.publishTime);
+        }
+    };
+
+    /**
+     * 注册登录成功时的广播</br>
+     */
+    private void registerLoginSuccessBroadcast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_LOGIN_SUCCESS);
+        // LocalBroadcastManager.getInstance(mContext).registerReceiver(mLoginReceiver,
+        // filter);
+        mContext.registerReceiver(mLoginReceiver, filter);
+    }
+
+    private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fetchDataFromServerByLogin();
+        }
+    };
+
+    /**
+     * 从server加载数据。【注意：该接口仅仅在登录成功的时候调用，需要对此种情况有特殊的逻辑处理】</br>
+     */
+    protected void fetchDataFromServerByLogin() {
+        mCommunitySDK.fetchLastestFeeds(mLoginRefreshListener);
+    }
+
+    protected FetchListener<FeedsResponse> mLoginRefreshListener = new FetchListener<FeedsResponse>() {
+
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onComplete(FeedsResponse response) {
+            // 首先清理未登录时存储的数据
+            mDatabaseAPI.getFeedDBAPI().deleteAllFeedsFromDB();
+            // 清理Adapter中的数据
+            mFeedView.getBindDataSource().clear();
+            if (NetworkUtils.handleResponseAll(response)) {
+                mFeedView.onRefreshEnd();
+                return;
+            }
+            // 更新下一页地址
+            mNextPageUrl = response.nextPageUrl;
+            if (!TextUtils.isEmpty(mNextPageUrl)) {
+                isNeedRemoveOldFeeds.set(false);
+            }
+            beforeDeliveryFeeds(response);
+            mFeedView.getBindDataSource().addAll(response.result);
+            mFeedView.notifyDataSetChanged();
+            // 保存加载的数据。如果该数据存在于DB中，则替换成最新的，否则Insert一条新纪录
+            saveDataToDB(response.result);
+            mFeedView.onRefreshEnd();
         }
     };
 

@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.umeng.comm.core.imageloader.cache.DiskLruCache;
 import com.umeng.comm.core.imageloader.cache.ImageCache;
@@ -56,11 +57,12 @@ public class ImageBrowserPresenter {
     public void saveImage(String url) {
         BufferedOutputStream out = null;
         BufferedInputStream in = null;
+        DiskLruCache.Snapshot snapshot = null;
         try {
             String fileName = Md5Helper.toMD5(url);
             File imgFile = new File(getCacheDir() + File.separator
                     + fileName + ".png");
-            DiskLruCache.Snapshot snapshot = ImageCache.getInstance().getInputStream(fileName);
+            snapshot = ImageCache.getInstance().getInputStream(fileName);
             if (snapshot == null) {
                 return;
             }
@@ -74,18 +76,16 @@ public class ImageBrowserPresenter {
             }
             out.flush();
             galleryAddPic(imgFile);
-            ToastMsg.showShortMsg(mContext,
-                    ResFinder.getString("umeng_comm_save_pic_success")
-                            + imgFile.getAbsolutePath());
+            String text = ResFinder.getString("umeng_comm_save_pic_success") +imgFile.getAbsolutePath();  
+            Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
-            ToastMsg.showShortMsg(mContext,
-                    ResFinder.getString("umeng_comm_save_pic_failed"));
+            ToastMsg.showShortMsgByResName("umeng_comm_save_pic_failed");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-            ToastMsg.showShortMsg(mContext,
-                    ResFinder.getString("umeng_comm_save_pic_failed"));
+            ToastMsg.showShortMsgByResName("umeng_comm_save_pic_failed");
         } finally {
+            CommonUtils.closeSilently(snapshot);
             CommonUtils.closeSilently(out);
             CommonUtils.closeSilently(in);
         }

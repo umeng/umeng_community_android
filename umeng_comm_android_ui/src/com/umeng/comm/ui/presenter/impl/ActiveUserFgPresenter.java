@@ -4,6 +4,8 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -20,15 +22,14 @@ import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.Response;
 import com.umeng.comm.core.nets.responses.FansResponse;
 import com.umeng.comm.core.nets.responses.UsersResponse;
-import com.umeng.comm.core.utils.ResFinder;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
+import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpActiveUserFgView;
 import com.umeng.comm.ui.presenter.BaseFragmentPresenter;
 import com.umeng.comm.ui.utils.BroadcastUtils;
 import com.umeng.comm.ui.utils.BroadcastUtils.BROADCAST_TYPE;
 import com.umeng.comm.ui.utils.BroadcastUtils.DefalutReceiver;
-
-import java.util.List;
 
 /**
  * 
@@ -95,16 +96,16 @@ public class ActiveUserFgPresenter extends BaseFragmentPresenter<List<CommUser>>
      */
     void dealResult(FansResponse response, boolean fromRefresh) {
 
-        if (response.errCode != ErrorCode.NO_ERROR) {
-            // 加载数据失败
-            mActiveUserFgView.showToast("umeng_comm_load_failed");
-            return;
+        if (NetworkUtils.handleResponseComm(response)
+                || NetworkUtils.handResponseWithDefaultCode(response)) {
+            return ;
         }
 
         List<CommUser> users = response.result;
-        if (users == null || users.size() == 0) {
+        if (CommonUtils.isListEmpty(users)) {
             // 加载用户为空
-            mActiveUserFgView.showToast("umeng_comm_no_recommend_user");
+            ToastMsg.showShortMsgByResName("umeng_comm_no_recommend_user");
+            
             return;
         }
 
@@ -118,6 +119,7 @@ public class ActiveUserFgPresenter extends BaseFragmentPresenter<List<CommUser>>
             dataSource.addAll(users);
         }
         mActiveUserFgView.notifyDataSetChanged();
+        mActiveUserFgView.onRefreshEnd();
     }
 
     private void dealNextpageUrl(String url, boolean fromRefersh) {
@@ -144,7 +146,7 @@ public class ActiveUserFgPresenter extends BaseFragmentPresenter<List<CommUser>>
             @Override
             public void onComplete(Response response) {
                 if (response.errCode == ErrorCode.NO_ERROR) {
-                    mActiveUserFgView.showToast("umeng_comm_follow_user_success");
+                    ToastMsg.showShortMsgByResName("umeng_comm_follow_user_success");
                     toggleButton.setChecked(true);
                     DatabaseAPI.getInstance().getFollowDBAPI().follow(user);
                     // 改变状态
@@ -159,12 +161,13 @@ public class ActiveUserFgPresenter extends BaseFragmentPresenter<List<CommUser>>
                     return;
                 }
                 if (response.errCode == ErrorCode.ERROR_USER_FOCUSED) {
-                    ToastMsg.showShortMsgByResName(mContext, "umeng_comm_user_has_focused");
-                    toggleButton.setChecked(false);
+                    ToastMsg.showShortMsgByResName("umeng_comm_user_has_focused");
+                    user.isFollowed = true;
+                    toggleButton.setChecked(true);
                     return;
                 }
 
-                mActiveUserFgView.showToast("umeng_comm_follow_user_failed");
+                ToastMsg.showShortMsgByResName("umeng_comm_follow_user_failed");
                 toggleButton.setChecked(false);
             }
         });
@@ -185,9 +188,7 @@ public class ActiveUserFgPresenter extends BaseFragmentPresenter<List<CommUser>>
             @Override
             public void onComplete(Response response) {
                 if (response.errCode == ErrorCode.NO_ERROR) {
-                    ToastMsg.showShortMsg(mContext,
-                            ResFinder.getString(
-                                    "umeng_comm_follow_cancel_success"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_follow_cancel_success");
                     toggleButton.setChecked(false);
                     DatabaseAPI.getInstance().getFollowDBAPI().unfollow(user);
                     // 改变状态
@@ -204,13 +205,13 @@ public class ActiveUserFgPresenter extends BaseFragmentPresenter<List<CommUser>>
                     return;
                 }
                 if (response.errCode == ErrorCode.ERROR_USER_NOT_FOCUSED) {
-                    ToastMsg.showShortMsgByResName(mContext, "umeng_comm_user_has_not_focused");
-                    toggleButton.setChecked(true);
+                    ToastMsg.showShortMsgByResName("umeng_comm_user_has_not_focused");
+                    user.isFollowed = false;
+                    toggleButton.setChecked(false);
                     return;
                 }
 
-                ToastMsg.showShortMsg(mContext,
-                        ResFinder.getString("umeng_comm_follow_user_failed"));
+                ToastMsg.showShortMsgByResName("umeng_comm_follow_user_failed");
                 toggleButton.setChecked(true);
             }
         });
@@ -218,7 +219,7 @@ public class ActiveUserFgPresenter extends BaseFragmentPresenter<List<CommUser>>
 
     private boolean isMySelf(CommUser user) {
         if (user.id.equals(CommConfig.getConfig().loginedUser.id)) {
-            ToastMsg.showShortMsgByResName(mContext, "umeng_comm_no_follow_unfollow_myself");
+            ToastMsg.showShortMsgByResName("umeng_comm_no_follow_unfollow_myself");
             return true;
         }
         return false;

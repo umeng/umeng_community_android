@@ -37,6 +37,7 @@ import com.umeng.comm.core.beans.CommUser.Gender;
 import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.imageloader.ImgDisplayOption;
 import com.umeng.comm.core.imageloader.UMImageLoader;
+import com.umeng.comm.core.listeners.Listeners;
 import com.umeng.comm.core.sdkmanager.ImageLoaderManager;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ResFinder.ResType;
@@ -134,20 +135,21 @@ public class ActiveUserAdapter extends
     }
 
     public void setupItemClickListener(View rootView, final CommUser user) {
-        if (isFromFindPage) {
-            rootView.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    ComponentName componentName = new ComponentName(mContext,
-                            UserInfoActivity.class);
-                    intent.setComponent(componentName);
-                    intent.putExtra(Constants.TAG_USER, user);
-                    ((Activity) mContext).startActivity(intent);
-                }
-            });
+        if (!isFromFindPage) {
+            return;
         }
+        rootView.setOnClickListener(new Listeners.LoginOnViewClickListener() {
+
+            @Override
+            protected void doAfterLogin(View v) {
+                Intent intent = new Intent();
+                ComponentName componentName = new ComponentName(mContext,
+                        UserInfoActivity.class);
+                intent.setComponent(componentName);
+                intent.putExtra(Constants.TAG_USER, user);
+                ((Activity) mContext).startActivity(intent);
+            }
+        });
     }
 
     private String buildMsgFansStr(CommUser user) {

@@ -34,6 +34,7 @@ import com.umeng.comm.core.beans.relation.EntityRelationFactory;
 import com.umeng.comm.core.db.ctrl.LikeDBAPI;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class LikeDBAPIImpl extends AbsDbAPI<List<Like>> implements LikeDBAPI {
@@ -59,8 +60,9 @@ class LikeDBAPIImpl extends AbsDbAPI<List<Like>> implements LikeDBAPI {
 
             @Override
             protected void execute() {
+                final List<Like> likes = new ArrayList<Like>(feedItem.likes);
                 // 存储实体类本身
-                for (Like like : feedItem.likes) {
+                for (Like like : likes) {
                     like.saveEntity();
                     // 存储关系
                     DBRelationOP<?> relation = EntityRelationFactory.createFeedLike(feedItem,

@@ -24,13 +24,12 @@
 
 package com.umeng.comm.ui.mvpview;
 
+import java.util.List;
+
 import android.location.Location;
 
 import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.beans.LocationItem;
-import com.umeng.comm.core.nets.responses.AbsResponse;
-
-import java.util.List;
 
 /**
  * 发布Feed 的View接口
@@ -45,8 +44,6 @@ public interface MvpPostFeedActivityView {
      * 发送成功之后清空编辑器等状态
      */
     public void clearState();
-
-    public boolean handleResponse(AbsResponse<?> response);
 
     /**
      * 重新发送时恢复feed数据

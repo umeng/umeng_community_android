@@ -103,7 +103,7 @@ public class AlbumActivity extends Activity implements MvpAlbumView {
 
             @Override
             public void onRefresh() {
-                mPresenter.fetchUserAlbums();
+                mPresenter.loadDataFromServer();
             }
         });
 
@@ -140,7 +140,7 @@ public class AlbumActivity extends Activity implements MvpAlbumView {
     }
 
     @Override
-    public List<ImageItem> getAdapterDataSet() {
+    public List<ImageItem> getBindDataSource() {
         return mImageAdapter.getDataSource();
     }
 

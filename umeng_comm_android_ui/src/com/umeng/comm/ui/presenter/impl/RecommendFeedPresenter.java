@@ -38,7 +38,7 @@ import com.umeng.comm.ui.mvpview.MvpFeedView;
 public class RecommendFeedPresenter extends FeedListPresenter {
 
     public RecommendFeedPresenter(MvpFeedView feedViewInterface) {
-        super(feedViewInterface);
+        super(feedViewInterface, true);
     }
 
     @Override
@@ -59,17 +59,28 @@ public class RecommendFeedPresenter extends FeedListPresenter {
         mDatabaseAPI.getFeedDBAPI()
                 .loadRecommendFeedsFromDB(mDbFetchListener);
     }
+    
+    @Override
+    public void sortFeedItems(List<FeedItem> items) {
+    }
 
     @Override
     public void loadMoreData() {
+//        mFeedView.onRefreshEnd();
+        fetchNextPageData();
     }
-    
+
     @Override
     protected void saveDataToDB(List<FeedItem> newFeedItems) {
         // 未登录的情况下，不保存推荐数据
-        if ( !TextUtils.isEmpty(CommConfig.getConfig().loginedUser.id) ) {
+        if (!TextUtils.isEmpty(CommConfig.getConfig().loginedUser.id)) {
             super.saveDataToDB(newFeedItems);
         }
+    }
+
+    @Override
+    protected void fetchDataFromServerByLogin() {
+        mCommunitySDK.fetchRecommendedFeeds(mLoginRefreshListener);
     }
 
 }

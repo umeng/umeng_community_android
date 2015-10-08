@@ -24,6 +24,10 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import android.location.Location;
 
 import com.umeng.comm.core.beans.FeedItem;
@@ -32,11 +36,6 @@ import com.umeng.comm.core.nets.responses.FeedsResponse;
 import com.umeng.comm.core.sdkmanager.LocationSDKManager;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpFeedView;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 附近的Feed Presenter
@@ -58,8 +57,7 @@ public class NearbyFeedPresenter extends FriendFeedPresenter {
                     @Override
                     public void onComplete(Location location) {
                         if (location == null) {
-                            ToastMsg.showShortMsgByResName(mContext,
-                                    "umeng_comm_request_location_failed");
+                            ToastMsg.showShortMsgByResName("umeng_comm_request_location_failed");
                             return;
                         }
                         mCommunitySDK.fetchNearByFeed(location, mRefreshListener);

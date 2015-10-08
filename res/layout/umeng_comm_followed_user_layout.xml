@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- 好友gridview -->
+
+    <com.umeng.comm.ui.widgets.RefreshGvLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/umeng_comm_user_swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <GridView
+            android:id="@+id/umeng_comm_user_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:columnWidth="80dp"
+            android:focusable="false"
+            android:horizontalSpacing="6dp"
+            android:numColumns="4"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="6dp" />
+    </com.umeng.comm.ui.widgets.RefreshGvLayout>
+
+    <com.umeng.comm.ui.widgets.BaseView
+        android:id="@+id/umeng_comm_baseview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

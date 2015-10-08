@@ -24,6 +24,8 @@
 
 package com.umeng.comm.ui.fragments;
 
+import android.view.View;
+
 import com.umeng.comm.ui.adapters.FeedAdapter;
 import com.umeng.comm.ui.adapters.LikeMeFeedAdapter;
 import com.umeng.comm.ui.presenter.impl.LikeMePresenter;
@@ -41,6 +43,12 @@ public class LikedMeFragment extends FeedListFragment<LikeMePresenter> {
     @Override
     protected FeedAdapter createListViewAdapter() {
         return new LikeMeFeedAdapter(getActivity());
+    }
+
+    @Override
+    protected void initWidgets() {
+        super.initWidgets();
+        mPostBtn.setVisibility(View.GONE);
     }
 
     @Override

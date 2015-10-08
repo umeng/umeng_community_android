@@ -27,23 +27,16 @@ package com.umeng.comm.ui.mvpview;
 import java.util.List;
 
 import com.umeng.comm.core.beans.CommUser;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 
 /**
  * 已关注用户的View
  */
-public interface MvpFollowedUserView {
+public interface MvpFollowedUserView extends MvpBaseRefreshView {
 
     public List<CommUser> getBindDataSource();
 
     public void notifyDataSetChanged();
 
     public void executeCallback(int count);
-
-    public void onRefreshStart();
-
-    public void onRefreshEnd();
-
-    public boolean handleResponse(AbsResponse<?> response);
 
 }

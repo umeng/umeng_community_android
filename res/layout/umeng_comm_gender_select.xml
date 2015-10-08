@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/umeng_comm_gender_textview_male"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="18dp"
+        android:textSize="@dimen/text_big16_size"
+        android:text="@string/umeng_comm_male" />
+
+    <include layout="@layout/umeng_comm_divide_line" />
+
+    <TextView
+        android:id="@+id/umeng_comm_gender_textview_femal"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="18dp"
+        android:textSize="@dimen/text_big16_size"
+        android:text="@string/umeng_comm_female" />
+
+</LinearLayout>

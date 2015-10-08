@@ -24,29 +24,21 @@
 
 package com.umeng.comm.ui.mvpview;
 
-import com.umeng.comm.core.beans.FeedItem;
-import com.umeng.comm.core.nets.responses.AbsResponse;
-
 import java.util.List;
+
+import com.umeng.comm.core.beans.FeedItem;
 
 /**
  * Feed View接口
  */
-public interface MvpFeedView {
-    /**
-     * 处理请求结果,集中处理一些错误信息
-     * 
-     * @param response 请求的response
-     * @return 如果该response已经处理则返回true,否则返回false
-     */
-    public boolean handleResponse(AbsResponse<?> response);
+public interface MvpFeedView extends MvpBaseRefreshView{
 
     /**
      * 获取Feed的数据集
      * 
      * @return
      */
-    public List<FeedItem> getAdapterDataSet();
+    public List<FeedItem> getBindDataSource();
 
     /**
      * 更新Feed Adapter中的数据
@@ -57,9 +49,5 @@ public interface MvpFeedView {
      * 清空Feed列表
      */
     public void clearListView();
-
-    public void onRefreshStart();
-
-    public void onRefreshEnd();
 
 }

@@ -167,6 +167,21 @@ public class FeedDetailFragment extends CommentEditFragment<List<FeedItem>, Feed
         setFeedItemData(mFeedItem);
     }
 
+    public void updateFeedItem(FeedItem feedItem) {
+        if (mFeedItem != null && feedItem != null) {
+            mFeedItem.text = feedItem.text;
+            mFeedItem.publishTime = feedItem.publishTime;
+            mFeedItem.likeCount = feedItem.likeCount;
+            mFeedItem.commentCount = feedItem.commentCount;
+            mFeedItem.forwardCount = feedItem.forwardCount;
+            mFeedItem.imageUrls = feedItem.imageUrls ;
+            mFeedItem.category = feedItem.category;
+        } else {
+            mFeedItem = feedItem;
+        }
+        setFeedItemData(mFeedItem);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -235,7 +250,7 @@ public class FeedDetailFragment extends CommentEditFragment<List<FeedItem>, Feed
         mRefreshLayout = mViewFinder.findViewById(ResFinder
                 .getId("umeng_comm_feed_refresh_layout"));
         mRefreshLayout.setRefreshing(false);
-         mRefreshLayout.setEnabled(false);
+        mRefreshLayout.setEnabled(false);
         // 添加footer
         if (mFeedItem.commentCount > Constants.COUNT) {
             mRefreshLayout.setDefaultFooterView();
@@ -312,8 +327,7 @@ public class FeedDetailFragment extends CommentEditFragment<List<FeedItem>, Feed
                 mFeedItem.extraData.remove(HttpProtocol.COMMENT_ID_KEY);
                 final Comment item = mCommentAdapter.getItem(position);
                 if (item.creator.id.equals(CommConfig.getConfig().loginedUser.id)) {
-                    ToastMsg.showShortMsg(getActivity(),
-                            ResFinder.getString("umeng_comm_do_not_reply_yourself"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_do_not_reply_yourself");                    
                 } else {
                     showCommentLayout(position, item);
                 }
@@ -426,7 +440,7 @@ public class FeedDetailFragment extends CommentEditFragment<List<FeedItem>, Feed
      * @param viewHolder
      * @param item
      */
-    public void setFeedItemData(final FeedItem feedItem) {
+    private void setFeedItemData(final FeedItem feedItem) {
         if (TextUtils.isEmpty(feedItem.id)) {
             return;
         }
@@ -445,7 +459,7 @@ public class FeedDetailFragment extends CommentEditFragment<List<FeedItem>, Feed
     }
 
     private void setLikeCount(int count) {
-        if ( mFeedItem.likeCount < 0 ) {
+        if (mFeedItem.likeCount < 0) {
             mFeedItem.likeCount = 0;
         }
         mLikeTextView.setText("" + mFeedItem.likeCount);
@@ -574,6 +588,10 @@ public class FeedDetailFragment extends CommentEditFragment<List<FeedItem>, Feed
         }
         mFeedItem.forwardCount = mFeedItem.forwardCount + count;
         setForwardCount(mFeedItem.forwardCount);
+    }
+
+    @Override
+    public void onRefreshStart() {
     }
 
 }

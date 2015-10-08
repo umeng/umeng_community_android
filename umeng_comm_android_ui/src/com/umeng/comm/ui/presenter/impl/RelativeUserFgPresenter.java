@@ -27,7 +27,6 @@ package com.umeng.comm.ui.presenter.impl;
 import android.text.TextUtils;
 
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 import com.umeng.comm.core.nets.responses.UsersResponse;
 import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.ui.mvpview.MvpActiveUserFgView;
@@ -64,7 +63,7 @@ public class RelativeUserFgPresenter extends RecommendUserFgPresenter {
                     public void onComplete(UsersResponse response) {
                         mActiveUserFgView.onRefreshEnd();
                         mNextPageUrl = response.nextPageUrl;
-                        if (handleResponse(response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
                             return;
                         }
                         mActiveUserFgView.getBindDataSource().addAll(response.result);
@@ -72,15 +71,5 @@ public class RelativeUserFgPresenter extends RecommendUserFgPresenter {
                     }
                 });
     }
-
-    /**
-     * 根据response做不同的Toast提示。【所有跟网络请求相关的Toast都应该经过此方法的判断】</br>
-     * 
-     * @param response
-     * @return 如果进行了Toast，则返回true；否则返回false
-     */
-    protected boolean handleResponse(AbsResponse<?> response) {
-        return NetworkUtils.handleResponse(mContext, response);
-    }
-
+    
 }

@@ -30,9 +30,9 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.umeng.comm.core.constants.Constants;
-import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.emoji.EmojiHandler;
 
 /**
@@ -75,17 +75,18 @@ public class CommentEditText extends EditText {
                 Editable editable = getText();
                 int totalChars = editable.toString().length();
                 if (totalChars > Constants.COMMENT_CHARS) {
-                    setText(editable.delete(Constants.COMMENT_CHARS-1, totalChars));
+                    setText(editable.delete(Constants.COMMENT_CHARS, totalChars));
                     setSelection(getText().length());
-                    ToastMsg.showShortMsg(getContext(), "评论最多" + Constants.COMMENT_CHARS + "个字符~");
+                    String text = "评论最多" + Constants.COMMENT_CHARS + "个字符~";
+                    Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-    
+
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-//        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        // super.onTextChanged(text, start, lengthBefore, lengthAfter);
         EmojiHandler.addEmojis(getContext(), getText(), 65, 65, false);
     }
 

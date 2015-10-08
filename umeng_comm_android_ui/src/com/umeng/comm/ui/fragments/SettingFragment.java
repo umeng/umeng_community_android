@@ -31,7 +31,6 @@ import android.view.View.OnClickListener;
 
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
-import com.umeng.comm.core.beans.MessageCount;
 import com.umeng.comm.core.login.LoginListener;
 import com.umeng.comm.core.push.NullPushImpl;
 import com.umeng.comm.core.push.Pushable;
@@ -52,6 +51,7 @@ public class SettingFragment extends BaseFragment<Void, NullPresenter> implement
 
     // 由于开发者可能直接使用Fragment，在退出登录的时候，我们需要回到该Activity
     private String mContainerClass = null;
+    private boolean mFromRegister = false;
 
     @Override
     protected int getFragmentLayout() {
@@ -73,6 +73,10 @@ public class SettingFragment extends BaseFragment<Void, NullPresenter> implement
 
     public void setContainerClass(String clz) {
         mContainerClass = clz;
+    }
+
+    public void setFrom(boolean from) {
+        mFromRegister = from;
     }
 
     /**
@@ -111,7 +115,7 @@ public class SettingFragment extends BaseFragment<Void, NullPresenter> implement
     private void logout() {
         if (CommonUtils.isActivityAlive(getActivity())
                 && !DeviceUtils.isNetworkAvailable(getActivity())) {
-            ToastMsg.showShortMsg(getActivity(), ResFinder.getString("umeng_comm_not_network"));
+            ToastMsg.showShortMsgByResName("umeng_comm_not_network");
             return;
         }
         // 退出登录的情况
@@ -127,13 +131,14 @@ public class SettingFragment extends BaseFragment<Void, NullPresenter> implement
                     public void onComplete(int stCode, CommUser userInfo) {
 
                         Log.d(getTag(), "### 社区登出 , stCode = " + stCode);
-                        if (mContainerClass == null) {
-                            Log.e(getTag(), " container class is null...");
+
+                        if (stCode != 200) {
+                            ToastMsg.showShortMsgByResName("umeng_comm_logout_failed");
                             return;
                         }
-                        if (stCode != 200) {
-                            ToastMsg.showShortMsgByResName(getActivity(),
-                                    "umeng_comm_logout_failed");
+
+                        if (mContainerClass == null && !mFromRegister) {
+                            Log.e(getTag(), " container class is null...");
                             return;
                         }
 
@@ -143,11 +148,15 @@ public class SettingFragment extends BaseFragment<Void, NullPresenter> implement
                         Pushable pushable = PushSDKManager.getInstance().getCurrentSDK();
                         pushable.disable();
                         // 清空未读消息
-                        MessageCount.obtainSingleInstance().clear();
+                        CommConfig.getConfig().mMessageCount.clear();
                         // 清空SDK内部保存的用户信息
                         CommonUtils.logout();
                         // 置空用户信息
                         CommConfig.getConfig().loginedUser = new CommUser();
+                        if (mContainerClass == null) {
+                            getActivity().finish();
+                            return;
+                        }
                         Class<?> clz;
                         try {
                             clz = Class.forName(mContainerClass);

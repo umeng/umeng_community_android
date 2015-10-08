@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 
+import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.MessageCount;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ResFinder.ResType;
@@ -60,13 +61,12 @@ public class NewMsgActivity extends BaseFragmentActivity implements OnClickListe
     AtMeFeedFragment mAtFragment;
     CommentTabFragment mCommentFragment;
     LikedMeFragment mLikeMeFragment;
-    MessageCount mUnreadMsg = MessageCount.obtainSingleInstance();
+    MessageCount mUnreadMsg = CommConfig.getConfig().mMessageCount;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(ResFinder.getLayout("umeng_comm_my_msg_layout"));
-        // mUnreadMsg = getIntent().getParcelableExtra(Constants.UNREAD_MSG);
         initTitle();
         attachFragment();
     }
@@ -137,7 +137,8 @@ public class NewMsgActivity extends BaseFragmentActivity implements OnClickListe
         } else if (index == 2) {
             mUnreadMsg.unReadLikesCount = 0;
         }
-        mUnreadMsg.unReadTotal = mUnreadMsg.feedRelativeTotal();
+        mUnreadMsg.unReadTotal = mUnreadMsg.unReadAtCount + mUnreadMsg.unReadCommentsCount
+                + mUnreadMsg.unReadLikesCount + mUnreadMsg.unReadNotice;
     }
 
     private void attachFragment() {

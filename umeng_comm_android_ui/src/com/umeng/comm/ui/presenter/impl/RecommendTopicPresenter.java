@@ -39,6 +39,7 @@ import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.Response;
 import com.umeng.comm.core.nets.responses.LoginResponse;
 import com.umeng.comm.core.nets.responses.TopicResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpRecommendTopicView;
@@ -55,6 +56,8 @@ import java.util.List;
 public class RecommendTopicPresenter extends BaseFragmentPresenter<List<Topic>> {
 
     protected MvpRecommendTopicView mRecommendTopicView;
+    
+    private String mNextPageUrl = "";
 
     public RecommendTopicPresenter(MvpRecommendTopicView recommendTopicView) {
         this.mRecommendTopicView = recommendTopicView;
@@ -82,13 +85,14 @@ public class RecommendTopicPresenter extends BaseFragmentPresenter<List<Topic>> 
 
             @Override
             public void onComplete(final TopicResponse response) {
-                final List<Topic> results = response.result;
                 // 根据response进行Toast
-                if (mRecommendTopicView.handlerResponse(response)) {
+                if (NetworkUtils.handleResponseAll(response)) {
                     mRecommendTopicView.onRefreshEnd(); // [注意]:不可移动，该方法的回调会决定是否显示空视图 
                     return;
                 }
-                updateNextPageUrl(results.get(0).nextPage);
+                final List<Topic> results = response.result;
+                updateNextPageUrl(response.nextPageUrl);
+                dealNextPageUrl(response.nextPageUrl, true);
                 fetchTopicComplete(results, true);
                 mRecommendTopicView.onRefreshEnd();
             }
@@ -105,6 +109,14 @@ public class RecommendTopicPresenter extends BaseFragmentPresenter<List<Topic>> 
             topic.nextPage = newUrl;
         }
         mRecommendTopicView.notifyDataSetChanged();
+    }
+    
+    protected void dealNextPageUrl(String url,boolean fromRefresh){
+        if ( fromRefresh && TextUtils.isEmpty(mNextPageUrl) ) {
+            mNextPageUrl = url;
+        } else {
+          mNextPageUrl = url;  
+        }
     }
 
     protected void fetchTopicComplete(List<Topic> topics, boolean fromRefersh) {
@@ -172,7 +184,30 @@ public class RecommendTopicPresenter extends BaseFragmentPresenter<List<Topic>> 
 
     @Override
     public void loadMoreData() {
-        mRecommendTopicView.onRefreshEnd();
+        if (TextUtils.isEmpty(mNextPageUrl))  {
+            mRecommendTopicView.onRefreshEnd();
+            return ;
+        }
+        mCommunitySDK.fetchNextPageData(mNextPageUrl,TopicResponse.class, new FetchListener<TopicResponse>() {
+
+            @Override
+            public void onStart() {
+                
+            }
+
+            @Override
+            public void onComplete(TopicResponse response) {
+                // 根据response进行Toast
+                if (NetworkUtils.handleResponseAll(response)) {
+                    return;
+                }
+                final List<Topic> results = response.result;
+                updateNextPageUrl(response.nextPageUrl);
+                dealNextPageUrl(response.nextPageUrl, false);
+                fetchTopicComplete(results, false);
+                mRecommendTopicView.onRefreshEnd();
+            }
+        });
     }
 
     protected DefalutReceiver mReceiver = new DefalutReceiver() {
@@ -206,26 +241,26 @@ public class RecommendTopicPresenter extends BaseFragmentPresenter<List<Topic>> 
 
             @Override
             public void onComplete(Response response) {
+                if ( NetworkUtils.handleResponseComm(response) ) {
+                    return ;
+                }
                 if (response.errCode == ErrorCode.NO_ERROR) {
                     topic.isFocused = true;
                     // 存储到数据
                     List<Topic> topics = new ArrayList<Topic>();
                     topics.add(topic);
                     insertTopicsToDB(topics);
-//                    toggleButton.setChecked(true);
                     BroadcastUtils.sendTopicFollowBroadcast(mContext, topic);
-                    // ToastMsg.showShortMsgByResName(mContext,
-                    // "umeng_comm_topic_follow_success");
                 } else if (response.errCode == ErrorCode.ORIGIN_TOPIC_DELETE_ERR_CODE) {
                     // 在数据库中删除该话题并Toast
                     deleteTopic(topic);
-                    ToastMsg.showShortMsgByResName(mContext, "umeng_comm_topic_has_deleted");
+                    ToastMsg.showShortMsgByResName("umeng_comm_topic_has_deleted");
                 } else if (response.errCode == ErrorCode.ERROR_TOPIC_FOCUSED) {
-                    ToastMsg.showShortMsgByResName(mContext, "umeng_comm_topic_has_focused");
+                    ToastMsg.showShortMsgByResName("umeng_comm_topic_has_focused");
                     toggleButton.setChecked(true);
                 } else {
                     toggleButton.setChecked(false);
-                    ToastMsg.showShortMsgByResName(mContext, "umeng_comm_topic_follow_failed");
+                    ToastMsg.showShortMsgByResName("umeng_comm_topic_follow_failed");
                 }
                 toggleButton.setClickable(true);
             }
@@ -272,11 +307,13 @@ public class RecommendTopicPresenter extends BaseFragmentPresenter<List<Topic>> 
                     @Override
                     public void onComplete(Response response) {
                         toggleButton.setClickable(true);
+                        if ( NetworkUtils.handleResponseComm(response) ) {
+                            return ;
+                        }
                         if (response.errCode == ErrorCode.ORIGIN_TOPIC_DELETE_ERR_CODE) {
                             // 在数据库中删除该话题并Toast
                             deleteTopic(topic);
-                            ToastMsg.showShortMsgByResName(mContext,
-                                    "umeng_comm__topic_has_deleted");
+                            ToastMsg.showShortMsgByResName("umeng_comm__topic_has_deleted");
                             return;
                         }
 
@@ -284,21 +321,16 @@ public class RecommendTopicPresenter extends BaseFragmentPresenter<List<Topic>> 
                             topic.isFocused = false;
                             // 将该记录从数据库中移除
                             DatabaseAPI.getInstance().getTopicDBAPI().deleteTopicFromDB(topic.id);
-//                            toggleButton.setChecked(false);
                             BroadcastUtils.sendTopicCancelFollowBroadcast(mContext, topic);
                             List<Topic> topics = new ArrayList<Topic>();
                             topics.add(topic);
                             insertTopicsToDB(topics);
-                            // ToastMsg.showShortMsgByResName(mContext,
-                            // "umeng_comm_topic_cancel_success");
                         } else if (response.errCode == ErrorCode.ERROR_TOPIC_NOT_FOCUSED) {
-                            ToastMsg.showShortMsgByResName(mContext,
-                                    "umeng_comm_topic_has_not_focused");
+                            ToastMsg.showShortMsgByResName("umeng_comm_topic_has_not_focused");
                             toggleButton.setChecked(false);
                         } else {
                             toggleButton.setChecked(true);
-                            ToastMsg.showShortMsgByResName(mContext,
-                                    "umeng_comm_topic_cancel_failed");
+                            ToastMsg.showShortMsgByResName("umeng_comm_topic_cancel_failed");
                         }
                     }
                 });

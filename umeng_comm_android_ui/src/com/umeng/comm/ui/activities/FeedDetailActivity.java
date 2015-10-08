@@ -44,7 +44,6 @@ import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.constants.HttpProtocol;
 import com.umeng.comm.core.impl.CommunityFactory;
 import com.umeng.comm.core.listeners.Listeners.LoginOnViewClickListener;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.DeviceUtils;
 import com.umeng.comm.core.utils.ResFinder;
@@ -145,9 +144,9 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
             mActivityPresenter.setExtraData(extraBundle);
             mFeedId = extraBundle.getString(Constants.FEED_ID);
             mActionDialog.setFeedId(mFeedId);
-            fetchFeedInfo(mRootView);
         } else if (extraBundle.containsKey(Constants.FEED)) {
             mFeedItem = extraBundle.getParcelable(Constants.FEED);
+            mFeedId = mFeedItem.id;
             mActionDialog.setFeedItem(mFeedItem);
             // 传递评论的id
             if (extraBundle.containsKey(HttpProtocol.COMMENT_ID_KEY)) {
@@ -157,6 +156,7 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
             // 初始化fragment
             initFragment(mFeedItem);
         }
+        fetchFeedInfo(mRootView);
         checkFeedItem();
         mActionDialog.attachView(this);
     }
@@ -166,8 +166,7 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
      */
     private void checkFeedItem() {
         if (mFeedItem != null && mFeedItem.status >= FeedItem.STATUS_SPAM) {
-            ToastMsg.showShortMsg(getApplicationContext(),
-                    ResFinder.getString("umeng_comm_feed_deleted"));
+            ToastMsg.showShortMsgByResName("umeng_comm_feed_deleted");
             finish();
         }
     }
@@ -228,6 +227,7 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
         replaceFragment(mFeedFrgm);
     }
 
+    @SuppressWarnings("deprecation")
     private void initTitleLayout() {
         TextView titleTextView = (TextView) findViewById(ResFinder.getId(
                 "umeng_comm_title_tv"));
@@ -260,6 +260,7 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onStop() {
         super.onStop();
@@ -295,11 +296,6 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
     }
 
     @Override
-    public boolean handleResponse(AbsResponse<?> response) {
-        return super.handlerResponse(response);
-    }
-
-    @Override
     public void fetchDataComplete(FeedItem result) {
         if (isValidFeedItem(result)) { // 获取到feed并显示数据
             if (mFeedFrgm == null) {
@@ -308,16 +304,17 @@ public class FeedDetailActivity extends BaseFragmentActivity implements OnClickL
                 // 初始化fragment
                 initFragment(mFeedItem);
             } else {
-                // mFeedFrgm.setFeedItemData(result);
-                // 获取到的数据无效，此时需要显示加载失败并可重新加载
-                mBaseView.showEmptyView();
+                 mFeedFrgm.updateFeedItem(result);
             }
+        } else {
+            // 获取到的数据无效，此时需要显示加载失败并可重新加载
+            mBaseView.showEmptyView();
         }
     }
-    
+
     @Override
     public void fetchFeedFaild() {
-        finish();
+//        finish();
     }
 
     /**

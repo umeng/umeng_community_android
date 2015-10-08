@@ -35,6 +35,7 @@ import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
 import com.umeng.comm.core.listeners.Listeners.OnResultListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.Response;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpTopicDetailView;
 import com.umeng.comm.ui.presenter.BaseActivityPresenter;
@@ -106,12 +107,14 @@ public class TopicDetailPresenter extends BasePresenter implements BaseActivityP
 
                     @Override
                     public void onComplete(Response response) {
+                        if ( NetworkUtils.handleResponseComm(response) ) {
+                            return ;
+                        }
                         String resName = "";
                         if (response.errCode == ErrorCode.NO_ERROR) {
                             resName = "umeng_comm_topic_follow_success";
                             mTopicDetailView.setToggleButtonStatus(true);
                             topic.isFocused = true;
-
                             CommUser user = CommConfig.getConfig().loginedUser;
                             DatabaseAPI.getInstance().getTopicDBAPI()
                                     .saveFollowedTopicToDB(user.id, topic);
@@ -129,7 +132,7 @@ public class TopicDetailPresenter extends BasePresenter implements BaseActivityP
                             resName = "umeng_comm_topic_follow_failed";
                             mTopicDetailView.setToggleButtonStatus(false);
                         }
-                        ToastMsg.showShortMsgByResName(mActivity, resName);
+                        ToastMsg.showShortMsgByResName(resName);
                     }
                 });
     }
@@ -146,6 +149,9 @@ public class TopicDetailPresenter extends BasePresenter implements BaseActivityP
 
                     @Override
                     public void onComplete(Response response) {
+                        if ( NetworkUtils.handleResponseComm(response) ) {
+                            return ;
+                        }
                         String resName = "";
                         if (response.errCode == ErrorCode.NO_ERROR) {
                             resName = "umeng_comm_topic_cancel_success";
@@ -155,8 +161,7 @@ public class TopicDetailPresenter extends BasePresenter implements BaseActivityP
                             BroadcastUtils.sendTopicCancelFollowBroadcast(mActivity,
                                     topic);
                         } else if (response.errCode == ErrorCode.ORIGIN_TOPIC_DELETE_ERR_CODE) {
-                            ToastMsg.showShortMsgByResName(mActivity,
-                                    "umeng_comm__topic_has_deleted");
+                            ToastMsg.showShortMsgByResName("umeng_comm__topic_has_deleted");
                             DatabaseAPI.getInstance().getTopicDBAPI()
                                     .deleteTopicDataFromDB(topic.id);
                         } else if (response.errCode == ErrorCode.ERROR_TOPIC_NOT_FOCUSED) {
@@ -167,7 +172,7 @@ public class TopicDetailPresenter extends BasePresenter implements BaseActivityP
                                     "umeng_comm_topic_cancel_failed";
                             mTopicDetailView.setToggleButtonStatus(true);
                         }
-                        ToastMsg.showShortMsgByResName(mActivity, resName);
+                        ToastMsg.showShortMsgByResName(resName);
                     }
                 });
     }
