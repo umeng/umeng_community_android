@@ -31,20 +31,12 @@ import com.umeng.comm.core.beans.CommUser;
 /**
  * 活跃用户的Fragment View
  */
-public interface MvpActiveUserFgView {
+public interface MvpActiveUserFgView extends MvpBaseEmptyView,MvpBaseRefreshView{
 
-    public void onRefreshStart();
-
-    public void onRefreshEnd();
-
-    public void showToast(String resName);
+//    public void showToast(String resName);
 
     public List<CommUser> getBindDataSource();
 
     public void notifyDataSetChanged();
-
-    public void hideEmptyView();
-
-    public void showEmptyView();
 
 }

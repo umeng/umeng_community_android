@@ -24,6 +24,8 @@
 
 package com.umeng.comm.ui.fragments;
 
+import java.util.List;
+
 import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -35,8 +37,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.umeng.comm.core.beans.Topic;
-import com.umeng.comm.core.nets.responses.AbsResponse;
-import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.ui.adapters.BackupAdapter;
 import com.umeng.comm.ui.adapters.RecommendTopicAdapter;
@@ -47,8 +47,6 @@ import com.umeng.comm.ui.utils.FontUtils;
 import com.umeng.comm.ui.widgets.BaseView;
 import com.umeng.comm.ui.widgets.RefreshLayout.OnLoadListener;
 import com.umeng.comm.ui.widgets.RefreshLvLayout;
-
-import java.util.List;
 
 /**
  * 推荐的话题
@@ -151,7 +149,7 @@ public class RecommendTopicFragment extends BaseFragment<List<Topic>, RecommendT
         initAdapter();
         if (!mSaveButtonVisiable) {
             // 目前推荐话题不需要刷新跟加载更多，因此暂时设置不可用
-            mRefreshLvLayout.setEnabled(false);
+//            mRefreshLvLayout.setEnabled(false);
         } else {
             mRefreshLvLayout.setDefaultFooterView();
         }
@@ -192,10 +190,6 @@ public class RecommendTopicFragment extends BaseFragment<List<Topic>, RecommendT
         this.mOnDismissListener = listener;
     }
 
-    public boolean handlerResponse(AbsResponse<?> response) {
-        return NetworkUtils.handleResponse(getActivity(), response);
-    }
-
     @Override
     public List<Topic> getBindDataSource() {
         return mAdapter.getDataSource();
@@ -213,13 +207,18 @@ public class RecommendTopicFragment extends BaseFragment<List<Topic>, RecommendT
 
     @Override
     public void onRefreshEnd() {
-        mRefreshLvLayout.setRefreshing(false);
-        mRefreshLvLayout.setLoading(false);
+        onRefreshEndNoOP();
         if (mAdapter.getCount() == 0) {
             mBaseView.showEmptyView();
         } else {
             mBaseView.hideEmptyView();
         }
+    }
+
+    @Override
+    public void onRefreshEndNoOP() {
+        mRefreshLvLayout.setRefreshing(false);
+        mRefreshLvLayout.setLoading(false);
     }
 
 }

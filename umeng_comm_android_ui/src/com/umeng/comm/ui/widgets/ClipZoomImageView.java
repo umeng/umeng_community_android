@@ -314,6 +314,7 @@ public class ClipZoomImageView extends ImageView implements
         getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();

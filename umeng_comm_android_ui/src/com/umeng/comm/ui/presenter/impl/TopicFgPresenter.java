@@ -34,6 +34,8 @@ import com.umeng.comm.core.beans.Topic;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.TopicResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
+import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.Log;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpRecommendTopicView;
@@ -53,7 +55,7 @@ public class TopicFgPresenter extends RecommendTopicPresenter {
     private static final int CHECK_RESULT = 0x01;
     private static final int DELAY = 100;
     private SearchTask mSearchTask = new SearchTask();
-    private static boolean isRefreshed = false;
+//    private static boolean isRefreshed = false;
 
     public TopicFgPresenter(MvpRecommendTopicView recommendTopicView) {
         super(recommendTopicView);
@@ -91,12 +93,18 @@ public class TopicFgPresenter extends RecommendTopicPresenter {
             @Override
             public void onComplete(final TopicResponse response) {
                 // 根据response进行Toast
-                if (mRecommendTopicView.handlerResponse(response)) {
-                    mRecommendTopicView.onRefreshEnd();
+                if (NetworkUtils.handleResponseAll(response)) {
+                    //  如果是网络错误，其结果可能快于DB查询
+                    if (CommonUtils.isNetworkErr(response.errCode)) { 
+                        mRecommendTopicView.onRefreshEndNoOP();
+                    } else {
+                        mRecommendTopicView.onRefreshEnd();
+                    }
                     return;
                 }
 
-                clearTopicCacheAfterFirstRefresh();
+//                clearTopicCacheAfterFirstRefresh();
+                mDatabaseAPI.getTopicDBAPI().deleteAllTopics();
                 final List<Topic> results = response.result;
                 updateNextPageUrl(results.get(0).nextPage);
                 fetchTopicComplete(results, true);
@@ -105,15 +113,15 @@ public class TopicFgPresenter extends RecommendTopicPresenter {
         });
     }
 
-    /**
-     * 第一次刷新数据后清空本地数据库缓存
-     */
-    private void clearTopicCacheAfterFirstRefresh() {
-        if (!isRefreshed) {
-            isRefreshed = true;
-            mDatabaseAPI.getTopicDBAPI().deleteAllTopics();
-        }
-    }
+//    /**
+//     * 第一次刷新数据后清空本地数据库缓存
+//     */
+//    private void clearTopicCacheAfterFirstRefresh() {
+//        if (!isRefreshed) {
+//            isRefreshed = true;
+//            mDatabaseAPI.getTopicDBAPI().deleteAllTopics();
+//        }
+//    }
 
     @Override
     public void loadDataFromDB() {
@@ -142,24 +150,24 @@ public class TopicFgPresenter extends RecommendTopicPresenter {
      */
     private List<Topic> setFollowedTag(List<Topic> results) {
         // 将过滤后的数据添加到listview中,这些为用户已经关注的话题列表
-        List<Topic> newTopics = filterTopics(results);
-        for (Topic topic : newTopics) {
-            topic.isFocused = true;
-        }
-        return newTopics;
+//        List<Topic> newTopics = filterTopics(results);
+//        for (Topic topic : newTopics) {
+//            topic.isFocused = true;
+//        }
+        return results;
     }
 
-    /**
-     * 移除重复的话题</br>
-     * 
-     * @param dest 目标话题列表。
-     * @return
-     */
-    private List<Topic> filterTopics(List<Topic> dest) {
-        List<Topic> src = mRecommendTopicView.getBindDataSource();
-        src.removeAll(dest);
-        return dest;
-    }
+//    /**
+//     * 移除重复的话题</br>
+//     * 
+//     * @param dest 目标话题列表。
+//     * @return
+//     */
+//    private List<Topic> filterTopics(List<Topic> dest) {
+//        List<Topic> src = mRecommendTopicView.getBindDataSource();
+//        src.removeAll(dest);
+//        return dest;
+//    }
 
     @Override
     public void loadMoreData() {
@@ -182,14 +190,17 @@ public class TopicFgPresenter extends RecommendTopicPresenter {
                     @Override
                     public void onComplete(TopicResponse response) {
                         mRecommendTopicView.onRefreshEnd();
-
                         // 根据response进行Toast
-                        if (mRecommendTopicView.handlerResponse(response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
                             return;
                         }
                         fetchTopicComplete(response.result, false);
                     }
                 });
+    }
+    
+    @Override
+    protected void dealNextPageUrl(String url, boolean fromRefresh) {
     }
 
     /**
@@ -206,7 +217,7 @@ public class TopicFgPresenter extends RecommendTopicPresenter {
          */
         public void execute(final String keyword) {
             if (TextUtils.isEmpty(keyword)) {
-                ToastMsg.showShortMsgByResName(mContext, "umeng_comm_search_keyword_input");
+                ToastMsg.showShortMsgByResName("umeng_comm_search_keyword_input");
                 return;
             }
             // 如果本次搜索未完成，直接取消，搜索新的话题
@@ -261,9 +272,9 @@ public class TopicFgPresenter extends RecommendTopicPresenter {
                 dataSource.addAll(topics);
                 mRecommendTopicView.notifyDataSetChanged();
             } else if (topics.size() == 0) {
-                ToastMsg.showShortMsgByResName(mContext, "umeng_comm_search_topic_failed");
+                ToastMsg.showShortMsgByResName("umeng_comm_search_topic_failed");
             } else {
-                ToastMsg.showShortMsgByResName(mContext, "umeng_comm_search_topic_failed");
+                ToastMsg.showShortMsgByResName("umeng_comm_search_topic_failed");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -25,6 +25,7 @@
 package com.umeng.comm.ui.fragments;
 
 import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +37,7 @@ import com.umeng.comm.core.listeners.Listeners.OnResultListener;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.ui.presenter.impl.ActiveUserFgPresenter;
 import com.umeng.comm.ui.presenter.impl.RecommendUserFgPresenter;
+import com.umeng.comm.ui.widgets.RefreshLayout.OnLoadListener;
 
 /**
  * 用户推荐页面
@@ -78,8 +80,24 @@ public class RecommendUserFragment extends ActiveUserFragment implements OnClick
         mRootView.findViewById(ResFinder.getId("umeng_comm_title_bar_root"))
                 .setBackgroundColor(Color.WHITE);
 
-        mRefreshLvLayout.setEnabled(false);
+        mRefreshLvLayout.setEnabled(true);
         mViewStub = (ViewStub) mRootView.findViewById(ResFinder.getId("umeng_comm_empty"));
+
+        mRefreshLvLayout.setOnLoadListener(new OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+                mPresenter.loadMoreData();
+            }
+        });
+
+        mRefreshLvLayout.setOnRefreshListener(new OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                mPresenter.loadDataFromServer();
+            }
+        });
     }
 
     @Override

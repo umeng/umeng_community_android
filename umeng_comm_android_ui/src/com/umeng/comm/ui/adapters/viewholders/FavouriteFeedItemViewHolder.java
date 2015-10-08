@@ -24,6 +24,8 @@
 
 package com.umeng.comm.ui.adapters.viewholders;
 
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint.FontMetrics;
@@ -35,6 +37,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+
 import com.umeng.comm.core.CommunitySDK;
 import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.beans.FeedItem.CATEGORY;
@@ -47,6 +50,7 @@ import com.umeng.comm.core.nets.responses.SimpleResponse;
 import com.umeng.comm.core.utils.DeviceUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ResFinder.ResType;
+import com.umeng.comm.core.utils.TimeUtils;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.utils.BroadcastUtils;
 
@@ -73,6 +77,10 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
     @Override
     protected void bindFeedItemData() {
         super.bindFeedItemData();
+        if (!isFromFeedDetailePage) {
+            Date date = new Date(Long.parseLong(mFeedItem.addTime));
+            mTimeTv.setText(TimeUtils.format(date));
+        }
         RelativeLayout.LayoutParams params = (LayoutParams) mFavoritestButton.getLayoutParams();
         // [此时说明在收藏页面，对于被删除的feed，需要隐藏分享、like、转发、评论按钮]
         if (isShowFavouriteView) {
@@ -106,9 +114,9 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
             mFavoritestButton.setBackgroundResource(ResFinder.getResourceId(ResType.DRAWABLE,
                     "umeng_comm_favorites_normal"));
         }
-        
+
         // 详情页面需要隐藏
-        if(isFromFeedDetailePage) {
+        if (isFromFeedDetailePage) {
             mLikeCountTextView.setVisibility(View.GONE);
             mForwardCountTextView.setVisibility(View.GONE);
             mCommentCountTextView.setVisibility(View.GONE);
@@ -147,18 +155,21 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
     @Override
     protected void setBaseFeeditemInfo() {
         super.setBaseFeeditemInfo();
-        mFeedTextTv.setOnClickListener(new OnClickListener() {
+        if (isFromFeedDetailePage) {
+            mFeedTextTv.setOnClickListener(null);
+        } else {
+            mFeedTextTv.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                if (mFeedItem.status >= FeedItem.STATUS_SPAM) {
-                    String text = getToastText(mFeedItem.status);
-                    ToastMsg.showShortMsg(mContext, text);
-                    return;
+                @Override
+                public void onClick(View v) {
+                    if (mFeedItem.status >= FeedItem.STATUS_SPAM) {
+                        ToastMsg.showShortMsgByResName("umeng_comm_feed_spam_deleted");
+                        return;
+                    }
+                    mPresenter.clickFeedItem();
                 }
-                mPresenter.clickFeedItem();
-            }
-        });
+            });
+        }
         mFeedTextTv.setVisibility(View.VISIBLE);
     }
 
@@ -173,6 +184,7 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
      * 
      * @param feedItem
      */
+    @SuppressWarnings("deprecation")
     private void setSpamFeed(FeedItem feedItem) {
         ViewGroup.LayoutParams params = mFeedTextTv.getLayoutParams();
         if (feedItem.status < FeedItem.STATUS_SPAM) { // 设置成默认的状态，避免复用导致问题
@@ -232,24 +244,23 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
                     if (response.errCode == ErrorCode.ERR_CODE_FEED_FAVOURITED) {
                         mFavoritestButton.setBackgroundResource(ResFinder.getResourceId(
                                 ResType.DRAWABLE, "umeng_comm_favorites_pressed"));
-                        ToastMsg.showShortMsgByResName(mContext, "umeng_comm_has_favorited");
+                        ToastMsg.showShortMsgByResName("umeng_comm_has_favorited");
                         mFeedItem.category = CATEGORY.FAVORITES;
                         BroadcastUtils.sendFeedUpdateBroadcast(mContext, mFeedItem);
                     } else if (response.errCode == ErrorCode.ERR_CODE_FAVOURITED_OVER_FLOW) {
-                        ToastMsg.showShortMsgByResName(mContext,
-                                "umeng_comm_favorites_overflow");
+                        ToastMsg.showShortMsgByResName("umeng_comm_favorites_overflow");
                     } else if (response.errCode == ErrorCode.USER_FORBIDDEN_ERR_CODE) {
-                        ToastMsg.showShortMsg(mContext,
-                                ResFinder.getString("umeng_comm_user_unusable"));
+                        ToastMsg.showShortMsgByResName("umeng_comm_user_unusable");
                     } else {
-                        ToastMsg.showShortMsgByResName(mContext, "umeng_comm_favorites_failed");
+                        ToastMsg.showShortMsgByResName("umeng_comm_favorites_failed");
                     }
                 } else {
                     mFavoritestButton.setBackgroundResource(ResFinder.getResourceId(
                             ResType.DRAWABLE,
                             "umeng_comm_favorites_pressed"));
-                    ToastMsg.showShortMsgByResName(mContext, "umeng_comm_favorites_success");
+                    ToastMsg.showShortMsgByResName("umeng_comm_favorites_success");
                     mFeedItem.category = CATEGORY.FAVORITES;
+                    mFeedItem.addTime = String.valueOf(System.currentTimeMillis());
                     DatabaseAPI.getInstance().getFeedDBAPI().saveFeedToDB(mFeedItem);
                     // 数据同步
                     BroadcastUtils.sendFeedUpdateBroadcast(mContext, mFeedItem);
@@ -278,8 +289,8 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
     }
 
     /**
-     * 是否显示收藏按钮。目前该方法仅仅在Feed详情页面调用</br>
-     * [修改该方法请慎重]
+     * 是否显示收藏按钮。目前该方法仅仅在Feed详情页面调用</br> [修改该方法请慎重]
+     * 
      * @param isShow
      */
     public void setShowFavouriteView(boolean isShow) {
@@ -301,22 +312,21 @@ public class FavouriteFeedItemViewHolder extends FeedItemViewHolder {
                                 mFavoritestButton.setBackgroundResource(ResFinder
                                         .getResourceId(
                                                 ResType.DRAWABLE, "umeng_comm_favorites_normal"));
-                                ToastMsg.showShortMsgByResName(mContext,
+                                ToastMsg.showShortMsgByResName(
                                         "umeng_comm_not_favorited");
                                 mFeedItem.category = CATEGORY.NORMAL;
                                 BroadcastUtils.sendFeedUpdateBroadcast(mContext, mFeedItem);
                             } else if (response.errCode == ErrorCode.USER_FORBIDDEN_ERR_CODE) {
-                                ToastMsg.showShortMsg(mContext,
-                                        ResFinder.getString("umeng_comm_user_unusable"));
+                                ToastMsg.showShortMsgByResName("umeng_comm_user_unusable");
                             } else {
-                                ToastMsg.showShortMsgByResName(mContext,
+                                ToastMsg.showShortMsgByResName(
                                         "umeng_comm_cancel_favorites_failed");
                             }
                         } else {
                             mFavoritestButton.setBackgroundResource(ResFinder.getResourceId(
                                     ResType.DRAWABLE,
                                     "umeng_comm_favorites_normal"));
-                            ToastMsg.showShortMsgByResName(mContext,
+                            ToastMsg.showShortMsgByResName(
                                     "umeng_comm_cancel_favorites_success");
                             mFeedItem.category = CATEGORY.NORMAL;
                             DatabaseAPI.getInstance().getFeedDBAPI().saveFeedToDB(mFeedItem);

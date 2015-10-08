@@ -31,12 +31,10 @@ import java.util.List;
 /**
  * 评论View
  */
-public interface MvpCommentView {
+public interface MvpCommentView extends MvpBaseRefreshView{
     public void loadMoreComment(List<Comment> comments);
 
     public void postCommentSuccess(Comment comment, CommUser replyUser);
-
-    public void onRefreshEnd();
 
     public void updateCommentView();
 

@@ -24,16 +24,16 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.List;
+
 import android.text.TextUtils;
 
 import com.umeng.comm.core.beans.Notification;
-import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.NotificationResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.ui.mvpview.MvpNotifyView;
 import com.umeng.comm.ui.presenter.BaseFragmentPresenter;
-
-import java.util.List;
 
 /**
  * 用户获取系统消息通知的Presenter
@@ -48,7 +48,7 @@ public class NotificationPresenter extends BaseFragmentPresenter<List<Notificati
     }
 
     private List<Notification> removeExsitItems(List<Notification> newItems) {
-        newItems.removeAll(mNotifyView.getDataSet());
+        newItems.removeAll(mNotifyView.getBindDataSource());
         return newItems;
     }
 
@@ -83,14 +83,15 @@ public class NotificationPresenter extends BaseFragmentPresenter<List<Notificati
 
     private void deliveryResponse(NotificationResponse response, boolean append) {
         mNotifyView.onRefreshEnd();
-        if (response.errCode == ErrorCode.NO_ERROR) {
-            nextPage = response.nextPageUrl;
-            if (append) {
-                mNotifyView.getDataSet().addAll(removeExsitItems(response.result));
-            } else {
-                mNotifyView.getDataSet().addAll(0, removeExsitItems(response.result));
-            }
-            mNotifyView.notifyDataSetChange();
+        if (NetworkUtils.handleResponseAll(response)) {
+            return;
         }
+        nextPage = response.nextPageUrl;
+        if (append) {
+            mNotifyView.getBindDataSource().addAll(removeExsitItems(response.result));
+        } else {
+            mNotifyView.getBindDataSource().addAll(0, removeExsitItems(response.result));
+        }
+        mNotifyView.notifyDataSetChange();
     }
 }

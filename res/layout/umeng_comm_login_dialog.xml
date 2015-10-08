@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <RelativeLayout
+        android:id="@+id/login_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="top"
+        android:gravity="left"
+        android:paddingLeft="10dp" >
+
+        <ImageView
+            android:id="@+id/login_back_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/umeng_comm_back_bt"
+            android:contentDescription="@string/umeng_socialize_login" />
+
+        <TextView
+            android:id="@+id/login_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/login_back_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/umeng_socialize_login"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/umeng_comm_login_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/login_action_bar"
+        layout="@layout/umeng_comm_divide_line" />
+
+    <RelativeLayout
+        android:id="@+id/umeng_comm_platform_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="100dp"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/sina_platform_btn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/umeng_comm_sina_bt"
+            android:contentDescription="@string/umeng_socialize_login" >
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/qq_platform_btn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/sina_platform_btn"
+            android:background="@drawable/umeng_comm_qq_pressed"
+            android:contentDescription="@string/umeng_socialize_login" >
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/weixin_platform_btn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/qq_platform_btn"
+            android:background="@drawable/umeng_comm_wechat_pressed"
+            android:contentDescription="@string/umeng_socialize_login" >
+        </ImageView>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/umeng_comm_statement_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="@string/umeng_socialize_login_statement"
+        android:textColor="#cccccc" />
+
+    <TextView
+        android:id="@+id/umeng_comm_login_tv_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_above="@id/umeng_comm_statement_tv"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="center"
+        android:text="@string/umeng_socialize_3rdparty_login"
+        android:textSize="18sp" />
+
+</RelativeLayout>

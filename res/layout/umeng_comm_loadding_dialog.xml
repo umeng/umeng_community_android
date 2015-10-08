@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_comm_main_container"
+    android:layout_width="144dp"
+    android:layout_height="108dp"
+    android:background="#d3d3d3">
+
+    <ProgressBar
+        android:id="@+id/umeng_comm_loadding_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp" />
+
+    <TextView
+        android:id="@+id/umeng_comm_dialog_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_below="@id/umeng_comm_loadding_pb"
+        android:singleLine="true"
+        android:text="@string/umeng_comm_loading"
+        android:textSize="13sp" />
+
+</RelativeLayout>

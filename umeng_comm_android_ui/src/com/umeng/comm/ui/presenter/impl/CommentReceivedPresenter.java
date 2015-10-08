@@ -28,9 +28,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.text.TextUtils;
 
-import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.FeedCommentResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.ui.mvpview.MvpFeedView;
 
 /**
@@ -58,6 +58,9 @@ public class CommentReceivedPresenter extends FeedListPresenter {
 
         @Override
         public void onComplete(FeedCommentResponse response) {
+            if ( NetworkUtils.handleResponseAll(response) ){
+                return ;
+            }
             if ( TextUtils.isEmpty(mNextPageUrl) && mUpdateNextPageUrl.get() ) {
                 mNextPageUrl = response.nextPageUrl;
                 mUpdateNextPageUrl.set(false);
@@ -77,11 +80,11 @@ public class CommentReceivedPresenter extends FeedListPresenter {
                 new SimpleFetchListener<FeedCommentResponse>() {
                     @Override
                     public void onComplete(FeedCommentResponse response) {
-                        if ( response.errCode != ErrorCode.NO_ERROR ) {
+                        if ( NetworkUtils.handleResponseAll(response) ) {
                             return ;
                         }
                         mNextPageUrl = response.nextPageUrl;
-                        appendFeedItems(response.result);
+                        appendFeedItems(response.result,false);
                         mFeedView.onRefreshEnd();
                     }
                 });

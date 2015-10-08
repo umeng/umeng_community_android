@@ -55,4 +55,5 @@ public class FansFragment extends FollowedUserFragment {
         fansFragment.setArguments(bundle);
         return fansFragment;
     }
+    
 }

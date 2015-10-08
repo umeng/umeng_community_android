@@ -63,7 +63,7 @@ class FeedDBAPIImpl extends AbsDbAPI<List<FeedItem>> implements FeedDBAPI {
                 // 分页加载
                 List<FeedItem> items = new
                         Select().from(FeedItem.class).where("category= 'NORMAL'")
-                                .limit(Constants.COUNT).offset(mOffset)
+                                .limit(Constants.COUNT).offset(mOffset).orderBy("publishTime DESC")
                                 .execute();
                 fillItems(items);
                 deliverResult(listener, items);

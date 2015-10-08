@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/search_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="left"
+        android:paddingLeft="10dp" >
+
+        <ImageView
+            android:id="@+id/search_back_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/umeng_comm_back_bt"
+            android:contentDescription="@string/umeng_comm_login" />
+
+        <TextView
+            android:id="@+id/search_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/search_back_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/umeng_comm_friends"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/search_ok_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/search_back_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/umeng_comm_login"
+            android:gravity="center"
+            android:text="@string/umeng_comm_ok"
+            android:textSize="@dimen/text_big18_size" />
+    </RelativeLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        layout="@layout/umeng_comm_divide_line" />
+
+    <!--
+         <include
+        android:id="@+id/umeng_comm_search_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        layout="@layout/umeng_comm_search_edittext"
+        android:padding="2dp" />
+    -->
+
+    <EditText
+        android:id="@+id/umeng_comm_search_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/umeng_community_topic_bg"
+        android:hint="@string/umeng_comm_search_hint"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLength="18"
+        android:textSize="@dimen/text_big16_size"
+        android:padding="2dp" />
+
+    <TextView
+        android:id="@+id/search_lastes_btn"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#aaaaaa"
+        android:contentDescription="@string/umeng_comm_login"
+        android:gravity="left|center"
+        android:paddingLeft="10dp"
+        android:text="@string/umeng_comm_lastes_friends" />
+
+    <com.umeng.comm.ui.widgets.RefreshLvLayout
+        android:id="@+id/umeng_comm_at_friend_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <include
+            android:id="@+id/umeng_comm_friend_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            layout="@layout/umeng_comm_listview"
+            android:imeOptions="actionSearch" />
+    </com.umeng.comm.ui.widgets.RefreshLvLayout>
+
+</LinearLayout>

@@ -197,7 +197,12 @@ public abstract class CommentEditFragment<T, P extends BaseFragmentPresenter<T>>
                             KeyEvent.KEYCODE_DEL));
                     return;
                 }
-
+                // 预判断，如果插入超过140字符，则不显示最新的表情
+                int emojiLen = emojiBean.isDouble ? 2: 1;
+                if ( mCommentEditText.getText().length()+emojiLen > Constants.COMMENT_CHARS ) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_comment_text_max");
+                    return ;
+                }
                 int start = mCommentEditText.getSelectionStart();
                 int end = mCommentEditText.getSelectionEnd();
                 if (start < 0) {
@@ -223,6 +228,7 @@ public abstract class CommentEditFragment<T, P extends BaseFragmentPresenter<T>>
         mInputMgr = (InputMethodManager) getActivity().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
     }
+    
 
     /**
      * 该Handler主要处理软键盘的弹出跟隐藏
@@ -289,9 +295,9 @@ public abstract class CommentEditFragment<T, P extends BaseFragmentPresenter<T>>
                 mInputMgr.showSoftInput(mCommentEditText, 0);
             }
         }, 30);
-
+        
     }
-
+    
     @Override
     public void showCommentLayout(int realPosition, Comment comment) {
         showCommentLayout();
@@ -314,11 +320,11 @@ public abstract class CommentEditFragment<T, P extends BaseFragmentPresenter<T>>
     private boolean checkCommentData(String content) {
         // 检查评论的内容是否合法
         if (TextUtils.isEmpty(content)) {
-            ToastMsg.showShortMsgByResName(getActivity(), "umeng_comm_content_invalid");
+            ToastMsg.showShortMsgByResName("umeng_comm_content_invalid");
             return false;
         }
         if (content.length() > 140) {
-            ToastMsg.showShortMsgByResName(getActivity(), "umeng_comm_comment_text_overflow");
+            ToastMsg.showShortMsgByResName("umeng_comm_comment_text_overflow");
             return false;
         }
         return true;

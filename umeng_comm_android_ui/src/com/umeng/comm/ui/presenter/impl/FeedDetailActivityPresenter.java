@@ -24,6 +24,7 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import com.umeng.comm.core.nets.Response;
 import com.umeng.comm.core.nets.responses.FeedItemResponse;
 import com.umeng.comm.core.nets.responses.LoginResponse;
 import com.umeng.comm.core.nets.responses.SimpleResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ToastMsg;
@@ -126,8 +128,13 @@ public class FeedDetailActivityPresenter extends BasePresenter {
                     @Override
                     public void onComplete(FeedItemResponse response) {
                         mActivityView.showLoading(false);
-                        if (mActivityView.handleResponse(response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
                             mActivityView.fetchFeedFaild();
+                            return;
+                        }
+                        if (response.errCode == ErrorCode.ERR_CODE_FEED_UNAVAILABLE) {
+                            ToastMsg.showShortMsgByResName("umeng_comm_feed_unavailable");
+                            ((Activity)mContext).finish();
                             return;
                         }
                         mActivityView.fetchDataComplete(response.result);
@@ -147,15 +154,12 @@ public class FeedDetailActivityPresenter extends BasePresenter {
                     }
 
                     @Override
-                    public void onComplete(Response data) {
-                        // 判断用户是否被禁言
-                        if (data.errCode == ErrorCode.USER_FORBIDDEN_ERR_CODE) {
-                            ToastMsg.showShortMsg(mContext,
-                                    ResFinder.getString("umeng_comm_user_unusable"));
+                    public void onComplete(Response response) {
+                        if (NetworkUtils.handleResponseComm(response)) {
                             return;
                         }
 
-                        if (data.errCode == 0) {
+                        if (response.errCode == 0) {
                             if (mActivityView != null) {
                                 mActivityView.deleteFeedSuccess();
                             }
@@ -163,10 +167,9 @@ public class FeedDetailActivityPresenter extends BasePresenter {
                             sendDeleteFeedBroadcast();
                         }
 
-                        final String toast = data.errCode == 0 ? ResFinder
-                                .getString("umeng_comm_delete_success") :
-                                ResFinder.getString("umeng_comm_delete_failed");
-                        ToastMsg.showShortMsg(mContext, toast);
+                        final String resName = response.errCode == 0 ? "umeng_comm_delete_success" :
+                                "umeng_comm_delete_failed";
+                        ToastMsg.showShortMsgByResName(resName);
                     }
                 });
     }
@@ -196,30 +199,34 @@ public class FeedDetailActivityPresenter extends BasePresenter {
         SimpleFetchListener<LoginResponse> loginListener = new SimpleFetchListener<LoginResponse>() {
             @Override
             public void onComplete(LoginResponse response) {
-                if (response.errCode == ErrorCode.NO_ERROR) {
-                    // 举报feed
-                    mCommunitySDK.spammerFeed(mFeedItem.id,
-                            new FetchListener<SimpleResponse>() {
-
-                                @Override
-                                public void onStart() {
-                                }
-
-                                @Override
-                                public void onComplete(SimpleResponse response) {
-                                    if (response.errCode == ErrorCode.NO_ERROR) {
-                                        ToastMsg.showShortMsgByResName(mContext,
-                                                "umeng_comm_text_spammer_success");
-                                    } else if (response.errCode == ErrorCode.SPAMMERED_CODE) {
-                                        ToastMsg.showShortMsgByResName(mContext,
-                                                "umeng_comm_text_spammered");
-                                    } else {
-                                        ToastMsg.showShortMsgByResName(mContext,
-                                                "umeng_comm_text_spammer_failed");
-                                    }
-                                }
-                            });
+                if (response.errCode != ErrorCode.NO_ERROR) {
+                    return;
                 }
+                // 举报feed
+                mCommunitySDK.spammerFeed(mFeedItem.id,
+                        new FetchListener<SimpleResponse>() {
+
+                            @Override
+                            public void onStart() {
+                            }
+
+                            @Override
+                            public void onComplete(SimpleResponse response) {
+                                if (NetworkUtils.handleResponseComm(response)) {
+                                    return;
+                                }
+                                if (response.errCode == ErrorCode.NO_ERROR) {
+                                    ToastMsg.showShortMsgByResName(
+                                            "umeng_comm_text_spammer_success");
+                                } else if (response.errCode == ErrorCode.SPAMMERED_CODE) {
+                                    ToastMsg.showShortMsgByResName(
+                                            "umeng_comm_text_spammered");
+                                } else {
+                                    ToastMsg.showShortMsgByResName(
+                                            "umeng_comm_text_spammer_failed");
+                                }
+                            }
+                        });
             }
         };
         CommonUtils.checkLoginAndFireCallback(mContext, loginListener);

@@ -167,7 +167,7 @@ public class FeedActionDialog extends ActionDialog {
     protected void report() {
         String loginedUid = CommConfig.getConfig().loginedUser.id;
         if (mFeedItem.creator.id.equals(loginedUid)) {
-            ToastMsg.showShortMsg(getContext(), ResFinder.getString("umeng_comm_do_not_spam_yourself_content"));
+            ToastMsg.showShortMsgByResName("umeng_comm_do_not_spam_yourself_content");
             return;
         }
         mPresenter.showReportConfirmDialog();

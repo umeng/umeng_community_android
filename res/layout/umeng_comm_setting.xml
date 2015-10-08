@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/umeng_comm_user_setting"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="@string/umeng_comm_setting_user"
+        android:textColor="@color/umeng_comm_text_topic_light_color"
+        android:textSize="@dimen/text_big16_size" />
+
+    <include
+        android:id="@+id/umeng_comm_user_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/umeng_comm_user_setting"
+        layout="@layout/umeng_comm_divide_line" />
+
+    <TextView
+        android:id="@+id/umeng_comm_msg_setting"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/umeng_comm_user_divider"
+        android:gravity="center"
+        android:text="@string/umeng_comm_setting_msg"
+        android:textColor="@color/umeng_comm_text_topic_light_color"
+        android:textSize="@dimen/text_big16_size" />
+
+    <include
+        android:id="@+id/umeng_comm_msg_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/umeng_comm_msg_setting"
+        layout="@layout/umeng_comm_divide_line" />
+
+    <TextView
+        android:id="@+id/umeng_comm_logout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/umeng_comm_setting_logout_bg"
+        android:gravity="center"
+        android:text="@string/umeng_comm_setting_logout"
+        android:textColor="@color/umeng_comm_text_topic_light_color"
+        android:textSize="@dimen/text_big16_size" />
+
+</RelativeLayout>

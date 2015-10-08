@@ -51,7 +51,7 @@ public class FavoritesFeedPresenter extends FriendFeedPresenter {
      * @param category
      */
     public void updateFeedFavourites(FeedItem item, CATEGORY category) {
-        List<FeedItem> items = mFeedView.getAdapterDataSet();
+        List<FeedItem> items = mFeedView.getBindDataSource();
         if (category == CATEGORY.FAVORITES) {
             items.add(item);
             mFeedView.notifyDataSetChanged();
@@ -68,14 +68,14 @@ public class FavoritesFeedPresenter extends FriendFeedPresenter {
     }
 
     public void addFavoutite(FeedItem feedItem) {
-        mFeedView.getAdapterDataSet().add(feedItem);
-        sortFeedItems(mFeedView.getAdapterDataSet());
+        mFeedView.getBindDataSource().add(feedItem);
+        sortFeedItems(mFeedView.getBindDataSource());
         mFeedView.notifyDataSetChanged();
     }
 
     @Override
     protected int addFeedItemsToHeader(List<FeedItem> feedItems) {
-        List<FeedItem> olds = mFeedView.getAdapterDataSet();
+        List<FeedItem> olds = mFeedView.getBindDataSource();
         int size = olds.size();
         olds.removeAll(feedItems);
         olds.addAll(0, feedItems);

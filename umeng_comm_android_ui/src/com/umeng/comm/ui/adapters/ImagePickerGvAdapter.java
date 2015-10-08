@@ -123,7 +123,7 @@ public class ImagePickerGvAdapter extends CommonAdapter<String, ImagePickerGvVie
             // 此时被选中
             if (mSelectImagePaths.size() >= MAX_IMAGE_NUM) {
                 if (!mSelectImagePaths.contains(Constants.ADD_IMAGE_PATH_SAMPLE)) {
-                    ToastMsg.showShortMsgByResName(mContext, "umeng_comm_image_overflow");
+                    ToastMsg.showShortMsgByResName("umeng_comm_image_overflow");
                     return;
                 }
                 mSelectImagePaths.remove(Constants.ADD_IMAGE_PATH_SAMPLE);

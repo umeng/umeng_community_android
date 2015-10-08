@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 由于布局文件跟页面的动画紧密相关，修改请慎重 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/umeng_comm_topic_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <LinearLayout
+            android:id="@+id/umeng_comm_topic_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="49dp" >
+
+            <include layout="@layout/umeng_comm_topic_info" />
+            <include layout="@layout/umeng_comm_divide_line" />
+        </LinearLayout>
+
+        <com.umeng.comm.ui.widgets.ViewPagerIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+    
+    <include
+        android:id="@+id/umeng_comm_title_layout" 
+        layout="@layout/umeng_comm_title_layout" />
+</RelativeLayout>

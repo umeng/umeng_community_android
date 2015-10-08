@@ -64,7 +64,7 @@ public class FeedAdapter extends CommonAdapter<FeedItem, FeedItemViewHolder> {
         }
         holder.setFeedItem(feedItem);
         // 评论的点击事件
-        holder.setOnItemViewClickListener(position, mClickListener);
+        holder.setOnItemViewClickListener(position,mClickListener);
         holder.setOnUpdateListener(mListener);
         if (mContext instanceof Activity) {
             holder.setShareActivity((Activity) mContext);

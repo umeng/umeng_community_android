@@ -28,10 +28,9 @@ import com.umeng.comm.core.beans.Notification;
 
 import java.util.List;
 
-public interface MvpNotifyView {
-    public List<Notification> getDataSet();
+public interface MvpNotifyView extends MvpBaseRefreshView{
+    public List<Notification> getBindDataSource();
 
     public void notifyDataSetChange();
 
-    public void onRefreshEnd();
 }

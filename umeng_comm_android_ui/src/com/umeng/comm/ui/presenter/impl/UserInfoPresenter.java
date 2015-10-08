@@ -24,6 +24,9 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,18 +43,15 @@ import com.umeng.comm.core.listeners.Listeners.OnResultListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.Response;
 import com.umeng.comm.core.nets.responses.ProfileResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.Log;
-import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpUserInfoView;
 import com.umeng.comm.ui.presenter.BaseActivityPresenter;
 import com.umeng.comm.ui.utils.BroadcastUtils;
 import com.umeng.comm.ui.utils.BroadcastUtils.BROADCAST_TYPE;
 import com.umeng.comm.ui.utils.BroadcastUtils.DefalutReceiver;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 用户信息页面的Presenter
@@ -239,7 +239,7 @@ public class UserInfoPresenter implements BaseActivityPresenter {
 
             @Override
             public void onComplete(ProfileResponse response) {
-                if (mUserInfoView.handlerResponse(response)) {
+                if (NetworkUtils.handleResponseAll(response)) {
                     return;
                 }
 
@@ -271,20 +271,20 @@ public class UserInfoPresenter implements BaseActivityPresenter {
 
             @Override
             public void onComplete(Response response) {
+                if ( NetworkUtils.handleResponseComm(response) ) {
+                    return ;
+                }
                 if (response.errCode == ErrorCode.NO_ERROR) {
-                    ToastMsg.showShortMsgByResName(mActivity,
-                            "umeng_comm_follow_user_success");
+                    ToastMsg.showShortMsgByResName("umeng_comm_follow_user_success");
                     mUserInfoView.setToggleButtonStatus(true);
                     DatabaseAPI.getInstance().getFollowDBAPI().follow(mUser);
                     BroadcastUtils.sendUserFollowBroadcast(mActivity, mUser);
                     BroadcastUtils.sendCountUserBroadcast(mActivity, 1);
                 } else if ( response.errCode == ErrorCode.ERROR_USER_FOCUSED) {
                     mUserInfoView.setToggleButtonStatus(true);
-                    ToastMsg.showShortMsgByResName(mActivity,
-                            "umeng_comm_user_has_focused");
+                    ToastMsg.showShortMsgByResName("umeng_comm_user_has_focused");
                 } else {
-                    ToastMsg.showShortMsgByResName(mActivity,
-                            "umeng_comm_follow_user_failed");
+                    ToastMsg.showShortMsgByResName("umeng_comm_follow_user_failed");
                     mUserInfoView.setToggleButtonStatus(false);
                 }
                 listener.onResult(0);
@@ -302,10 +302,11 @@ public class UserInfoPresenter implements BaseActivityPresenter {
 
             @Override
             public void onComplete(Response response) {
+                if ( NetworkUtils.handleResponseComm(response) ) {
+                    return ;
+                }
                 if (response.errCode == ErrorCode.NO_ERROR) {
-                    ToastMsg.showShortMsg(mActivity,
-                            ResFinder.getString(
-                                    "umeng_comm_follow_cancel_success"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_follow_cancel_success");
                     mUserInfoView.setToggleButtonStatus(false);
                     DatabaseAPI.getInstance().getFollowDBAPI().unfollow(mUser);
                     // 发送取消关注的广播
@@ -314,9 +315,9 @@ public class UserInfoPresenter implements BaseActivityPresenter {
                     DatabaseAPI.getInstance().getFeedDBAPI().deleteFriendFeed(mUser.id);
                 }else if (response.errCode == ErrorCode.ERROR_USER_NOT_FOCUSED) {
                     mUserInfoView.setToggleButtonStatus(false);
-                    ToastMsg.showShortMsgByResName(mActivity, "umeng_comm_user_has_not_focused");
+                    ToastMsg.showShortMsgByResName("umeng_comm_user_has_not_focused");
                 } else {
-                    ToastMsg.showShortMsgByResName(mActivity, "umeng_comm_follow_user_failed");
+                    ToastMsg.showShortMsgByResName("umeng_comm_follow_user_failed");
                     mUserInfoView.setToggleButtonStatus(true);
                 }
                 listener.onResult(0);

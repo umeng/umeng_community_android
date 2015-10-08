@@ -95,6 +95,7 @@ public class SettingActivity extends BaseFragmentActivity implements OnClickList
             loginUser = mExtra.getParcelable(Constants.USER);
             isRegisterUserNameInvalid = mExtra.getBoolean(Constants.REGISTER_USERNAME_INVALID);
             showUserSettingFrgm(true, loginUser);
+            mSettingFragment.setFrom(true);
         } else {
             showFragment(mSettingFragment);
         }

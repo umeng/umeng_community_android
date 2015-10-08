@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.umeng.comm.ui.fragments;
 
 import java.util.List;
@@ -32,9 +33,12 @@ import android.widget.ToggleButton;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.beans.Topic;
 import com.umeng.comm.core.constants.Constants;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.listeners.Listeners.OnResultListener;
+import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
+import com.umeng.comm.core.nets.responses.LoginResponse;
+import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.ResFinder;
-import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.adapters.ActiveUserAdapter;
 import com.umeng.comm.ui.adapters.RecommendTopicAdapter.FollowListener;
 import com.umeng.comm.ui.mvpview.MvpActiveUserFgView;
@@ -61,7 +65,8 @@ public class ActiveUserFragment extends BaseFragment<List<CommUser>, ActiveUserF
         mRefreshLvLayout = (RefreshLvLayout) mRootView.findViewById(ResFinder
                 .getId("umeng_comm_swipe_layout"));
         mAdapter = new ActiveUserAdapter(getActivity());
-        mListView = mRefreshLvLayout.findRefreshViewById(ResFinder.getId("umeng_comm_active_user_listview"));
+        mListView = mRefreshLvLayout.findRefreshViewById(ResFinder
+                .getId("umeng_comm_active_user_listview"));
         mRefreshLvLayout.setAdapter(mAdapter);
         mRefreshLvLayout.setEnabled(false);
         mAdapter.setFromFindPage(true);
@@ -107,12 +112,24 @@ public class ActiveUserFragment extends BaseFragment<List<CommUser>, ActiveUserF
     private FollowListener<CommUser> mListener = new FollowListener<CommUser>() {
 
         @Override
-        public void onFollowOrUnFollow(CommUser user, ToggleButton toggleButton, boolean isFollow) {
-            if (isFollow) {
-                mPresenter.followUser(user, toggleButton);
-            } else {
-                mPresenter.cancelFollowUser(user, toggleButton);
-            }
+        public void onFollowOrUnFollow(final CommUser user, final ToggleButton toggleButton,
+                final boolean isFollow) {
+            CommonUtils.checkLoginAndFireCallback(getActivity(),
+                    new SimpleFetchListener<LoginResponse>() {
+
+                        @Override
+                        public void onComplete(LoginResponse response) {
+                            if (response.errCode != ErrorCode.NO_ERROR) {
+                                toggleButton.setChecked(!toggleButton.isChecked());
+                                return;
+                            }
+                            if (isFollow) {
+                                mPresenter.followUser(user, toggleButton);
+                            } else {
+                                mPresenter.cancelFollowUser(user, toggleButton);
+                            }
+                        }
+                    });
         }
     };
 
@@ -125,11 +142,6 @@ public class ActiveUserFragment extends BaseFragment<List<CommUser>, ActiveUserF
     public void onRefreshEnd() {
         mRefreshLvLayout.setRefreshing(false);
         mRefreshLvLayout.setLoading(false);
-    }
-
-    @Override
-    public void showToast(String resName) {
-        ToastMsg.showShortMsgByResName(getActivity(), resName);
     }
 
     @Override

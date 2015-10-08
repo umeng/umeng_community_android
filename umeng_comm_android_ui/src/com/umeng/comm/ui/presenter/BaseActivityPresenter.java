@@ -36,5 +36,5 @@ public interface BaseActivityPresenter {
     public void onResume();
 
     public void onDestroy();
-
+    
 }

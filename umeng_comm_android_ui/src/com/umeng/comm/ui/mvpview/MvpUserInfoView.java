@@ -25,7 +25,6 @@
 package com.umeng.comm.ui.mvpview;
 
 import com.umeng.comm.core.beans.CommUser;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 
 /**
  * 用户个人信息页面View
@@ -39,8 +38,6 @@ public interface MvpUserInfoView {
     public void updateFeedTextView(int count);
 
     public void updateFollowTextView(int count);
-
-    public boolean handlerResponse(AbsResponse<?> response);
 
     public void setupUserInfo(CommUser user);
 }

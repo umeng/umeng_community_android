@@ -38,6 +38,7 @@ import android.view.View.OnClickListener;
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.constants.Constants;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
 import com.umeng.comm.core.imageloader.utils.BitmapDecoder;
 import com.umeng.comm.core.impl.CommunityFactory;
@@ -132,7 +133,7 @@ public class ClipImageDialog extends Dialog implements OnClickListener {
                     @Override
                     public void onComplete(PortraitUploadResponse response) {
                         progressDialog.dismiss();
-                        if (response != null && response.errCode == 0) {
+                        if (response != null && response.errCode == ErrorCode.NO_ERROR) {
                             Log.d("", "头像更新成功 : " + response.mJsonObject.toString());
                             CommUser user = CommConfig.getConfig().loginedUser;
                             user.iconUrl = response.mIconUrl;
@@ -145,7 +146,7 @@ public class ClipImageDialog extends Dialog implements OnClickListener {
                             BroadcastUtils.sendUserUpdateBroadcast(getContext(), user);
                             dismiss();
                         } else {
-                            ToastMsg.showShortMsg(getContext(), "头像更新失败~");
+                            ToastMsg.showShortMsgByResName("umeng_comm_update_icon_failed");
                         }
                     }
 

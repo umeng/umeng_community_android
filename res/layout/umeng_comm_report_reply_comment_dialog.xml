@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/umeng_comm_radius_bg"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/umeng_comm_report_comment_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="举报"
+        android:textSize="15sp" />
+
+    <include
+        android:id="@+id/umeng_comm_report_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/umeng_comm_report_comment_tv"
+        android:layout_marginTop="10dp"
+        layout="@layout/umeng_comm_divide_line" />
+
+    <TextView
+        android:id="@+id/umeng_comm_reply_comment_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_report_line"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="回复"
+        android:textSize="15sp" />
+
+</RelativeLayout>

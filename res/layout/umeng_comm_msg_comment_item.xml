@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingBottom="6dp"
+    android:paddingLeft="7dp"
+    android:paddingTop="6dp" >
+
+    <com.umeng.comm.ui.widgets.RoundImageView
+        android:id="@+id/umeng_comm_msg_comment_header"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@string/umeng_comm_desc"
+        android:scaleType="fitXY"
+        android:src="@drawable/umeng_comm_male" />
+
+    <TextView
+        android:id="@+id/umeng_comm_comment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/umeng_comm_msg_comment_header"
+        android:ellipsize="end"
+        android:maxLength="10"
+        android:singleLine="true"
+        android:text="用户名"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/umeng_comm_comment_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="3dp"
+        android:paddingRight="15dp"
+        android:text="2015-6-1"
+        android:textColor="#6d6d6d" />
+
+    <com.umeng.comm.ui.widgets.TextViewFixTouchConsume
+        android:id="@+id/umeng_comm_msg_comment_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_comment_name"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/umeng_comm_msg_comment_header"
+        android:text="@string/umeng_comm_desc"
+        android:textSize="@dimen/text_big16_size" />
+
+</RelativeLayout>

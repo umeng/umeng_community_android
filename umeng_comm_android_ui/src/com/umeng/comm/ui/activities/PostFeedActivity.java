@@ -24,6 +24,9 @@
 
 package com.umeng.comm.ui.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,7 +63,6 @@ import com.umeng.comm.core.beans.LocationItem;
 import com.umeng.comm.core.beans.Topic;
 import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 import com.umeng.comm.core.sdkmanager.ImagePickerManager;
 import com.umeng.comm.core.utils.DeviceUtils;
 import com.umeng.comm.core.utils.Log;
@@ -78,9 +80,6 @@ import com.umeng.comm.ui.utils.ContentChecker;
 import com.umeng.comm.ui.utils.FeedViewRender;
 import com.umeng.comm.ui.widgets.FeedEditText;
 import com.umeng.comm.ui.widgets.TopicTipView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 发布feed的Activity
@@ -221,6 +220,15 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
         if (!TextUtils.isEmpty(content)) {
             mEditText.setText(content);
         }
+    }
+
+    private boolean isCharsOverflow(String extraText) {
+        int extraTextLen = 0;
+        if (!TextUtils.isEmpty(extraText)) {
+            extraTextLen = extraText.length();
+        }
+        int len = mEditText.getText().length();
+        return len + extraTextLen >= CommConfig.getConfig().mFeedLen;
     }
 
     /**
@@ -493,7 +501,7 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
         mLocIcon.setVisibility(View.VISIBLE);
         // 设置我的位置,我的位置放在第1个索引的位置
         if (locationItems.size() > 0 && location != null) {
-            mLocationTv.setText(locationItems.get(0).detail);
+            mLocationTv.setText(locationItems.get(0).description);
         } else {
             mLocationTv.setText(ResFinder.getString("umeng_comm_fetching_loc_failed"));
         }
@@ -587,6 +595,10 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
             @Override
             public void onAdd(Topic topic) {
                 Log.d(TAG, "### topic = " + topic);
+                if (isCharsOverflow(topic.name)) {
+                    ToastMsg.showShortMsgByResName("umeng_comm_overflow_tips");
+                    return;
+                }
                 if (!mEditText.mTopicMap.containsValue(topic)) {
                     removeChar('#');
                     List<Topic> topics = new ArrayList<Topic>();
@@ -670,10 +682,10 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
 
             @Override
             public void onComplete(LocationItem data) {
-                if (data != null && !TextUtils.isEmpty(data.detail)) {
+                if (data != null && !TextUtils.isEmpty(data.description)) {
                     mLocationLayout.setVisibility(View.VISIBLE);
                     // 地理位置数据
-                    mLocationTv.setText(data.detail);
+                    mLocationTv.setText(data.description);
                 } else {
                     mLocationLayout.setVisibility(View.INVISIBLE);
                 }
@@ -699,11 +711,14 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
         mAtFriendDlg.setDataListener(new SimpleFetchListener<CommUser>() {
 
             @Override
-            public void onComplete(CommUser data) {
-
-                if (data != null) {
+            public void onComplete(CommUser user) {
+                if (user != null) {
+                    if (isCharsOverflow(user.name)) {
+                        ToastMsg.showShortMsgByResName("umeng_comm_overflow_tips");
+                        return;
+                    }
                     removeChar('@');
-                    mSelectFriends.add(data);
+                    mSelectFriends.add(user);
                     // 插入数据
                     mEditText.atFriends(mSelectFriends);
                 }
@@ -813,7 +828,7 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
             selectedList.add(imgUri);
             appendAddImageIfLessThanNine(selectedList);
         } else {
-            ToastMsg.showShortMsg(this, ResFinder.getString("umeng_comm_image_overflow"));
+            ToastMsg.showShortMsgByResName("umeng_comm_image_overflow");
         }
         mImageSelectedAdapter.notifyDataSetChanged();
     }
@@ -834,11 +849,6 @@ public class PostFeedActivity extends BaseFragmentActivity implements OnClickLis
         if (mImageSelectedAdapter.getCount() < 9) {
             mImageSelectedAdapter.addData(Constants.ADD_IMAGE_PATH_SAMPLE);
         }
-    }
-
-    @Override
-    public boolean handleResponse(AbsResponse<?> response) {
-        return super.handlerResponse(response);
     }
 
 }

@@ -210,6 +210,7 @@ public final class UserInfoActivity extends BaseFragmentActivity implements OnCl
         hideInputMethod(mCommentEditText);
     }
 
+    @SuppressWarnings("deprecation")
     private void initUIComponents() {
         // 设置Fragment
         addFragment(ResFinder.getId("umeng_comm_user_info_fragment_container"),
@@ -431,6 +432,9 @@ public final class UserInfoActivity extends BaseFragmentActivity implements OnCl
      * @param user
      */
     public void setupUserInfo(CommUser user) {
+        if ( !user.id.equals(mUser.id)) {
+            return ;
+        }
         mUser = user;
         mUserNameTv.setText(user.name);
         if (user.gender == Gender.MALE) {

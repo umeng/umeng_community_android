@@ -50,7 +50,7 @@ public class NetworkImageView extends ImageView {
      */
     public void setImageUrl(String url) {
         ImageLoaderManager.getInstance().getCurrentSDK().displayImage(url, this);
-        ImageLoaderManager.getInstance().getCurrentSDK().resume();
+//        ImageLoaderManager.getInstance().getCurrentSDK().resume();
     }
 
     /**
@@ -58,6 +58,6 @@ public class NetworkImageView extends ImageView {
      */
     public void setImageUrl(String url, ImgDisplayOption option) {
         ImageLoaderManager.getInstance().getCurrentSDK().displayImage(url, this, option);
-        ImageLoaderManager.getInstance().getCurrentSDK().resume();
+//        ImageLoaderManager.getInstance().getCurrentSDK().resume();
     }
 }

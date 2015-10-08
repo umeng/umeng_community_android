@@ -24,6 +24,10 @@
 
 package com.umeng.comm.ui.fragments;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,7 +35,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.umeng.comm.core.beans.Topic;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.ui.adapters.TopicPickerAdater;
 import com.umeng.comm.ui.adapters.viewholders.FriendItemViewHolder;
@@ -39,10 +42,6 @@ import com.umeng.comm.ui.mvpview.MvpRecommendTopicView;
 import com.umeng.comm.ui.presenter.impl.TopicFgPresenter;
 import com.umeng.comm.ui.widgets.RefreshLayout.OnLoadListener;
 import com.umeng.comm.ui.widgets.RefreshLvLayout;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * 用户发布feed时的话题选择fragment.
@@ -204,15 +203,15 @@ public class TopicPickerFragment extends BaseFragment<List<Topic>, TopicFgPresen
         mRefreshLvLayout.setLoading(false);
     }
 
-    @Override
-    public boolean handlerResponse(AbsResponse<?> response) {
-        return super.handlerResponse(response);
-    }
-
     public static interface ResultListener<T> {
         public void onAdd(T t);
 
         public void onRemove(T t);
+    }
+
+    @Override
+    public void onRefreshEndNoOP() {
+
     }
 
 }

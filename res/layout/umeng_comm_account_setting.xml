@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+
+    <!-- icon -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:gravity="center" >
+
+        <com.umeng.comm.ui.widgets.SquareImageView
+            android:id="@+id/umeng_comm_user_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/umeng_comm_desc"
+            android:paddingRight="15dp"
+            android:src="@drawable/umeng_comm_male" />
+
+        <ImageView
+            android:id="@+id/umeng_comm_camera_icon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignBottom="@id/umeng_comm_user_icon"
+            android:layout_alignRight="@id/umeng_comm_user_icon"
+            android:contentDescription="@string/umeng_comm_desc"
+            android:src="@drawable/umeng_comm_camera_pressed" />
+    </RelativeLayout>
+
+    <include layout="@layout/umeng_comm_divide_line" />
+    <!-- nick name -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp" >
+
+        <TextView
+            android:id="@+id/umeng_comm_user_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="@string/umeng_comm_nickname"
+            android:textColor="@color/umeng_comm_text_topic_light_color"
+            android:textSize="@dimen/text_big14_size" />
+
+        <EditText
+            android:id="@+id/umeng_comm_nickname_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="65dp"
+            android:layout_toRightOf="@id/umeng_comm_user_nickname"
+            android:background="@null"
+            android:gravity="center"
+            android:inputType="text" />
+    </RelativeLayout>
+
+    <include layout="@layout/umeng_comm_divide_line" />
+    <!-- gender -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp" >
+
+        <TextView
+            android:id="@+id/umeng_comm_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="@string/umeng_comm_gender"
+            android:textColor="@color/umeng_comm_text_topic_light_color"
+            android:textSize="@dimen/text_big14_size" />
+
+        <TextView
+            android:id="@+id/umeng_comm_gender_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="65dp"
+            android:layout_toRightOf="@id/umeng_comm_gender"
+            android:background="@null"
+            android:gravity="center"
+            android:padding="5dp" />
+    </RelativeLayout>
+
+    <include layout="@layout/umeng_comm_divide_line" />
+
+</LinearLayout>

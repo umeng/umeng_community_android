@@ -24,18 +24,20 @@
 
 package com.umeng.comm.core.db.ctrl.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
+import com.umeng.comm.core.beans.ImageItem;
 import com.umeng.comm.core.beans.Topic;
 import com.umeng.comm.core.beans.relation.DBRelationOP;
 import com.umeng.comm.core.beans.relation.EntityRelationFactory;
 import com.umeng.comm.core.db.ctrl.TopicDBAPI;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.umeng.comm.core.utils.CommonUtils;
 
 class TopicDBAPIImpl extends AbsDbAPI<List<Topic>> implements TopicDBAPI {
 
@@ -46,6 +48,7 @@ class TopicDBAPIImpl extends AbsDbAPI<List<Topic>> implements TopicDBAPI {
             @Override
             protected void execute() {
                 List<Topic> topics = new Select().from(Topic.class).execute();
+                fillTopicImageItems(topics);
                 deliverResult(listener, topics);
             }
         });
@@ -59,6 +62,7 @@ class TopicDBAPIImpl extends AbsDbAPI<List<Topic>> implements TopicDBAPI {
             protected void execute() {
                 DBRelationOP<List<Topic>> relationOP = EntityRelationFactory.createUserTopic();
                 List<Topic> topics = relationOP.queryById(uid);
+                fillTopicImageItems(topics);
                 deliverResult(listener, topics);
             }
         });
@@ -86,6 +90,7 @@ class TopicDBAPIImpl extends AbsDbAPI<List<Topic>> implements TopicDBAPI {
                 CommUser user = CommConfig.getConfig().loginedUser;
                 DBRelationOP<?> relationOP = EntityRelationFactory.createUserTopic(user, topicId);
                 relationOP.deleteById(user.id);
+                deleteTopicImages(topicId);
             }
         });
     }
@@ -122,6 +127,7 @@ class TopicDBAPIImpl extends AbsDbAPI<List<Topic>> implements TopicDBAPI {
             @Override
             protected void execute() {
                 new Delete().from(Topic.class).where("topic._id=?", topicId).execute();
+                deleteTopicImages(topicId);
             }
         });
     }
@@ -130,4 +136,25 @@ class TopicDBAPIImpl extends AbsDbAPI<List<Topic>> implements TopicDBAPI {
     public void deleteAllTopics() {
         new Delete().from(Topic.class).execute();
     }
+
+    private List<ImageItem> selectImagesForTopic(String topicId) {
+        return new Select().from(ImageItem.class).where("feedId=?", topicId).execute();
+    }
+
+    private void deleteTopicImages(String topicId) {
+        new Delete().from(ImageItem.class).where("imageitem.feedId=?", topicId).execute();
+    }
+
+    private void fillTopicImageItems(List<Topic> topics) {
+        if (CommonUtils.isListEmpty(topics)) {
+            return;
+        }
+        for (Topic topic : topics) {
+            List<ImageItem> cacheTopics = selectImagesForTopic(topic.id);
+            if (!CommonUtils.isListEmpty(cacheTopics)) {
+                topic.imageItems.addAll(cacheTopics);
+            }
+        }
+    }
+
 }

@@ -19,12 +19,13 @@ import android.widget.Toast;
 import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.sdkmanager.ImageLoaderManager;
 import com.umeng.comm.core.utils.ResFinder;
-import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.core.utils.ResFinder.ResType;
+import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.imagepicker.adapters.AlbumAdapter;
 import com.umeng.comm.ui.imagepicker.adapters.PhotoAdapter;
 import com.umeng.comm.ui.imagepicker.domain.PhotoSelectorDomain;
 import com.umeng.comm.ui.imagepicker.model.AlbumModel;
+import com.umeng.comm.ui.imagepicker.model.PhotoConstants;
 import com.umeng.comm.ui.imagepicker.model.PhotoModel;
 import com.umeng.comm.ui.imagepicker.util.AnimationUtil;
 import com.umeng.comm.ui.imagepicker.util.ImagePickerUtils;
@@ -77,8 +78,8 @@ public class PhotoSelectorActivity extends Activity implements
         initAlbumListView();
 
         photoSelectorDomain = new PhotoSelectorDomain(getApplicationContext());
-        photoSelectorDomain.getReccent(reccentListener); // 鏇存柊鏈�杩戠収鐗�
-        photoSelectorDomain.updateAlbum(albumListener); // 璺熸柊鐩稿唽淇℃伅
+        photoSelectorDomain.getReccent(reccentListener);
+        photoSelectorDomain.updateAlbum(albumListener);
     }
 
     private void initWidgets() {
@@ -187,7 +188,7 @@ public class PhotoSelectorActivity extends Activity implements
 
     private void preview() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("photos", mSelectedPhotos);
+        bundle.putSerializable(PhotoConstants.PHOTO_PRVIEW_PHOTO, mSelectedPhotos);
         ImagePickerUtils.launchActivity(this, PhotoPreviewActivity.class, bundle);
     }
 
@@ -201,12 +202,14 @@ public class PhotoSelectorActivity extends Activity implements
 
     private void popAlbum() {
         layoutAlbum.setVisibility(View.VISIBLE);
-        new AnimationUtil(getApplicationContext(), ResFinder.getResourceId(ResType.ANIM, "umeng_comm_translate_up_current"))
+        new AnimationUtil(getApplicationContext(), ResFinder.getResourceId(ResType.ANIM,
+                "umeng_comm_translate_up_current"))
                 .setLinearInterpolator().startAnimation(layoutAlbum);
     }
 
     private void hideAlbum() {
-        new AnimationUtil(getApplicationContext(), ResFinder.getResourceId(ResType.ANIM, "umeng_comm_translate_down"))
+        new AnimationUtil(getApplicationContext(), ResFinder.getResourceId(ResType.ANIM,
+                "umeng_comm_translate_down"))
                 .setLinearInterpolator().startAnimation(layoutAlbum);
         layoutAlbum.setVisibility(View.GONE);
     }
@@ -231,7 +234,7 @@ public class PhotoSelectorActivity extends Activity implements
             boolean isChecked) {
         // 不能超过最大数量
         if (mSelectedPhotos.size() == MAX_IMAGE && isChecked) {
-            ToastMsg.showShortMsg(getApplicationContext(), "超过九张啦");
+            ToastMsg.showShortMsgByResName("umeng_comm_image_overflow");
             photoItem.updatePhotoItemState(false);
             return;
         }

@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -52,13 +51,11 @@ import com.umeng.comm.core.beans.Like;
 import com.umeng.comm.core.constants.Constants;
 import com.umeng.comm.core.imageloader.UMImageLoader;
 import com.umeng.comm.core.listeners.Listeners.OnItemViewClickListener;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 import com.umeng.comm.core.sdkmanager.ImageLoaderManager;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.core.utils.DeviceUtils;
 import com.umeng.comm.core.utils.Log;
 import com.umeng.comm.core.utils.ResFinder;
-import com.umeng.comm.core.utils.SharePrefUtils;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.activities.FeedDetailActivity;
 import com.umeng.comm.ui.adapters.FeedAdapter;
@@ -214,8 +211,7 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
                         : realPosition);
                 if (feedItem != null && feedItem.status >= FeedItem.STATUS_SPAM
                         && feedItem.category == CATEGORY.FAVORITES) {
-                    ToastMsg.showShortMsg(getActivity().getApplicationContext(),
-                            getToastText(feedItem.status));
+                    ToastMsg.showShortMsgByResName("umeng_comm_feed_spam_deleted");
                     return;
                 }
                 Intent intent = new Intent(getActivity(), FeedDetailActivity.class);
@@ -223,28 +219,7 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
                 startActivity(intent);
             }
         });
-    }
 
-    private String getToastText(int status) {
-        String text = ResFinder.getString("umeng_comm_feed_spam_deleted");
-        // switch (status) {
-        // case FeedItem.STATUS_SPAM:
-        // text = ResFinder.getString("umeng_comm_feed_spam_shield");
-        // break;
-        // case FeedItem.STATUS_DELETE:
-        // text = ResFinder.getString("umeng_comm_feed_spam_deleted");
-        // break;
-        // case FeedItem.STATUS_SNOW:
-        // text = ResFinder.getString("umeng_comm_feed_spam_deleted_admin");
-        // break;
-        // case FeedItem.STATUS_SENSITIVE:
-        // text = ResFinder.getString("umeng_comm_feed_spam_sensitive");
-        // break;
-        // default:
-        // text = "该收藏feed已经被删除";
-        // break;
-        // }
-        return text;
     }
 
     /**
@@ -259,6 +234,7 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
     /**
      * 关闭输入法</br>
      */
+    @SuppressWarnings("deprecation")
     private void hideInputMethod() {
         if (CommonUtils.isActivityAlive(getActivity())) {
             sendInputMethodMessage(Constants.INPUT_METHOD_DISAPPEAR, mCommentEditText);
@@ -290,9 +266,6 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
      * 加载更多数据</br>
      */
     protected void loadMoreFeed() {
-        if (mPresenter == null) {
-            return;
-        }
         // 没有网络的情况下从数据库加载
         if (!DeviceUtils.isNetworkAvailable(getActivity())) {
             mPresenter.loadDataFromDB();
@@ -324,17 +297,40 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
                         getActivity().startActivity(intent);
                         return;
                     }
-                    mFeedsListView.setSelection(position);
                     mFeedItem = item;
                     if (mCommentPresenter != null) {
                         mCommentPresenter.setFeedItem(item);
                     }
                     showCommentLayout();
+                    addOnGlobalLayoutListener(position);
                 }
             });
 
         }
         mRefreshLayout.setAdapter(mFeedLvAdapter);
+    }
+
+    private void addOnGlobalLayoutListener(final int position) {
+        mOnGlobalLayoutListener = new OnGlobalLayoutListener() {
+
+            @SuppressWarnings("deprecation")
+            @Override
+            public void onGlobalLayout() {
+//                int count = mFeedsListView.getHeaderViewsCount();
+//                int headerheight = 0;
+//                if (count > 0) {
+//                    for (int i = 0; i < count; i++) {
+//                        View view = mFeedsListView.getChildAt(i);
+//                        headerheight += view.getHeight();
+//                    }
+//                }
+//                mFeedsListView.setSelectionFromTop(position - 1, headerheight);
+                mRootView.getRootView().getViewTreeObserver()
+                        .removeGlobalOnLayoutListener(mOnGlobalLayoutListener);
+            }
+        };
+        mRootView.getRootView().getViewTreeObserver()
+                .addOnGlobalLayoutListener(mOnGlobalLayoutListener);
     }
 
     @Override
@@ -358,7 +354,6 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
                 }
             }
         }, 300);
-        removeDeletedFeeds();
     }
 
     public void onStop() {
@@ -440,6 +435,7 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
     protected void dealFavourite(FeedItem feedItem) {
     }
 
+    // TODO 此处对于invalidate需要重构
     protected void postFeedComplete(FeedItem feedItem) {
         // mFeedLvAdapter.addToFirst(feedItem);
         // 此时需要排序，确保置顶的feed放在最前面
@@ -558,33 +554,6 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
     }
 
     /**
-     * 用户在个人中心删除feed后,在Feed流页面的ListView中要对应的删除.已删除的feed通过SharedPreferences来存储.
-     */
-    private void removeDeletedFeeds() {
-        SharedPreferences deletedSharedPref = SharePrefUtils.getSharePrefEdit(getActivity(),
-                Constants.DELETED_FEEDS_PREF);
-        // all deleted feeds iterator.
-        Iterator<String> deletedIterator = deletedSharedPref.getAll().keySet().iterator();
-        // 遍历移除所有已经删除的feed
-        while (deletedIterator.hasNext()) {
-            String feedId = deletedIterator.next();
-            //
-            Iterator<FeedItem> feedIterator = mFeedLvAdapter.getDataSource().iterator();
-            // find the target feed
-            while (feedIterator.hasNext()) {
-                FeedItem feedItem = feedIterator.next();
-                if (feedItem.id.equals(feedId)) {
-                    feedIterator.remove();
-                    break;
-                }
-            } // end of second while
-        } // first while
-
-        mFeedLvAdapter.notifyDataSetChanged();
-        deletedSharedPref.edit().clear();
-    }
-
-    /**
      * 设置feed的过滤器</br>
      * 
      * @param filter
@@ -633,10 +602,6 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
         super.onDestroy();
     }
 
-    public boolean handleResponse(AbsResponse<?> response) {
-        return super.handlerResponse(response);
-    }
-
     @Override
     public void clearListView() {
         if (mFeedLvAdapter != null) {
@@ -664,7 +629,7 @@ public abstract class FeedListFragment<P extends FeedListPresenter> extends
     }
 
     @Override
-    public List<FeedItem> getAdapterDataSet() {
+    public List<FeedItem> getBindDataSource() {
         return mFeedLvAdapter.getDataSource();
     }
 

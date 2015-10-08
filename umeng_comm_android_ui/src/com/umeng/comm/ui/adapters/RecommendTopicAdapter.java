@@ -51,7 +51,6 @@ public class RecommendTopicAdapter extends BackupAdapter<Topic, ActiveUserViewHo
     private static final String DIVIDER = " / ";
 
     private FollowListener<Topic> mListener;
-    static final String TOPIC_TAG = "#";
     private boolean isFromFindPage = false;// 是否来自于发现页面。对于来自发现页面需要单独处理，
 
     private int mTopicColor = 0;

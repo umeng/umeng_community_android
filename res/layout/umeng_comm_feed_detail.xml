@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_comm_feed_detail_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/umeng_comm_feed_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        layout="@layout/umeng_comm_title_layout" />
+
+    <include
+        android:id="@+id/umeng_comm_feed_title_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/umeng_comm_feed_title_layout"
+        layout="@layout/umeng_comm_divide_line" />
+
+    <!-- fragment container -->
+
+    <FrameLayout
+        android:id="@+id/umeng_comm_feed_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/umeng_comm_feed_title_line" >
+    </FrameLayout>
+
+    <com.umeng.comm.ui.widgets.BaseView
+        android:id="@+id/umeng_comm_baseview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/umeng_comm_feed_title_line" />
+
+</RelativeLayout>

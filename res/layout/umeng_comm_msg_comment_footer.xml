@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/umeng_comm_msg_comment_loadmore"
+    android:layout_width="match_parent"
+    android:layout_height="30dp" >
+
+    <View
+        android:id="@+id/umeng_comm_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/umeng_comm_divider" />
+
+    <TextView
+        android:id="@+id/umeng_comm_load_more"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/umeng_comm_comment_load_more"
+        android:textSize="@dimen/text_big16_size" />
+
+    <ProgressBar
+        android:id="@+id/umeng_comm_loadding_pb"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

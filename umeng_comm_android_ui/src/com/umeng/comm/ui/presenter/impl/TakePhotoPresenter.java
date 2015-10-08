@@ -76,7 +76,7 @@ public class TakePhotoPresenter {
         } catch (IOException ex) {
             // Error occurred while creating the File
             ex.printStackTrace();
-            ToastMsg.showShortMsg(mContext, "There was a problem saving the photo...");
+            ToastMsg.showShortMsgByResName("umeng_comm_save_photo_failed");
         }
     }
 

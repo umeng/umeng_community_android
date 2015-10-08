@@ -30,6 +30,7 @@ import android.view.View;
 
 import com.umeng.comm.core.CommunitySDK;
 import com.umeng.comm.core.beans.CommConfig;
+import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.impl.CommunityFactory;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.SimpleResponse;
@@ -56,13 +57,13 @@ public class UserReportDialog extends ActionDialog {
     protected void report() {
         String loginedUid = CommConfig.getConfig().loginedUser.id;
         if (mFeedItem != null && mFeedItem.creator.id.equals(loginedUid)) {
-            ToastMsg.showShortMsg(getContext(),
-                    ResFinder.getString("umeng_comm_do_not_spam_yourself"));
+            ToastMsg.showShortMsgByResName("umeng_comm_do_not_spam_yourself");
             return;
         }
         mPresenter.showSpamDialog();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void initViewClickListeners() {
         super.initViewClickListeners();
@@ -96,12 +97,12 @@ public class UserReportDialog extends ActionDialog {
             mCommunitySDK.spamUser(mUid, new SimpleFetchListener<SimpleResponse>() {
                 @Override
                 public void onComplete(SimpleResponse response) {
-                    if (response.errCode == 0) {
-                        ToastMsg.showShortMsg(mContext,
-                                ResFinder.getString("umeng_comm_text_spammer_success"));
+                    if (response.errCode == ErrorCode.NO_ERROR) {
+                        ToastMsg.showShortMsgByResName("umeng_comm_text_spammer_success");
+                    } else if (response.errCode == ErrorCode.SPAMMERED_CODE) {
+                        ToastMsg.showShortMsgByResName("umeng_comm_user_spamed");
                     } else {
-                        ToastMsg.showShortMsg(mContext,
-                                ResFinder.getString("umeng_comm_text_spammer_failed"));
+                        ToastMsg.showShortMsgByResName("umeng_comm_text_spammer_failed");
                     }
                 }
             });

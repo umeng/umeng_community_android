@@ -44,5 +44,5 @@ public interface MvpAlbumView {
      * 
      * @return
      */
-    public List<ImageItem> getAdapterDataSet();
+    public List<ImageItem> getBindDataSource();
 }

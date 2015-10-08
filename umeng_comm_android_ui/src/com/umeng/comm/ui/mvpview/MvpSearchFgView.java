@@ -33,10 +33,6 @@ import com.umeng.comm.core.beans.CommUser;
  */
 public interface MvpSearchFgView extends MvpFeedView {
 
-    public void onRefreshStart();
-
-    public void onRefreshEnd();
-
     public List<CommUser> getUserDataSource();
 
     public void notifyDataSetChanged();

@@ -1,18 +1,18 @@
 
 package com.umeng.comm.ui.imagepicker;
 
-import java.util.List;
-
 import android.os.Bundle;
 
 import com.umeng.comm.ui.imagepicker.PhotoSelectorActivity.OnLocalReccentListener;
 import com.umeng.comm.ui.imagepicker.domain.PhotoSelectorDomain;
+import com.umeng.comm.ui.imagepicker.model.PhotoConstants;
 import com.umeng.comm.ui.imagepicker.model.PhotoModel;
 import com.umeng.comm.ui.imagepicker.util.ImagePickerUtils;
 
+import java.util.List;
+
 /**
  * 照片预览Activity
- * 
  */
 public class PhotoPreviewActivity extends BasePhotoPreviewActivity implements
         OnLocalReccentListener {
@@ -33,14 +33,14 @@ public class PhotoPreviewActivity extends BasePhotoPreviewActivity implements
         if (extras == null)
             return;
 
-        if (extras.containsKey("photos")) { // 预览图片
-            photos = (List<PhotoModel>) extras.getSerializable("photos");
-            current = extras.getInt("position", 0);
+        if (extras.containsKey(PhotoConstants.PHOTO_PRVIEW_PHOTO)) { // 预览图片
+            photos = (List<PhotoModel>) extras.getSerializable(PhotoConstants.PHOTO_PRVIEW_PHOTO);
+            current = extras.getInt(PhotoConstants.PHOTO_POSITION, 0);
             updatePercent();
             bindData();
-        } else if (extras.containsKey("album")) { // 点击图片查看
-            String albumName = extras.getString("album"); // 相册
-            this.current = extras.getInt("position");
+        } else if (extras.containsKey(PhotoConstants.PHOTO_ALBUM)) { // 点击图片查看
+            String albumName = extras.getString(PhotoConstants.PHOTO_ALBUM); // 相册
+            this.current = extras.getInt(PhotoConstants.PHOTO_POSITION);
             if (!ImagePickerUtils.isNull(albumName)
                     && albumName.equals(PhotoSelectorActivity.RECCENT_PHOTO)) {
                 photoSelectorDomain.getReccent(this);

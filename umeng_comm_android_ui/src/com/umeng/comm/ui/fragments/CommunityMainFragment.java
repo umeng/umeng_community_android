@@ -24,10 +24,14 @@
 
 package com.umeng.comm.ui.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
@@ -44,14 +48,14 @@ import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.core.utils.ResFinder.ResType;
 import com.umeng.comm.ui.activities.FindActivity;
 import com.umeng.comm.ui.mvpview.MvpUnReadMsgView;
-import com.umeng.comm.ui.presenter.impl.UnReadMsgPresenter;
+import com.umeng.comm.ui.presenter.impl.NullPresenter;
 import com.umeng.comm.ui.widgets.SegmentView;
 import com.umeng.comm.ui.widgets.SegmentView.OnItemCheckedListener;
 
 /**
  * 社区首页，包含关注、推荐、话题三个tab的页面，通过ViewPager管理页面之间的切换.
  */
-public class CommunityMainFragment extends BaseFragment<Void, UnReadMsgPresenter> implements
+public class CommunityMainFragment extends BaseFragment<Void, NullPresenter> implements
         OnClickListener, MvpUnReadMsgView {
 
     private ViewPager mViewPager;
@@ -95,7 +99,7 @@ public class CommunityMainFragment extends BaseFragment<Void, UnReadMsgPresenter
     /**
      * 未读消息的数量
      */
-    private MessageCount mUnreadMsg = MessageCount.obtainSingleInstance();
+    private MessageCount mUnreadMsg = CommConfig.getConfig().mMessageCount;
     /**
      * 含有未读消息时的红点视图
      */
@@ -111,6 +115,7 @@ public class CommunityMainFragment extends BaseFragment<Void, UnReadMsgPresenter
         initTitle(mRootView);
         initFragment();
         initViewPager(mRootView);
+        registerInitSuccessBroadcast();
     }
 
     /**
@@ -167,7 +172,6 @@ public class CommunityMainFragment extends BaseFragment<Void, UnReadMsgPresenter
     @Override
     public void onResume() {
         super.onResume();
-        MessageCount.calculateTotal();
         if (mUnreadMsg.unReadTotal > 0) {
             mBadgeView.setVisibility(View.VISIBLE);
         } else {
@@ -332,16 +336,47 @@ public class CommunityMainFragment extends BaseFragment<Void, UnReadMsgPresenter
     }
 
     @Override
-    protected UnReadMsgPresenter createPresenters() {
-        return new UnReadMsgPresenter(this);
-    }
-
-    @Override
     public void onFetchUnReadMsg(MessageCount unreadMsg) {
         this.mUnreadMsg = unreadMsg;
         if (mUnreadMsg.unReadTotal > 0) {
             mBadgeView.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * 主动调用加载数据。 【注意】该接口仅仅在退出登录时，跳转到FeedsActivity清理数据后重新刷新数据</br>
+     */
+    public void repeatLoadDataFromServer() {
+        if (mMainFeedFragment != null) {
+            mMainFeedFragment.loadFeedFromServer();
+        }
+        if (mRecommendFragment != null) {
+            mRecommendFragment.loadDataFromServer();
+        }
+    }
+
+    /**
+     * 注册登录成功时的广播</br>
+     */
+    private void registerInitSuccessBroadcast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_INIT_SUCCESS);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mInitConfigReceiver,
+                filter);
+    }
+
+    private BroadcastReceiver mInitConfigReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onFetchUnReadMsg(CommConfig.getConfig().mMessageCount);
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mInitConfigReceiver);
+        super.onDestroy();
     }
 
 }

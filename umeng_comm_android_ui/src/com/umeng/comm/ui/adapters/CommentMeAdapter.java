@@ -70,24 +70,28 @@ public class CommentMeAdapter extends LikeMeFeedAdapter {
             public void onClick(View v) {
                 FeedItem feedItem = restoreFeedItem(getItem(position).sourceFeed);
                 if (feedItem.status >= FeedItem.STATUS_SPAM) {
-                    ToastMsg.showShortMsg(mContext, ResFinder.getString("umeng_comm_invalid_feed"));
+                    ToastMsg.showShortMsgByResName("umeng_comm_invalid_feed");
                     return;
                 }
                 Intent intent = new Intent(mContext, FeedDetailActivity.class);
                 intent.setExtrasClassLoader(ImageItem.class.getClassLoader());
                 intent.putExtra(Constants.FEED, feedItem);
+                String commentId = feedItem.extraData.getString(HttpProtocol.COMMENT_ID_KEY);
                 // 传递评论的id
-                intent.putExtra(HttpProtocol.COMMENT_ID_KEY,
-                        feedItem.extraData.getString(HttpProtocol.COMMENT_ID_KEY));
+                intent.putExtra(HttpProtocol.COMMENT_ID_KEY, commentId);
                 mContext.startActivity(intent);
             }
         });
     }
 
+    /**
+     * 获取原始的Feed内容,被@的消息中含有creator的用户名
+     * 
+     * @param originFeedItem
+     * @return
+     */
     private FeedItem restoreFeedItem(FeedItem originFeedItem) {
         FeedItem feedItem = originFeedItem.clone();
-        feedItem.imageUrls = feedItem.extraData
-                .getParcelableArrayList(HttpProtocol.IMAGES_KEY);
         feedItem.text = feedItem.text.split(":")[1];
         return feedItem;
     }

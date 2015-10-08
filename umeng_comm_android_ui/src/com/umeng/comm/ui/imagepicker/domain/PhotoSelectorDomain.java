@@ -14,6 +14,7 @@ import com.umeng.comm.ui.imagepicker.controller.AlbumController;
 import com.umeng.comm.ui.imagepicker.model.AlbumModel;
 import com.umeng.comm.ui.imagepicker.model.PhotoModel;
 
+// TODO Handler 的方式需要优化
 @SuppressLint("HandlerLeak")
 public class PhotoSelectorDomain {
 

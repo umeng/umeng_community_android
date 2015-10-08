@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- 消息流列表 -->
+
+    <com.umeng.comm.ui.widgets.RefreshLvLayout
+        android:id="@+id/umeng_comm_swipe_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ListView
+            android:id="@+id/umeng_comm_feed_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#EEEEEE"
+            android:dividerHeight="1dip"
+            android:fadingEdgeLength="0.0sp"
+            android:fastScrollEnabled="false"
+            android:headerDividersEnabled="false"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none"
+            android:scrollingCache="false" />
+    </com.umeng.comm.ui.widgets.RefreshLvLayout>
+
+    <!-- 发布feed按钮 -->
+
+    <ImageView
+        android:id="@+id/umeng_comm_new_post_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:contentDescription="@string/umeng_comm_new_post"
+        android:src="@drawable/umeng_comm_new_post_btn_style" />
+    <!-- 评论布局 -->
+
+    <include
+        android:id="@+id/umeng_comm_comment_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        layout="@layout/umeng_comm_comment_layout"
+        android:clickable="true"
+        android:gravity="center"
+        android:visibility="invisible" />
+
+</FrameLayout>

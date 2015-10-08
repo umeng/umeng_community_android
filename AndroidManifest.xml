@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.umeng.community.example"
-    android:versionCode="5"
-    android:versionName="2.1" >
+    android:versionCode="7"
+    android:versionName="2.1.2" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -57,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".custom.CustonLoginActivity" />
-        
+
         <!-- 发现的Activity -->
         <activity
             android:name="com.umeng.comm.ui.activities.FindActivity"
@@ -93,7 +93,9 @@
         <activity
             android:name="com.umeng.comm.ui.activities.PostFeedActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
 
         <!--  -->
         <activity
@@ -256,8 +258,7 @@
         </service>
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
-
-        <!--
+		<!-- 线上demo Appkey -->
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="54d19086fd98c540a2001155" >
@@ -266,8 +267,8 @@
             android:name="UMENG_MESSAGE_SECRET"
             android:value="de08937649e99e3c81d7924b145b3f79" >
         </meta-data>
-        -->
-
+        <!-- 开发阶段测试appkey -->
+        <!--
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="4eaee02c527015373b000003" >
@@ -276,9 +277,14 @@
             android:name="UMENG_MESSAGE_SECRET"
             android:value="a102852523d3070310d74f676d128a3c" >
         </meta-data>
+        -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="557e18d1afb32a69351be5abc7f1cd25" />
+
+        <activity
+            android:name="com.umeng.comm.ui.activities.BrowserActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 
 </manifest>

@@ -33,6 +33,7 @@ import com.umeng.comm.core.beans.FeedItem;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.FeedsResponse;
 import com.umeng.comm.core.nets.responses.UsersResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.ToastMsg;
 import com.umeng.comm.ui.mvpview.MvpSearchFgView;
 
@@ -59,7 +60,7 @@ public class SearchPresenter extends FeedListPresenter {
      */
     public void loadMoreUser() {
         if (TextUtils.isEmpty(mUserNextPage) || executeLoading) {
-            ToastMsg.showShortMsgByResName(mContext, "umeng_comm_text_load_over");
+            ToastMsg.showShortMsgByResName("umeng_comm_text_load_over");
             mSearchView.onRefreshEnd();
             return;
         }
@@ -71,7 +72,7 @@ public class SearchPresenter extends FeedListPresenter {
                     public void onComplete(UsersResponse response) {
                         mSearchView.onRefreshEnd();
                         mUserNextPage = response.nextPageUrl;
-                        if (mSearchView.handleResponse(response)) {
+                        if (NetworkUtils.handleResponseAll(response)) {
                             return;
                         }
                         mSearchView.getUserDataSource().addAll(response.result);
@@ -83,7 +84,7 @@ public class SearchPresenter extends FeedListPresenter {
 
     public void executeSearch(String keyword) {
         if (TextUtils.isEmpty(keyword)) {
-            ToastMsg.showShortMsgByResName(mContext, "umeng_comm_topic_search_no_keyword");
+            ToastMsg.showShortMsgByResName("umeng_comm_topic_search_no_keyword");
             return;
         }
         mSearchView.hideInputMethod();
@@ -94,13 +95,12 @@ public class SearchPresenter extends FeedListPresenter {
                     @Override
                     public void onComplete(FeedsResponse response) {
                         List<FeedItem> feedItems = response.result;
-//                        mSearchView.clearListView();
-                        mSearchView.getAdapterDataSet().clear();
+                        mSearchView.getBindDataSource().clear();
                         if (feedItems.size() == 0) {
                             mSearchView.showFeedEmptyView();
                             mSearchView.notifyDataSetChanged();
                         } else {
-                            mSearchView.getAdapterDataSet().addAll(feedItems);
+                            mSearchView.getBindDataSource().addAll(feedItems);
                             mSearchView.notifyDataSetChanged();
                             mSearchView.hideFeedEmptyView();
                         }

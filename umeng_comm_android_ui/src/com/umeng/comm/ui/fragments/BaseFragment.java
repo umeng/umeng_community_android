@@ -30,8 +30,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.umeng.comm.core.nets.responses.AbsResponse;
-import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.ui.presenter.BaseFragmentPresenter;
 import com.umeng.comm.ui.utils.FontUtils;
@@ -83,7 +81,7 @@ public abstract class BaseFragment<T, P extends BaseFragmentPresenter<T>> extend
         }
         return mRootView;
     }
-
+    
     // protected abstract View inflateRootView(LayoutInflater inflater,
     // ViewGroup container,
     // Bundle savedInstanceState);
@@ -132,16 +130,6 @@ public abstract class BaseFragment<T, P extends BaseFragmentPresenter<T>> extend
         super.onResume();
         // 修改字体
         FontUtils.changeTypeface(getView());
-    }
-
-    /**
-     * 根据response做不同的Toast提示。【所有跟网络请求相关的Toast都应该经过此方法的判断】</br>
-     * 
-     * @param response
-     * @return 如果进行了Toast，则返回true；否则返回false
-     */
-    protected boolean handlerResponse(AbsResponse<?> response) {
-        return NetworkUtils.handleResponse(getActivity(), response);
     }
 
     @Override

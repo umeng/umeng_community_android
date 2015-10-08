@@ -4,14 +4,17 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.db.ctrl.FansDBAPI;
 import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.FansResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.ui.mvpview.MvpFollowedUserView;
+import com.umeng.comm.ui.utils.BroadcastUtils.BROADCAST_TYPE;
 
 import java.util.List;
 
@@ -27,7 +30,7 @@ public class FansFgPresenter extends FollowedUserFgPresenter {
      */
     public FansFgPresenter(MvpFollowedUserView followedUserView, String uid) {
         super(followedUserView, uid);
-        isFollowPage = false;
+//        isFollowPage = false;
         mFansDBAPI = DatabaseAPI.getInstance().getFansDBAPI();
     }
 
@@ -42,13 +45,13 @@ public class FansFgPresenter extends FollowedUserFgPresenter {
 
             @Override
             public void onComplete(FansResponse response) {
-                final List<CommUser> fans = response.result;
                 // 根据response进行Toast
-                if (mFollowedUserView.handleResponse(response)) {
+                if (NetworkUtils.handleResponseAll(response)) {
                     mFollowedUserView.onRefreshEnd();
                     return;
                 }
-
+                
+                final List<CommUser> fans = response.result;
                 // 保存到数据库
                 mFansDBAPI.saveFansToDB(mUid, fans);
 
@@ -69,6 +72,9 @@ public class FansFgPresenter extends FollowedUserFgPresenter {
 
     @Override
     public void loadDataFromDB() {
+        if (!mUid.equals(CommConfig.getConfig().loginedUser.id)) {
+            return;
+        }
         // 加载某个用户的粉丝
         mFansDBAPI.loadFansFromDB(mUid, new
                 SimpleFetchListener<List<CommUser>>() {
@@ -99,6 +105,10 @@ public class FansFgPresenter extends FollowedUserFgPresenter {
         users.removeAll(dataSource);
         dataSource.addAll(users);
         mFollowedUserView.notifyDataSetChanged();
+    }
+    
+    @Override
+    protected void onUserFollowStateChange(CommUser user, BROADCAST_TYPE type) {
     }
 
 }

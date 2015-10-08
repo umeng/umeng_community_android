@@ -36,13 +36,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.umeng.comm.core.beans.CommConfig;
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.constants.Constants;
-import com.umeng.comm.core.constants.ErrorCode;
 import com.umeng.comm.core.db.ctrl.impl.DatabaseAPI;
 import com.umeng.comm.core.imageloader.ImgDisplayOption;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.listeners.Listeners.SimpleFetchListener;
 import com.umeng.comm.core.nets.responses.FansResponse;
-import com.umeng.comm.core.utils.CommonUtils;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
 import com.umeng.comm.core.utils.ResFinder;
 import com.umeng.comm.ui.adapters.PickerAdapter;
 import com.umeng.comm.ui.adapters.viewholders.FriendItemViewHolder;
@@ -136,13 +135,16 @@ public class AtFriendDialog extends PickerDialog<CommUser> {
             }
 
             @Override
-            public void onComplete(FansResponse resp) {
+            public void onComplete(FansResponse response) {
                 mRefreshLvLayout.setRefreshing(false);
-                if (resp.errCode == ErrorCode.NO_ERROR && mUpdateNextPageUrl.get() ) {
-                    mNextPageUrl = resp.nextPageUrl;
+                if ( NetworkUtils.handleResponseAll(response) ) {
+                    return ;
+                }
+                if ( mUpdateNextPageUrl.get() ) {
+                    mNextPageUrl = response.nextPageUrl;
                     mUpdateNextPageUrl.set(false);
                 }
-                handleResultData(resp);
+                handleResultData(response);
             }
         });
     }
@@ -161,12 +163,13 @@ public class AtFriendDialog extends PickerDialog<CommUser> {
                     }
 
                     @Override
-                    public void onComplete(FansResponse data) {
+                    public void onComplete(FansResponse response) {
                         mRefreshLvLayout.setLoading(false);
-                        if ( data.errCode == ErrorCode.NO_ERROR ) {
-                            mNextPageUrl = data.nextPageUrl;
+                        if ( NetworkUtils.handleResponseAll(response) ) {
+                            return ;
                         }
-                        handleResultData(data);
+                        mNextPageUrl = response.nextPageUrl;
+                        handleResultData(response);
                     }
                 });
     }
@@ -184,14 +187,6 @@ public class AtFriendDialog extends PickerDialog<CommUser> {
      */
     private void handleResultData(FansResponse response) {
         List<CommUser> users = response.result;
-        if (CommonUtils.isListEmpty(users)) {
-            return;
-        }
-        if (users.size() == 0) {
-            // ToastMsg.showShortMsgByResName(getContext(),
-            // "umeng_comm_followed_no_user");
-            return;
-        }
         List<CommUser> sourceList = mAdapter.getDataSource();
         users.removeAll(sourceList);
         mAdapter.addData(users);

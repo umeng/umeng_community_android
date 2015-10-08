@@ -24,6 +24,10 @@
 
 package com.umeng.comm.ui.presenter.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -39,17 +43,13 @@ import com.umeng.comm.ui.mvpview.MvpAlbumView;
 import com.umeng.comm.ui.presenter.BaseActivityPresenter;
 import com.umeng.comm.ui.presenter.BasePresenter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 public class AlbumPresenter extends BasePresenter implements BaseActivityPresenter {
 
     String mUid;
     MvpAlbumView mAlbumView;
     String mNextPage;
-    
-    private volatile AtomicBoolean mUpdateNextUrl = new AtomicBoolean(true); 
+
+    private volatile AtomicBoolean mUpdateNextUrl = new AtomicBoolean(true);
 
     public AlbumPresenter(String uid, MvpAlbumView view) {
         mUid = uid;
@@ -59,11 +59,10 @@ public class AlbumPresenter extends BasePresenter implements BaseActivityPresent
     @Override
     public void attach(Context context) {
         super.attach(context);
-
-        fetchUserAlbums();
+        loadDataFromServer();
     }
 
-    public void fetchUserAlbums() {
+    public void loadDataFromServer() {
         mCommunitySDK.fetchAlbums(mUid, new FetchListener<AlbumResponse>() {
 
             @Override
@@ -72,10 +71,10 @@ public class AlbumPresenter extends BasePresenter implements BaseActivityPresent
 
             @Override
             public void onComplete(AlbumResponse response) {
-                if ( response.errCode != ErrorCode.NO_ERROR ) {
-                    return ;
+                if (NetworkUtils.handleResponseAll(response)) {
+                    return;
                 }
-                if ( TextUtils.isEmpty(mNextPage) && mUpdateNextUrl.get() ) {
+                if (TextUtils.isEmpty(mNextPage) && mUpdateNextUrl.get()) {
                     mNextPage = response.nextPageUrl;
                     mUpdateNextUrl.set(false);
                 }
@@ -85,7 +84,7 @@ public class AlbumPresenter extends BasePresenter implements BaseActivityPresent
     }
 
     private void deliveryImageItems(AlbumResponse response) {
-        if (NetworkUtils.handleResponse(mContext, response)) {
+        if (NetworkUtils.handleResponseComm(response)) {
             return;
         }
         // 从相册中解析图片,目前一个相册只有一张图,将结果回调给View
@@ -98,32 +97,32 @@ public class AlbumPresenter extends BasePresenter implements BaseActivityPresent
             newItems.addAll(albumItem.images);
         }
         // 去除已经存在的数据项
-        newItems.removeAll(mAlbumView.getAdapterDataSet());
+        newItems.removeAll(mAlbumView.getBindDataSource());
         return newItems;
     }
 
     public void loadMore() {
-        if (hasMore()) {
-            mCommunitySDK.fetchNextPageData(mNextPage, AlbumResponse.class,
-                    new SimpleFetchListener<AlbumResponse>() {
+        if (TextUtils.isEmpty(mNextPage)) {
+            return;
+        }
+        mCommunitySDK.fetchNextPageData(mNextPage, AlbumResponse.class,
+                new SimpleFetchListener<AlbumResponse>() {
 
-                        @Override
-                        public void onComplete(AlbumResponse response) {
-                            if ( response.errCode != ErrorCode.NO_ERROR ) {
-                                return ;
-                            }
-                            mNextPage = response.nextPageUrl;
-                            if ( !TextUtils.isEmpty(mNextPage) && "null".equals(mNextPage) ) {
+                    @Override
+                    public void onComplete(AlbumResponse response) {
+                        if (NetworkUtils.handleResponseAll(response)) {
+                            if (response.errCode == ErrorCode.NO_ERROR) {
                                 mNextPage = "";
                             }
-                            deliveryImageItems(response);
+                            return;
                         }
-                    });
-        }
-    }
-
-    private boolean hasMore() {
-        return !TextUtils.isEmpty(mNextPage);
+                        mNextPage = response.nextPageUrl;
+                        if (!TextUtils.isEmpty(mNextPage) && "null".equals(mNextPage)) {
+                            mNextPage = "";
+                        }
+                        deliveryImageItems(response);
+                    }
+                });
     }
 
     @Override

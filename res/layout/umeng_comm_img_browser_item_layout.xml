@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <com.umeng.comm.ui.widgets.ScaleImageView
+        android:id="@+id/umeng_comm_imagebrowser_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_centerInParent="true" />
+
+    <ProgressBar
+        android:id="@+id/umeng_comm_image_progressbar"
+        style="@android:style/Widget.ProgressBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/umeng_comm_save_img_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/umeng_comm_image_save_bg"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="6dp"
+        android:text="@string/umeng_comm_save"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_big15_size" />
+
+    <TextView
+        android:id="@+id/umeng_comm_origin_img_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/umeng_comm_save_img_tv"
+        android:background="@drawable/umeng_comm_image_save_bg"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="6dp"
+        android:text="@string/umeng_comm_origin_image"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_big15_size" />
+
+</RelativeLayout>

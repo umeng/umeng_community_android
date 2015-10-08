@@ -26,10 +26,14 @@ package com.umeng.comm.ui.presenter.impl;
 
 import java.util.List;
 
+import android.text.TextUtils;
+
 import com.umeng.comm.core.beans.CommUser;
 import com.umeng.comm.core.listeners.Listeners.FetchListener;
 import com.umeng.comm.core.nets.responses.FansResponse;
 import com.umeng.comm.core.nets.responses.UsersResponse;
+import com.umeng.comm.core.nets.uitls.NetworkUtils;
+import com.umeng.comm.core.utils.CommonUtils;
 import com.umeng.comm.ui.mvpview.MvpActiveUserFgView;
 
 /**
@@ -60,14 +64,35 @@ public class RecommendUserFgPresenter extends ActiveUserFgPresenter {
 
     @Override
     void dealResult(FansResponse response, boolean fromRefresh) {
+        if ( NetworkUtils.handleResponseComm(response) ) {
+            return ;
+        }
         List<CommUser> users = response.result;
-        if (users == null || users.size() == 0) {
+        if (CommonUtils.isListEmpty(users)) {
             mActiveUserFgView.showEmptyView();
             return;
         } else {
             mActiveUserFgView.hideEmptyView();
         }
         super.dealResult(response, fromRefresh);
+    }
+    
+    @Override
+    public void loadMoreData() {
+        if ( TextUtils.isEmpty(mNextPageUrl) ) {
+            mActiveUserFgView.onRefreshEnd();
+            return ;
+        }
+        mCommunitySDK.fetchNextPageData(mNextPageUrl, UsersResponse.class, new FetchListener<UsersResponse>() {
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onComplete(UsersResponse response) {
+                dealResult(response, false);
+            }} );
     }
 
 }

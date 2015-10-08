@@ -25,7 +25,6 @@
 package com.umeng.comm.ui.mvpview;
 
 import com.umeng.comm.core.beans.FeedItem;
-import com.umeng.comm.core.nets.responses.AbsResponse;
 
 /**
  * Feed详情Activity的View
@@ -36,8 +35,6 @@ public interface MvpFeedDetailActivityView {
 
     public void showLoading(boolean show);
 
-    public boolean handleResponse(AbsResponse<?> response);
-    
     public void fetchFeedFaild();
 
     public void fetchDataComplete(FeedItem result);
